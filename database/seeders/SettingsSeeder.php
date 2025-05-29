@@ -16,7 +16,7 @@ class SettingsSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('settings')->insert([
+        DB::table('settings')->insert([ 
             // Site title
             ['option_name' => 'app_name', 'option_value' => 'Lifemedia'],
 
