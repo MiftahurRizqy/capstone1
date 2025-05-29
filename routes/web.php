@@ -48,6 +48,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::resource('users', UsersController::class);
     Route::get('users/{id}/login-as', [UserLoginAsController::class, 'loginAs'])->name('users.login-as');
     Route::post('users/switch-back', [UserLoginAsController::class, 'switchBack'])->name('users.switch-back');
+
+    // Routes untuk Pelanggan
+    Route::group(['prefix' => 'pelanggan', 'as' => 'pelanggan.'], function () {
+        Route::get('/personal', [App\Http\Controllers\PelangganController::class, 'personal'])->name('personal');
+        Route::get('/perusahaan', [App\Http\Controllers\PelangganController::class, 'perusahaan'])->name('perusahaan');
+    });
 });
 
 /**
