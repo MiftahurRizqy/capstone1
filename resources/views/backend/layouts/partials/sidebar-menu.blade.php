@@ -39,6 +39,38 @@
             @endif
             @php echo ld_apply_filters('sidebar_menu_after_dashboard', '') @endphp
 
+                        @if ($user->can('user.create') || $user->can('user.view') || $user->can('user.edit') || $user->can('user.delete'))
+                <li>
+                    <button
+                        class="menu-item group w-full text-left {{ Route::is('admin.users.*') ? 'menu-item-active' : 'menu-item-inactive text-white' }}"
+                        type="button" onclick="toggleSubmenu('users-submenu')">
+                        <i class="bi bi-person text-xl text-center"></i>
+                        <span :style="`color: ${textColor}`">Users</span>
+                        <i class="bi bi-chevron-down ml-auto"></i>
+                    </button>
+                    <ul id="users-submenu"
+                        class="submenu {{ Route::is('admin.users.*') ? '' : 'hidden' }} pl-12 mt-2 space-y-2">
+                        @if ($user->can('user.view'))
+                            <li>
+                                <a href="{{ route('admin.users.index') }}"
+                                    class="block px-4 py-2 rounded-lg {{ Route::is('admin.users.index') || Route::is('admin.users.edit') ? 'menu-item-active' : 'menu-item-inactive' }}">
+                                    {{ __('Users') }}
+                                </a>
+                            </li>
+                        @endif
+                        @if ($user->can('user.create'))
+                            <li>
+                                <a href="{{ route('admin.users.create') }}"
+                                    class="block px-4 py-2 rounded-lg {{ Route::is('admin.users.create') ? 'menu-item-active' : 'menu-item-inactive' }}">
+                                    {{ __('New User') }}
+                                </a>
+                            </li>
+                        @endif
+                    </ul>
+                </li>
+            @endif
+            @php echo ld_apply_filters('sidebar_menu_after_users', '') @endphp
+
             @if ($user->can('role.create') || $user->can('role.view') || $user->can('role.edit') || $user->can('role.delete'))
                 <li>
                     <button
@@ -71,37 +103,7 @@
             @endif
             @php echo ld_apply_filters('sidebar_menu_after_roles', '') @endphp
 
-            @if ($user->can('user.create') || $user->can('user.view') || $user->can('user.edit') || $user->can('user.delete'))
-                <li>
-                    <button
-                        class="menu-item group w-full text-left {{ Route::is('admin.users.*') ? 'menu-item-active' : 'menu-item-inactive text-white' }}"
-                        type="button" onclick="toggleSubmenu('users-submenu')">
-                        <i class="bi bi-person text-xl text-center"></i>
-                        <span :style="`color: ${textColor}`">Users</span>
-                        <i class="bi bi-chevron-down ml-auto"></i>
-                    </button>
-                    <ul id="users-submenu"
-                        class="submenu {{ Route::is('admin.users.*') ? '' : 'hidden' }} pl-12 mt-2 space-y-2">
-                        @if ($user->can('user.view'))
-                            <li>
-                                <a href="{{ route('admin.users.index') }}"
-                                    class="block px-4 py-2 rounded-lg {{ Route::is('admin.users.index') || Route::is('admin.users.edit') ? 'menu-item-active' : 'menu-item-inactive' }}">
-                                    {{ __('Users') }}
-                                </a>
-                            </li>
-                        @endif
-                        @if ($user->can('user.create'))
-                            <li>
-                                <a href="{{ route('admin.users.create') }}"
-                                    class="block px-4 py-2 rounded-lg {{ Route::is('admin.users.create') ? 'menu-item-active' : 'menu-item-inactive' }}">
-                                    {{ __('New User') }}
-                                </a>
-                            </li>
-                        @endif
-                    </ul>
-                </li>
-            @endif
-            @php echo ld_apply_filters('sidebar_menu_after_users', '') @endphp
+
 
             @if ($user->can('module.view'))
                 <li>
