@@ -65,6 +65,38 @@
                 </ul>
             </li>
 
+            <!-- Menu Jaringan -->
+            <li>
+                <button
+                    class="menu-item group w-full text-left {{ Route::is('admin.jaringan.*') ? 'menu-item-active' : 'menu-item-inactive text-white' }}"
+                    type="button" onclick="toggleSubmenu('jaringan-submenu')">
+                    <i class="bi bi-diagram-3 text-xl text-center"></i>
+                    <span :style="`color: ${textColor}`">Jaringan</span>
+                    <i class="bi bi-chevron-down ml-auto"></i>
+                </button>
+                <ul id="jaringan-submenu"
+                    class="submenu {{ Route::is('admin.jaringan.*') ? '' : 'hidden' }} pl-12 mt-2 space-y-2">
+                    <li>
+                        <a href="{{ route('admin.jaringan.pop') }}"
+                            class="block px-4 py-2 rounded-lg {{ Route::is('admin.jaringan.pop') ? 'menu-item-active' : 'menu-item-inactive' }}">
+                            {{ __('POP') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.jaringan.node') }}"
+                            class="block px-4 py-2 rounded-lg {{ Route::is('admin.jaringan.node') ? 'menu-item-active' : 'menu-item-inactive' }}">
+                            {{ __('NODE') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.jaringan.kabkota') }}"
+                            class="block px-4 py-2 rounded-lg {{ Route::is('admin.jaringan.kabkota') ? 'menu-item-active' : 'menu-item-inactive' }}">
+                            {{ __('Kabupaten/Kota') }}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
             @if ($user->can('user.create') || $user->can('user.view') || $user->can('user.edit') || $user->can('user.delete'))
                 <li>
                     <button

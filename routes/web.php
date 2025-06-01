@@ -54,6 +54,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
         Route::get('/personal', [App\Http\Controllers\PelangganController::class, 'personal'])->name('personal');
         Route::get('/perusahaan', [App\Http\Controllers\PelangganController::class, 'perusahaan'])->name('perusahaan');
     });
+
+    // Routes untuk Jaringan
+    Route::group(['prefix' => 'jaringan', 'as' => 'jaringan.'], function () {
+        Route::get('/pop', [App\Http\Controllers\JaringanController::class, 'pop'])->name('pop');
+        Route::get('/node', [App\Http\Controllers\JaringanController::class, 'node'])->name('node');
+        Route::get('/kabkota', [App\Http\Controllers\JaringanController::class, 'kabkota'])->name('kabkota');
+    });
 });
 
 /**
