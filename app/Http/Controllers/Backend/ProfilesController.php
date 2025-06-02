@@ -15,10 +15,10 @@ class ProfilesController extends Controller
 {
     public function edit(): Renderable
     {
-        $this->checkAuthorization(auth()->user(), ['profile.edit'], true);
+        // $this->checkAuthorization(auth()->user(), ['profile.edit'], true);
 
-        // Prevent modification of super admin in demo mode.
-        $this->preventSuperAdminModification(auth()->user(), ['profile.edit']);
+        // // Prevent modification of super admin in demo mode.
+        // $this->preventSuperAdminModification(auth()->user(), ['profile.edit']);
 
         $user = Auth::user();
 
@@ -27,10 +27,10 @@ class ProfilesController extends Controller
 
     public function update(Request $request): RedirectResponse
     {
-        $this->checkAuthorization(auth()->user(), ['profile.edit'], true);
+        // $this->checkAuthorization(auth()->user(), ['profile.edit'], true);
 
-        // Prevent modification of super admin in demo mode.
-        $this->preventSuperAdminModification(auth()->user(), ['profile.edit']);
+        // // Prevent modification of super admin in demo mode.
+        // $this->preventSuperAdminModification(auth()->user(), ['profile.edit']);
 
         $user = Auth::user();
 

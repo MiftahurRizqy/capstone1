@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('member_card')->unique();
             $table->enum('tipe', ['personal', 'perusahaan']);
-            
+
             // Field umum
             $table->foreignId('pop_id')->constrained('pop')->onDelete('cascade');
             $table->text('alamat');
@@ -25,13 +25,13 @@ return new class extends Migration
             $table->string('tipe_identitas')->nullable();
             $table->string('nomor_identitas')->nullable();
             $table->boolean('reseller')->default(false);
-            
+
             // Field pelanggan personal
             $table->string('nama_lengkap')->nullable();
             $table->date('tanggal_lahir')->nullable();
             $table->enum('jenis_kelamin', ['L', 'P'])->nullable();
             $table->string('pekerjaan')->nullable();
-            
+
             // Field pelanggan perusahaan
             $table->string('nama_perusahaan')->nullable();
             $table->string('jenis_usaha')->nullable();
@@ -40,7 +40,7 @@ return new class extends Migration
             $table->string('fax')->nullable();
             $table->string('email')->nullable();
             $table->string('npwp')->nullable();
-            
+
             $table->timestamps();
         });
     }
