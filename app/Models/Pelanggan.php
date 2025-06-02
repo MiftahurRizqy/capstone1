@@ -9,6 +9,8 @@ class Pelanggan extends Model
 {
     use HasFactory;
 
+    protected $table = 'pelanggan'; // ✅ PERBAIKAN UTAMA
+
     protected $fillable = [
         'member_card', 'tipe', 'pop', 'alamat', 'kode_pos', 'kabupaten', 
         'kota', 'wilayah', 'no_hp', 'nama_kontak', 'tipe_identitas', 

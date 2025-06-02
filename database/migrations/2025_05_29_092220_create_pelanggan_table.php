@@ -14,7 +14,7 @@ return new class extends Migration
             $table->enum('tipe', ['personal', 'perusahaan']);
             
             // Field umum
-            $table->string('pop');
+            $table->foreignId('pop_id')->constrained('pop')->onDelete('cascade');
             $table->text('alamat');
             $table->string('kode_pos');
             $table->string('kabupaten');

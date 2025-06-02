@@ -7,6 +7,7 @@ use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\ModulesController;
 use App\Http\Controllers\Backend\RolesController;
 use App\Http\Controllers\Backend\UsersController;
+use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\Backend\SettingsController;
 use App\Http\Controllers\Backend\ProfilesController;
 use App\Http\Controllers\Backend\UserLoginAsController;
@@ -49,6 +50,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::get('users/{id}/login-as', [UserLoginAsController::class, 'loginAs'])->name('users.login-as');
     Route::post('users/switch-back', [UserLoginAsController::class, 'switchBack'])->name('users.switch-back');
 
+<<<<<<< Updated upstream
     // Routes untuk Pelanggan
     Route::group(['prefix' => 'pelanggan', 'as' => 'pelanggan.'], function () {
         Route::get('/personal', [App\Http\Controllers\PelangganController::class, 'personal'])->name('personal');
@@ -61,12 +63,22 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
         Route::get('/node', [App\Http\Controllers\JaringanController::class, 'node'])->name('node');
         Route::get('/kabkota', [App\Http\Controllers\JaringanController::class, 'kabkota'])->name('kabkota');
     });
+=======
+ 
 });
-
+// For backend profile routes
+Route::prefix('admin')->middleware(['auth'])->group(function() {
+    Route::get('/profile', [ProfilesController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfilesController::class, 'update'])->name('profile.update');
+>>>>>>> Stashed changes
+});
 /**
  * Profile routes.
  */
-Route::group(['prefix' => 'profile', 'as' => 'profile.', 'middleware' => ['auth']], function () {
-    Route::get('/edit', [ProfilesController::class, 'edit'])->name('edit');
-    Route::put('/update', [ProfilesController::class, 'update'])->name('update');
+Route::group(['prefix' => 'admin', 'as' => 'admin.'], function() {
+    Route::prefix('pelanggan')->name('pelanggan.')->group(function() {
+        Route::get('/personal', [PelangganController::class, 'personal'])->name('personal');
+        Route::get('/perusahaan', [PelangganController::class, 'perusahaan'])->name('perusahaan');
+        Route::post('/store', [PelangganController::class, 'store'])->name('store'); // Ini yang penting
+    });
 });

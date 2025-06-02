@@ -10,8 +10,7 @@ return new class extends Migration
     {
         Schema::create('penagihan', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pelanggan_id')->constrained()->onDelete('cascade');
-            
+            $table->foreignId('pelanggan_id')->constrained('pelanggan')->onDelete('cascade');            
             // Kontak penagihan
             $table->string('kontak_penagihan');
             $table->text('alamat_penagihan');

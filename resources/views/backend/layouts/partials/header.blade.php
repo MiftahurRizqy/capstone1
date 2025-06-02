@@ -73,12 +73,6 @@ x-init="init()"
                 </button>
                 @php ld_apply_filters('dark_mode_toggler_after_button', '') @endphp
 
-                @if (env('GITHUB_LINK'))
-                    <a href="{{ env('GITHUB_LINK') }}" target="_blank"
-                        class="hover:text-dark-900 relative flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white">
-                        <i class="bi bi-github text-xl"></i>
-                    </a>
-                @endif
             </div>
 
             <div class="relative" x-data="{ dropdownOpen: false }" @click.outside="dropdownOpen = false">
