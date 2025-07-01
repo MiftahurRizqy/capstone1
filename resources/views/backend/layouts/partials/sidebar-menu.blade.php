@@ -76,8 +76,9 @@
                 <ul id="jaringan-submenu"
                     class="submenu {{ Route::is('admin.jaringan.*') ? '' : 'hidden' }} pl-12 mt-2 space-y-2">
                     <li>
-                        <a href="{{ route('admin.jaringan.pop') }}"
-                            class="block px-4 py-2 rounded-lg {{ Route::is('admin.jaringan.pop') ? 'menu-item-active' : 'menu-item-inactive' }}">
+                        {{-- PERUBAHAN: Menunjuk ke rute POP yang baru --}}
+                        <a href="{{ route('admin.jaringan.pop.index') }}"
+                            class="block px-4 py-2 rounded-lg {{ Route::is('admin.jaringan.pop.*') ? 'menu-item-active' : 'menu-item-inactive' }}">
                             {{ __('POP') }}
                         </a>
                     </li>
@@ -88,9 +89,9 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.jaringan.kabkota') }}"
-                            class="block px-4 py-2 rounded-lg {{ Route::is('admin.jaringan.kabkota') ? 'menu-item-active' : 'menu-item-inactive' }}">
-                            {{ __('Kabupaten/Kota') }}
+                        <a href="{{ route('admin.jaringan.wilayah.index') }}"
+                            class="block px-4 py-2 rounded-lg {{ Route::is('admin.jaringan.wilayah.*') ? 'menu-item-active' : 'menu-item-inactive' }}">
+                            {{ __('Wilayah') }}
                         </a>
                     </li>
                 </ul>

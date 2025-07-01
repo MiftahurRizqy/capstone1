@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('waktu_pembayaran');
             $table->string('invoice_instalasi')->nullable();
             $table->string('invoice_reguler');
-            $table->string('mata_uang');
+            $table->enum('mata_uang', ['IDR'])->default('IDR');
             $table->decimal('biaya_reguler', 12, 2);
             $table->boolean('kenakan_ppn')->default(false);
             $table->text('keterangan')->nullable();

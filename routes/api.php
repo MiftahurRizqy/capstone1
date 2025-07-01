@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\WilayahController; // Pastikan ini diimport
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
+// Endpoint untuk cascading dropdown
+// Pastikan ini terdaftar di routes/api.php agar bisa dipanggil dari frontend
+Route::get('/wilayah/children', [WilayahController::class, 'getChildren'])->name('api.wilayah.children');
