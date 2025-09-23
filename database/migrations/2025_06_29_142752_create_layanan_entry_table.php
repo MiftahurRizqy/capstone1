@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('layanan', function (Blueprint $table) {
+        Schema::create('layanan_entry', function (Blueprint $table) {
             $table->id();
             $table->string('kode')->unique();
             $table->string('nama_paket');
-            $table->enum('status', ['aktif', 'tidak aktif'])->default('aktif');
+            $table->enum('status', ['aktif', 'tidak aktif']);
             $table->enum('tipe', ['TV', 'Internet', 'Lain-Lain']);
             $table->enum('kelompok_layanan', ['Layanan Dasar', 'Web Hosting', 'Colocation']);
             // KOLOM BARU: foreign key ke layanan_induk
@@ -57,6 +57,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('layanan');
+        Schema::dropIfExists('layanan_entry');
     }
 };

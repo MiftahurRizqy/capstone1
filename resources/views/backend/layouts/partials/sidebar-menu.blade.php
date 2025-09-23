@@ -96,6 +96,48 @@
                     </li>
                 </ul>
             </li>
+            <!-- Menu Layanan -->
+            <li>
+                <button
+                    class="menu-item group w-full text-left {{ Route::is('admin.layanan.*') ? 'menu-item-active' : 'menu-item-inactive text-white' }}"
+                    type="button" onclick="toggleSubmenu('layanan-submenu')">
+                    <i class="bi bi-router-fill text-xl text-center"></i>
+                    <span :style="`color: ${textColor}`">Layanan</span>
+                    <i class="bi bi-chevron-down ml-auto"></i>
+                </button>
+                <ul id="layanan-submenu"
+                    class="submenu {{ Route::is('admin.layanan.*') ? '' : 'hidden' }} pl-12 mt-2 space-y-2">
+                    <li>
+                        <a href="{{ route('admin.layanan.entry.index') }}"
+                            class="block px-4 py-2 rounded-lg {{ Route::is('admin.layanan.entry.*') ? 'menu-item-active' : 'menu-item-inactive' }}">
+                            {{ __('Layanan Entry') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.layanan.induk.index') }}"
+                            class="block px-4 py-2 rounded-lg {{ Route::is('admin.layanan.induk.*') ? 'menu-item-active' : 'menu-item-inactive' }}">
+                            {{ __('Layanan Induk') }}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <!-- Menu Keluhan -->
+            <li>
+                <a href="{{ route('admin.keluhan.index') }}"
+                    class="menu-item group w-full text-left {{ Route::is('admin.keluhan.*') ? 'menu-item-active' : 'menu-item-inactive text-white' }}">
+                    <i class="bi bi-chat-dots text-xl text-center"></i>
+                    <span :style="`color: ${textColor}`">Keluhan</span>
+                </a>
+            </li>
+            <!-- Menu SPK -->
+            <li>
+                <a href="{{ route('admin.spk.index') }}"
+                    class="menu-item group w-full text-left {{ Route::is('admin.spk.*') ? 'menu-item-active' : 'menu-item-inactive text-white' }}">
+                    <i class="bi bi-file-earmark-text text-xl text-center"></i>
+                    <span :style="`color: ${textColor}`">SPK</span>
+                </a>
+            </li>
+
 
             @if ($user->can('user.create') || $user->can('user.view') || $user->can('user.edit') || $user->can('user.delete'))
             <li>

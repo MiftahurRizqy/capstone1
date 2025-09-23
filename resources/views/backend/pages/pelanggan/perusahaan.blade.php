@@ -95,7 +95,7 @@
                                             @error('nama_perusahaan') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                         </div>
                                         <div>
-                                            <label for="member_card" class="block text-sm text-gray-700 dark:text-gray-300">No. Member</label>
+                                            <label for="member_card" class="block text-sm text-gray-700 dark:text-gray-300">Member Card</label>
                                             <input type="text" name="member_card" id="member_card" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('member_card') border-red-500 @enderror" value="{{ old('member_card') }}">
                                             @error('member_card') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                         </div>
@@ -341,7 +341,7 @@
                         <thead class="bg-gray-100 dark:bg-gray-800 dark:text-white/80">
                             <tr>
                                 <th class="px-4 py-3">No.</th>
-                                <th class="px-4 py-3">No. Member</th>
+                                <th class="px-4 py-3">Member Card</th>
                                 <th class="px-4 py-3">Nama Perusahaan</th>
                                 <th class="px-4 py-3">Jenis Usaha</th>
                                 <th class="px-4 py-3">Account Manager</th>

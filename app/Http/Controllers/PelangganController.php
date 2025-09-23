@@ -1,5 +1,5 @@
 <?php
-// app/Http/Controllers/PelangganController.php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -8,21 +8,18 @@ use App\Models\Layanan;
 use App\Models\Penagihan;
 use App\Models\Pop; // Pastikan semua model di-import
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\DB; // Tambahkan ini untuk transaksi database
 
 class PelangganController extends Controller
 {
-    // Hapus properti $table, ini adalah properti Model, bukan Controller.
-
     /**
      * Menampilkan daftar pelanggan dengan tipe 'personal'.
      * @return \Illuminate\View\View
      */
     public function personal()
     {
-        // Eager load relasi 'pop' untuk menghindari N+1 query problem
         $pelanggan = Pelanggan::where('tipe', 'personal')->with('pop')->get();
-        $pops = Pop::all(); // Diperlukan untuk form atau dropdown di view
+        $pops = Pop::all();
         return view('backend.pages.pelanggan.personal', compact('pelanggan', 'pops'));
     }
 
@@ -32,9 +29,8 @@ class PelangganController extends Controller
      */
     public function perusahaan()
     {
-        // Eager load relasi 'pop' untuk menghindari N+1 query problem
         $pelanggan = Pelanggan::where('tipe', 'perusahaan')->with('pop')->get();
-        $pops = Pop::all(); // Diperlukan untuk form atau dropdown di view
+        $pops = Pop::all();
         return view('backend.pages.pelanggan.perusahaan', compact('pelanggan', 'pops'));
     }
 
@@ -49,7 +45,7 @@ class PelangganController extends Controller
         $rules = [
             'member_card' => 'required|string|max:255|unique:pelanggan,member_card',
             'tipe' => 'required|in:personal,perusahaan',
-            'pop_id' => 'required|exists:pop,id', // Pastikan pop_id ada di tabel pop
+            'pop_id' => 'required|exists:pop,id',
             'alamat' => 'required|string|max:255',
             'kode_pos' => 'required|string|max:10',
             'kabupaten' => 'required|string|max:255',
@@ -117,7 +113,16 @@ class PelangganController extends Controller
 
         $request->validate($rules);
 
+        // Menggunakan transaction untuk memastikan semua data tersimpan dengan benar
+        DB::beginTransaction();
+
         try {
+            // Logika penomoran pelanggan otomatis
+            $latestPelanggan = Pelanggan::latest('id')->first();
+            $startNumber = 1770;
+            $newNumber = $latestPelanggan ? ((int) substr($latestPelanggan->nomor_pelanggan, 3)) + 1 : $startNumber;
+            $nomor_pelanggan = 'CMN' . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
+
             // Siapkan data untuk Pelanggan
             $pelangganData = $request->only([
                 'member_card', 'tipe', 'pop_id', 'alamat', 'kode_pos', 'kabupaten',
@@ -126,6 +131,10 @@ class PelangganController extends Controller
                 'pekerjaan', 'nama_perusahaan', 'jenis_usaha', 'account_manager',
                 'telepon_perusahaan', 'fax', 'email', 'npwp'
             ]);
+
+            // Tambahkan nomor pelanggan ke data
+            $pelangganData['nomor_pelanggan'] = $nomor_pelanggan;
+            
             // Pastikan nilai boolean diambil dengan benar
             $pelangganData['reseller'] = $request->has('reseller');
 
@@ -146,8 +155,6 @@ class PelangganController extends Controller
             }
 
             // Simpan data penagihan jika ada
-            // Disarankan untuk selalu menyimpan data penagihan jika pelanggan dibuat,
-            // atau tambahkan validasi yang lebih ketat jika ini opsional.
             if ($request->has('kontak_penagihan')) {
                 $penagihanData = $request->only([
                     'kontak_penagihan', 'alamat_penagihan', 'kode_pos_penagihan',
@@ -161,10 +168,12 @@ class PelangganController extends Controller
 
                 Penagihan::create($penagihanData);
             }
+            
+            DB::commit(); // Commit transaksi jika semua berhasil
 
             return redirect()->back()->with('success', 'Data pelanggan berhasil disimpan.');
         } catch (\Exception $e) {
-            // Log error untuk debugging lebih lanjut
+            DB::rollBack(); // Rollback transaksi jika ada error
             Log::error('Gagal menyimpan data pelanggan: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()->back()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
         }
@@ -177,9 +186,8 @@ class PelangganController extends Controller
      */
     public function edit($id)
     {
-        // Eager load semua relasi yang mungkin diperlukan di form edit
         $pelanggan = Pelanggan::with(['layanan', 'penagihan', 'pop'])->findOrFail($id);
-        $pops = Pop::all(); // Diperlukan untuk dropdown POP di form edit
+        $pops = Pop::all();
         return view('backend.pages.pelanggan.edit', compact('pelanggan', 'pops'));
     }
 
@@ -192,10 +200,9 @@ class PelangganController extends Controller
     public function update(Request $request, $id)
     {
         $pelanggan = Pelanggan::findOrFail($id);
-
+        
         // Aturan validasi dasar untuk update
         $rules = [
-            // member_card harus unik kecuali untuk record yang sedang diedit
             'member_card' => 'required|string|max:255|unique:pelanggan,member_card,' . $id,
             'tipe' => 'required|in:personal,perusahaan',
             'pop_id' => 'required|exists:pop,id',
@@ -241,7 +248,6 @@ class PelangganController extends Controller
         }
 
         // Aturan validasi untuk Layanan (jika ada)
-        // Jika form layanan dikirim, validasi
         if ($request->has('jenis_layanan')) {
             $rules['homepass'] = 'nullable|string|max:255';
             $rules['jenis_layanan'] = 'required|string|max:255';
@@ -276,16 +282,19 @@ class PelangganController extends Controller
         }
 
         $request->validate($rules);
+        
+        DB::beginTransaction();
 
         try {
-            // Siapkan data untuk Pelanggan
             $pelangganData = $request->only([
                 'member_card', 'tipe', 'pop_id', 'alamat', 'kode_pos', 'kabupaten',
                 'kota', 'wilayah', 'no_hp', 'nama_kontak', 'tipe_identitas',
                 'nomor_identitas', 'nama_lengkap', 'tanggal_lahir', 'jenis_kelamin',
                 'pekerjaan', 'nama_perusahaan', 'jenis_usaha', 'account_manager',
-                'telepon_perusahaan', 'fax', 'email', 'npwp'
+                'telepon_perusahaan', 'fax', 'email', 'npwp', 'reseller'
             ]);
+            
+            // Perbaikan: Pastikan nilai boolean diambil dengan benar
             $pelangganData['reseller'] = $request->has('reseller');
 
             // Update data pelanggan
@@ -324,9 +333,12 @@ class PelangganController extends Controller
                 // Jika data penagihan tidak dikirim, dan sebelumnya ada, hapus
                 $pelanggan->penagihan()->delete();
             }
+            
+            DB::commit();
 
             return redirect()->back()->with('success', 'Data pelanggan berhasil diperbarui.');
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error('Gagal memperbarui data pelanggan: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()->back()->with('error', 'Gagal memperbarui data: ' . $e->getMessage());
         }
@@ -341,7 +353,7 @@ class PelangganController extends Controller
     {
         try {
             $pelanggan = Pelanggan::findOrFail($id);
-            $pelanggan->delete(); // Otomatis menghapus layanan dan penagihan berkat onDelete('cascade') di migrasi
+            $pelanggan->delete();
 
             return redirect()->back()->with('success', 'Data pelanggan berhasil dihapus.');
         } catch (\Exception $e) {
@@ -349,10 +361,10 @@ class PelangganController extends Controller
             return redirect()->back()->with('error', 'Gagal menghapus data: ' . $e->getMessage());
         }
     }
+
     public function show($id)
-{
-    // Eager load semua relasi yang mungkin diperlukan di halaman detail
-    $pelanggan = Pelanggan::with(['layanan', 'penagihan', 'pop'])->findOrFail($id);
-    return view('backend.pages.pelanggan.show', compact('pelanggan'));
-}
+    {
+        $pelanggan = Pelanggan::with(['layanan', 'penagihan', 'pop'])->findOrFail($id);
+        return view('backend.pages.pelanggan.show', compact('pelanggan'));
+    }
 }

@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('pelanggan', function (Blueprint $table) {
             $table->id();
+            $table->string('nomor_pelanggan')->unique();
             $table->string('member_card')->unique();
             $table->enum('tipe', ['personal', 'perusahaan']);
 

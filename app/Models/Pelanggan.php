@@ -14,6 +14,7 @@ class Pelanggan extends Model
 
     // Kolom yang dapat diisi secara massal (mass assignable)
     protected $fillable = [
+        'nomor_pelanggan',
         'member_card',
         'tipe',
         'pop_id', // Perbaikan: Menggunakan pop_id sesuai migrasi

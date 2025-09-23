@@ -9,8 +9,12 @@ use App\Http\Controllers\Backend\RolesController;
 use App\Http\Controllers\Backend\UsersController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\JaringanController;
+use App\Http\Controllers\KeluhanController;
 use App\Http\Controllers\PopController;
+use App\Http\Controllers\SpkController;
 use App\Http\Controllers\WilayahController;
+use App\Http\Controllers\LayananIndukController;
+use App\Http\Controllers\LayananEntryController;
 use App\Http\Controllers\Backend\SettingsController;
 use App\Http\Controllers\Backend\ProfilesController;
 use App\Http\Controllers\Backend\UserLoginAsController;
@@ -80,11 +84,52 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
             Route::delete('/{id}', [PopController::class, 'destroy'])->name('destroy');
         });
     });
+    Route::prefix('layanan')->name('layanan.')->group(function () {
+
+        // Rute untuk Layanan Induk
+        Route::get('/induk', [LayananIndukController::class, 'index'])->name('induk.index');
+        Route::post('/induk', [LayananIndukController::class, 'store'])->name('induk.store');
+        Route::get('/induk/{layananInduk}/edit', [LayananIndukController::class, 'edit'])->name('induk.edit');
+        Route::put('/induk/{layananInduk}', [LayananIndukController::class, 'update'])->name('induk.update');
+        Route::delete('/induk/{layananInduk}', [LayananIndukController::class, 'destroy'])->name('induk.destroy');
+
+        // Pastikan route ini ada
+        Route::get('/entry', [LayananEntryController::class, 'index'])->name('entry.index'); 
+        Route::post('/entry', [LayananEntryController::class, 'store'])->name('entry.store');
+        Route::get('/entry/{layananEntry}', [LayananEntryController::class, 'show'])->name('entry.show');
+        Route::get('/entry/{layananEntry}/edit', [LayananEntryController::class, 'edit'])->name('entry.edit');
+        Route::put('/entry/{layananEntry}', [LayananEntryController::class, 'update'])->name('entry.update');
+        Route::delete('/entry/{layananEntry}', [LayananEntryController::class, 'destroy'])->name('entry.destroy');
+    });
+   // Rute untuk Keluhan (dibuat secara manual)
+    Route::get('keluhan', [KeluhanController::class, 'index'])->name('keluhan.index');
+    Route::post('keluhan', [KeluhanController::class, 'store'])->name('keluhan.store');
+    Route::get('keluhan/{keluhan}/edit', [KeluhanController::class, 'edit'])->name('keluhan.edit');
+    Route::put('keluhan/{keluhan}', [KeluhanController::class, 'update'])->name('keluhan.update');
+    Route::delete('keluhan/{keluhan}', [KeluhanController::class, 'destroy'])->name('keluhan.destroy');
+
+// Rute untuk SPK
+Route::prefix('spk')->name('spk.')->group(function () {
+    Route::get('/', [SpkController::class, 'index'])->name('index');
+    Route::post('/', [SpkController::class, 'store'])->name('store');
+    
+    // Rute yang lebih spesifik harus diletakkan di atas
+    Route::get('{spk}/edit', [SpkController::class, 'edit'])->name('edit')->where('spk', '.*');
+    
+    // Rute yang lebih umum diletakkan di bawah
+    Route::get('{spk}', [SpkController::class, 'show'])->name('show')->where('spk', '.*');
+    
+    Route::put('{spk}', [SpkController::class, 'update'])->name('update')->where('spk', '.*');
+    Route::delete('{spk}', [SpkController::class, 'destroy'])->name('destroy')->where('spk', '.*');
 });
+});
+
+
+
 Route::get('/profile/edit', [ProfilesController::class, 'edit'])->name('profile.edit');
 Route::put('/profile/update', [ProfilesController::class, 'update'])->name('profile.update');
 /**
- * 
+
  * Profile routes.
  */
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {

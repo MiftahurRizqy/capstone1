@@ -25,7 +25,8 @@
                 <div class="pb-6 border-b border-gray-200 dark:border-gray-700">
                     <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4 border-l-4 border-blue-500 pl-3">Informasi Pelanggan</h2>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-gray-700 dark:text-gray-300">
-                        <div><strong>No. Member:</strong> <span class="font-medium">{{ $pelanggan->member_card }}</span></div>
+                        <div><strong>Nomor Pelanggan:</strong> <span class="font-medium">{{ $pelanggan->nomor_pelanggan }}</span></div>
+                        <div><strong>Member Card:</strong> <span class="font-medium">{{ $pelanggan->member_card }}</span></div>
                         <div><strong>Tipe:</strong> <span class="font-medium">{{ ucfirst($pelanggan->tipe) }}</span></div>
                         @if($pelanggan->tipe === 'personal')
                             <div><strong>Nama Lengkap:</strong> <span class="font-medium">{{ $pelanggan->nama_lengkap }}</span></div>
