@@ -15,8 +15,8 @@ class Layanan extends Model
     // Kolom yang dapat diisi secara massal (mass assignable)
     protected $fillable = [
         'pelanggan_id',
+        'layanan_entry_id',
         'homepass',
-        'jenis_layanan',
         'mulai_kontrak',
         'selesai_kontrak',
         'perjanjian_trial',
@@ -41,5 +41,10 @@ class Layanan extends Model
     public function pelanggan()
     {
         return $this->belongsTo(Pelanggan::class, 'pelanggan_id', 'id');
+    }
+
+        public function layananEntry()
+    {
+        return $this->belongsTo(LayananEntry::class, 'layanan_entry_id', 'id');
     }
 }

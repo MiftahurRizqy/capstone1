@@ -11,8 +11,8 @@ return new class extends Migration
         Schema::create('layanan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pelanggan_id')->constrained('pelanggan')->onDelete('cascade');
+            $table->foreignId('layanan_entry_id')->constrained('layanan_entry')->onDelete('cascade');
             $table->string('homepass')->nullable();
-            $table->string('jenis_layanan');
             $table->date('mulai_kontrak');
             $table->date('selesai_kontrak');
             $table->boolean('perjanjian_trial')->default(false);

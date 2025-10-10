@@ -33,7 +33,7 @@ return new class extends Migration
             $table->text('kelengkapan_kerja')->nullable();
             $table->text('keterangan');
             $table->enum('tipe', ['instalasi', 'migrasi', 'survey', 'dismantle', 'lain-lain']);
-            $table->string('status');
+            $table->enum('status', ['dijadwalkan', 'dalam_pengerjaan', 'reschedule', 'selesai_sebagian', 'selesai'])->default('dijadwalkan');
             $table->string('pelaksana_1');
             $table->string('pelaksana_2')->nullable();
             $table->string('koordinator')->nullable();

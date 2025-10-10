@@ -233,9 +233,14 @@
                                 @error('homepass') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div>
-                                <label for="jenis_layanan" class="block text-sm text-gray-700 dark:text-gray-300">Jenis Layanan</label>
-                                <input type="text" name="jenis_layanan" id="jenis_layanan" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('jenis_layanan') border-red-500 @enderror" value="{{ old('jenis_layanan', $pelanggan->layanan->first()->jenis_layanan ?? '') }}">
-                                @error('jenis_layanan') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                <label for="layanan_entry_id" class="block text-sm text-gray-700 dark:text-gray-300">Jenis Layanan</label>
+                                <select name="layanan_entry_id" id="layanan_entry_id" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('layanan_entry_id') border-red-500 @enderror">
+                                    <option value="">Pilih Layanan</option>
+                                    @foreach($layananEntries as $entry)
+                                        <option value="{{ $entry->id }}" {{ old('layanan_entry_id', $pelanggan->layanan->first()->layanan_entry_id ?? '') == $entry->id ? 'selected' : '' }}>{{ $entry->nama_paket }} ({{ $entry->kode }})</option>
+                                    @endforeach
+                                </select>
+                                @error('layanan_entry_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label for="mulai_kontrak" class="block text-sm text-gray-700 dark:text-gray-300">Mulai Kontrak</label>
@@ -378,17 +383,18 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-{{-- Script untuk membuka tab yang relevan jika ada error validasi --}}
+@push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        @if($errors - > any())
-        // Jika ada error pada tab Layanan, pindah ke tab tersebut
-        @if($errors - > hasAny(['homepass', 'jenis_layanan', 'mulai_kontrak', 'selesai_kontrak', 'perjanjian_trial', 'email_alternatif_1', 'email_alternatif_2', 'pembelian_modem', 'jumlah_tv_kabel']))
-        document.querySelector('[x-data="{ activeTab: \'informasi_pelanggan\' }"]')._x_dataStack[0].activeTab = 'layanan';
-        @elseif($errors - > hasAny(['kontak_penagihan', 'alamat_penagihan', 'kode_pos_penagihan', 'kabupaten_penagihan', 'kota_penagihan', 'no_hp_penagihan', 'telepon_penagihan', 'fax_penagihan', 'email_penagihan', 'cara_pembayaran', 'waktu_pembayaran', 'invoice_instalasi', 'invoice_reguler', 'mata_uang', 'biaya_reguler', 'kenakan_ppn', 'keterangan']))
-        document.querySelector('[x-data="{ activeTab: \'informasi_pelanggan\' }"]')._x_dataStack[0].activeTab = 'penagihan';
+        @if($errors->any())
+        // Perbaikan: Ubah kondisi pengecekan error
+        @if($errors->hasAny(['homepass', 'layanan_entry_id', 'mulai_kontrak', 'selesai_kontrak', 'perjanjian_trial', 'email_alternatif_1', 'email_alternatif_2', 'pembelian_modem', 'jumlah_tv_kabel']))
+            document.querySelector('[x-data]')._x_dataStack[0].activeTab = 'layanan';
+        @elseif($errors->hasAny(['kontak_penagihan', 'alamat_penagihan', 'kode_pos_penagihan', 'kabupaten_penagihan', 'kota_penagihan', 'no_hp_penagihan', 'telepon_penagihan', 'fax_penagihan', 'email_penagihan', 'cara_pembayaran', 'waktu_pembayaran', 'invoice_instalasi', 'invoice_reguler', 'mata_uang', 'biaya_reguler', 'kenakan_ppn', 'keterangan']))
+            document.querySelector('[x-data]')._x_dataStack[0].activeTab = 'penagihan';
         @endif
         @endif
     });
 </script>
+@endpush
 @endpush

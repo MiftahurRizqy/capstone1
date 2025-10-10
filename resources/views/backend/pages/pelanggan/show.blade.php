@@ -8,8 +8,8 @@
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-white/90">Detail Data Pelanggan: {{ $pelanggan->tipe === 'personal' ? $pelanggan->nama_lengkap : $pelanggan->nama_perusahaan }}</h1>
             @php
-                // Tentukan rute kembali berdasarkan tipe pelanggan
-                $backRoute = $pelanggan->tipe === 'personal' ? 'admin.pelanggan.personal' : 'admin.pelanggan.perusahaan';
+            // Tentukan rute kembali berdasarkan tipe pelanggan
+            $backRoute = $pelanggan->tipe === 'personal' ? 'admin.pelanggan.personal' : 'admin.pelanggan.perusahaan';
             @endphp
             <a href="{{ route($backRoute) }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 rounded-lg shadow dark:bg-gray-500 dark:hover:bg-gray-600 transition-all duration-200">
                 <i class="fas fa-arrow-left"></i>
@@ -57,25 +57,25 @@
                     </div>
                 </div>
 
-                {{-- Informasi Layanan Section --}}
-                <div class="pb-6 border-b border-gray-200 dark:border-gray-700">
-                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4 border-l-4 border-blue-500 pl-3">Informasi Layanan</h2>
-                    @if($pelanggan->layanan->isNotEmpty())
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-gray-700 dark:text-gray-300">
-                            <div><strong>Homepass:</strong> <span class="font-medium">{{ $pelanggan->layanan->first()->homepass ?? '-' }}</span></div>
-                            <div><strong>Jenis Layanan:</strong> <span class="font-medium">{{ $pelanggan->layanan->first()->jenis_layanan ?? '-' }}</span></div>
-                            <div><strong>Mulai Kontrak:</strong> <span class="font-medium">{{ $pelanggan->layanan->first()->mulai_kontrak ? $pelanggan->layanan->first()->mulai_kontrak->format('d M Y') : '-' }}</span></div>
-                            <div><strong>Selesai Kontrak:</strong> <span class="font-medium">{{ $pelanggan->layanan->first()->selesai_kontrak ? $pelanggan->layanan->first()->selesai_kontrak->format('d M Y') : '-' }}</span></div>
-                            <div><strong>Perjanjian Trial:</strong> <span class="font-medium">{{ $pelanggan->layanan->first()->perjanjian_trial ? 'Ya' : 'Tidak' }}</span></div>
-                            <div><strong>Pembelian Modem:</strong> <span class="font-medium">{{ $pelanggan->layanan->first()->pembelian_modem ? 'Ya' : 'Tidak' }}</span></div>
-                            <div><strong>Email Alternatif 1:</strong> <span class="font-medium">{{ $pelanggan->layanan->first()->email_alternatif_1 ?? '-' }}</span></div>
-                            <div><strong>Email Alternatif 2:</strong> <span class="font-medium">{{ $pelanggan->layanan->first()->email_alternatif_2 ?? '-' }}</span></div>
-                            <div><strong>Jumlah TV Kabel:</strong> <span class="font-medium">{{ $pelanggan->layanan->first()->jumlah_tv_kabel ?? 0 }}</span></div>
-                        </div>
-                    @else
-                        <p class="text-gray-500 dark:text-gray-400 italic">Belum ada data layanan.</p>
-                    @endif
-                </div>
+{{-- Informasi Layanan Section --}}
+<div class="pb-6 border-b border-gray-200 dark:border-gray-700">
+    <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4 border-l-4 border-blue-500 pl-3">Informasi Layanan</h2>
+    @if($pelanggan->layanan->isNotEmpty())
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-gray-700 dark:text-gray-300">
+            <div><strong>Homepass:</strong> <span class="font-medium">{{ $pelanggan->layanan->first()->homepass ?? '-' }}</span></div>
+            <div><strong>Jenis Layanan:</strong> <span class="font-medium">{{ $pelanggan->layanan->first()->layananEntry->nama_paket ?? '-' }}</span></div>
+            <div><strong>Mulai Kontrak:</strong> <span class="font-medium">{{ $pelanggan->layanan->first()->mulai_kontrak ? $pelanggan->layanan->first()->mulai_kontrak->format('d M Y') : '-' }}</span></div>
+            <div><strong>Selesai Kontrak:</strong> <span class="font-medium">{{ $pelanggan->layanan->first()->selesai_kontrak ? $pelanggan->layanan->first()->selesai_kontrak->format('d M Y') : '-' }}</span></div>
+            <div><strong>Perjanjian Trial:</strong> <span class="font-medium">{{ $pelanggan->layanan->first()->perjanjian_trial ? 'Ya' : 'Tidak' }}</span></div>
+            <div><strong>Pembelian Modem:</strong> <span class="font-medium">{{ $pelanggan->layanan->first()->pembelian_modem ? 'Ya' : 'Tidak' }}</span></div>
+            <div><strong>Email Alternatif 1:</strong> <span class="font-medium">{{ $pelanggan->layanan->first()->email_alternatif_1 ?? '-' }}</span></div>
+            <div><strong>Email Alternatif 2:</strong> <span class="font-medium">{{ $pelanggan->layanan->first()->email_alternatif_2 ?? '-' }}</span></div>
+            <div><strong>Jumlah TV Kabel:</strong> <span class="font-medium">{{ $pelanggan->layanan->first()->jumlah_tv_kabel ?? 0 }}</span></div>
+        </div>
+    @else
+        <p class="text-gray-500 dark:text-gray-400 italic">Belum ada data layanan.</p>
+    @endif
+</div>
 
                 {{-- Informasi Penagihan Section --}}
                 <div> {{-- No bottom border for the last section --}}
@@ -107,4 +107,5 @@
             </div>
         </div>
     </div>
-    @endsection
+</div>
+@endsection

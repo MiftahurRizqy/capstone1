@@ -48,15 +48,19 @@
                                     </a>
                                 </td>
                                 <td class="px-4 py-3">
-                                    @if ($s->pelanggan->tipe == 'personal')
-                                        {{ $s->pelanggan->nama_lengkap ?? '-' }}
+                                    @if ($s->pelanggan)
+                                        @if ($s->pelanggan->tipe == 'personal')
+                                            {{ $s->pelanggan->nama_lengkap ?? '-' }}
+                                        @else
+                                            {{ $s->pelanggan->nama_perusahaan ?? '-' }}
+                                        @endif
                                     @else
-                                        {{ $s->pelanggan->nama_perusahaan ?? '-' }}
+                                        -
                                     @endif
                                 </td>
                                 <td class="px-4 py-3">{{ $s->layananInduk->nama_layanan_induk ?? '-' }}</td>
                                 <td class="px-4 py-3">{{ $s->tipe }}</td>
-                                <td class="px-4 py-3">{{ ucfirst($s->status) }}</td>
+                                <td class="px-4 py-3">{{ ucfirst(str_replace('_', ' ', $s->status)) }}</td>
                                 <td class="px-4 py-3">{{ $s->rencana_pengerjaan ? $s->rencana_pengerjaan->format('d-m-Y') : '-' }}</td>
                                 <td class="px-4 py-3 flex gap-2">
                                     {{-- Tombol Edit --}}
@@ -90,6 +94,11 @@
                     </table>
                 </div>
             </div>
+            @if ($spk->hasPages())
+                <div class="card-footer p-4">
+                    {{ $spk->links() }}
+                </div>
+            @endif
         </div>
     </div>
 </div>

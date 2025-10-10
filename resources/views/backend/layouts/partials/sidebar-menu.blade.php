@@ -38,31 +38,15 @@
             @endif
             @php echo ld_apply_filters('sidebar_menu_after_dashboard', '') @endphp
 
-            <!-- Menu Pelanggan -->
-            <li>
-                <button
-                    class="menu-item group w-full text-left {{ Route::is('admin.pelanggan.*') ? 'menu-item-active' : 'menu-item-inactive text-white' }}"
-                    type="button" onclick="toggleSubmenu('pelanggan-submenu')">
-                    <i class="bi bi-people text-xl text-center"></i>
-                    <span :style="`color: ${textColor}`">Pelanggan</span>
-                    <i class="bi bi-chevron-down ml-auto"></i>
-                </button>
-                <ul id="pelanggan-submenu"
-                    class="submenu {{ Route::is('admin.pelanggan.*') ? '' : 'hidden' }} pl-12 mt-2 space-y-2">
-                    <li>
-                        <a href="{{ route('admin.pelanggan.personal') }}"
-                            class="block px-4 py-2 rounded-lg {{ Route::is('admin.pelanggan.personal') ? 'menu-item-active' : 'menu-item-inactive' }}">
-                            {{ __('Personal') }}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.pelanggan.perusahaan') }}"
-                            class="block px-4 py-2 rounded-lg {{ Route::is('admin.pelanggan.perusahaan') ? 'menu-item-active' : 'menu-item-inactive' }}">
-                            {{ __('Perusahaan') }}
-                        </a>
-                    </li>
-                </ul>
-            </li>
+<li>
+    <a href="{{ route('admin.pelanggan.index') }}"
+        class="menu-item group w-full text-left {{ Route::is('admin.pelanggan.*') ? 'menu-item-active' : 'menu-item-inactive text-white' }}">
+        
+        <i class="bi bi-people text-xl text-center"></i>
+        <span :style="`color: ${textColor}`">Pelanggan</span>
+        </a>
+    
+    </li>
 
             <!-- Menu Jaringan -->
             <li>
@@ -137,7 +121,14 @@
                     <span :style="`color: ${textColor}`">SPK</span>
                 </a>
             </li>
-
+            <!-- Menu Invoice -->
+            <li>
+                <a href="{{ route('admin.invoice.index') }}"
+                    class="menu-item group w-full text-left {{ Route::is('admin.invoice.*') ? 'menu-item-active' : 'menu-item-inactive text-white' }}">
+                    <i class="bi bi-receipt-cutoff text-xl text-center"></i>
+                    <span :style="`color: ${textColor}`">Invoice</span>
+                </a>
+            </li>
 
             @if ($user->can('user.create') || $user->can('user.view') || $user->can('user.edit') || $user->can('user.delete'))
             <li>

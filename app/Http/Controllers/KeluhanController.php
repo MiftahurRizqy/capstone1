@@ -117,7 +117,7 @@ class KeluhanController extends Controller
             'alamat' => $pelanggan->alamat,
             'keterangan' => $keluhan->deskripsi, // Mengambil dari deskripsi keluhan
             'tipe' => $tipeSpk, // Menggunakan tipe SPK yang ditentukan
-            'status' => 'pending', // Status awal SPK
+            'status' => 'dijadwalkan', // Status awal SPK
             'pelaksana_1' => '', // Bisa diisi nanti
             'rencana_pengerjaan' => now(),
             'user_id' => auth()->id(), // Mengambil user yang sedang login

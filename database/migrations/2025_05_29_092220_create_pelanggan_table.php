@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('nomor_pelanggan')->unique();
             $table->string('member_card')->unique();
-            $table->enum('tipe', ['personal', 'perusahaan']);
+            $table->foreignId('kategori_pelanggan_id')->constrained('kategori_pelanggan') ->onDelete('restrict');
 
             // Field umum
             $table->foreignId('pop_id')->constrained('pop')->onDelete('cascade');

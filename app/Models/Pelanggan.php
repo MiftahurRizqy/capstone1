@@ -16,7 +16,7 @@ class Pelanggan extends Model
     protected $fillable = [
         'nomor_pelanggan',
         'member_card',
-        'tipe',
+        'kategori_pelanggan_id', 
         'pop_id', // Perbaikan: Menggunakan pop_id sesuai migrasi
         'alamat',
         'kode_pos',
@@ -51,6 +51,11 @@ class Pelanggan extends Model
      * Definisi relasi: Satu Pelanggan memiliki satu POP.
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
+        public function kategori()
+    {
+        // Secara default Eloquent akan mencari 'kategori_pelanggan_id'
+        return $this->belongsTo(KategoriPelanggan::class, 'kategori_pelanggan_id');
+    }
     public function pop()
     {
         return $this->belongsTo(Pop::class, 'pop_id', 'id');
@@ -73,4 +78,5 @@ class Pelanggan extends Model
     {
         return $this->hasOne(Penagihan::class, 'pelanggan_id', 'id');
     }
+    
 }

@@ -8,10 +8,16 @@
     <div class="card bg-white shadow rounded-lg dark:bg-white/[0.03] dark:border dark:border-gray-700 p-6">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-2xl font-bold text-gray-800 dark:text-white/90">Detail SPK #{{ $spk->nomor_spk }}</h2>
-            <a href="{{ route('admin.spk.index') }}" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500 transition-colors duration-200">
-                <i class="fas fa-arrow-left"></i>
-                Kembali
-            </a>
+            <div class="flex items-center gap-2">
+                <a href="{{ route('admin.spk.index') }}" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500 transition-colors duration-200">
+                    <i class="fas fa-arrow-left"></i>
+                    Kembali
+                </a>
+                <a href="{{ route('admin.spk.print', urlencode($spk->nomor_spk)) }}" target="_blank" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 transition-colors duration-200">
+                    <i class="fas fa-print"></i>
+                    Cetak SPK
+                </a>
+            </div>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -32,7 +38,8 @@
                 </div>
                 <div class="border-b pb-2 dark:border-gray-700">
                     <p class="text-sm text-gray-500 dark:text-gray-400">Status</p>
-                    <p class="font-medium dark:text-white/90">{{ ucfirst($spk->status) }}</p>
+                    {{-- PERBAIKAN: Memformat status agar lebih mudah dibaca --}}
+                    <p class="font-medium dark:text-white/90">{{ ucfirst(str_replace('_', ' ', $spk->status)) }}</p>
                 </div>
                 <div class="border-b pb-2 dark:border-gray-700">
                     <p class="text-sm text-gray-500 dark:text-gray-400">Rencana Pengerjaan</p>

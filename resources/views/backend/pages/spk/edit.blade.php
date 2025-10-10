@@ -76,37 +76,59 @@
 
             <div>
                 <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
-                <input type="text" name="status" value="{{ old('status', $spk->status) }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <select name="status" id="status" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    {{-- Opsi status dari ENUM --}}
+                    @foreach(['dijadwalkan', 'dalam_pengerjaan', 'reschedule', 'selesai_sebagian', 'selesai'] as $status)
+                        <option value="{{ $status }}" {{ $spk->status == $status ? 'selected' : '' }}>{{ ucfirst(str_replace('_', ' ', $status)) }}</option>
+                    @endforeach
+                </select>
+                @error('status') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
             </div>
 
             <div>
                 <label for="kelengkapan_kerja" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kelengkapan Kerja</label>
                 <textarea name="kelengkapan_kerja" id="kelengkapan_kerja" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">{{ old('kelengkapan_kerja', $spk->kelengkapan_kerja) }}</textarea>
+                @error('kelengkapan_kerja') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
             </div>
 
             <div>
                 <label for="keterangan" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Keterangan</label>
                 <textarea name="keterangan" id="keterangan" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">{{ old('keterangan', $spk->keterangan) }}</textarea>
+                @error('keterangan') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
             </div>
 
             <div>
                 <label for="rencana_pengerjaan" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rencana Pengerjaan</label>
                 <input type="date" name="rencana_pengerjaan" value="{{ old('rencana_pengerjaan', $spk->rencana_pengerjaan ? $spk->rencana_pengerjaan->format('Y-m-d') : '') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                @error('rencana_pengerjaan') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
             </div>
 
             <div>
                 <label for="pelaksana_1" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pelaksana 1</label>
-                <input type="text" name="pelaksana_1" value="{{ old('pelaksana_1', $spk->pelaksana_1) }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <select name="pelaksana_1" id="pelaksana_1" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <option value="">Pilih Pelaksana</option>
+                    @foreach($pelaksanaOptions as $user)
+                        <option value="{{ $user->name }}" {{ ($spk->pelaksana_1 ?? old('pelaksana_1')) == $user->name ? 'selected' : '' }}>{{ $user->name }}</option>
+                    @endforeach
+                </select>
+                @error('pelaksana_1') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
             </div>
 
             <div>
                 <label for="pelaksana_2" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pelaksana 2</label>
-                <input type="text" name="pelaksana_2" value="{{ old('pelaksana_2', $spk->pelaksana_2) }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <select name="pelaksana_2" id="pelaksana_2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <option value="">Pilih Pelaksana</option>
+                    @foreach($pelaksanaOptions as $user)
+                        <option value="{{ $user->name }}" {{ ($spk->pelaksana_2 ?? old('pelaksana_2')) == $user->name ? 'selected' : '' }}>{{ $user->name }}</option>
+                    @endforeach
+                </select>
+                @error('pelaksana_2') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
             </div>
 
             <div>
                 <label for="koordinator" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Koordinator</label>
                 <input type="text" name="koordinator" value="{{ old('koordinator', $spk->koordinator) }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                @error('koordinator') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
             </div>
 
             <div class="mt-6 flex justify-end gap-2">

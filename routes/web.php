@@ -11,8 +11,10 @@ use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\JaringanController;
 use App\Http\Controllers\KeluhanController;
 use App\Http\Controllers\PopController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\SpkController;
 use App\Http\Controllers\WilayahController;
+use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\LayananIndukController;
 use App\Http\Controllers\LayananEntryController;
 use App\Http\Controllers\Backend\SettingsController;
@@ -107,12 +109,41 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::get('keluhan/{keluhan}/edit', [KeluhanController::class, 'edit'])->name('keluhan.edit');
     Route::put('keluhan/{keluhan}', [KeluhanController::class, 'update'])->name('keluhan.update');
     Route::delete('keluhan/{keluhan}', [KeluhanController::class, 'destroy'])->name('keluhan.destroy');
+    
+    // RUTE BARU UNTUK PENCARIAN PELANGGAN, DIPINDAHKAN KE DALAM GROUP INI
+    Route::get('pelanggan-search', [InvoiceController::class, 'searchPelanggan'])->name('pelanggan.search');
+    Route::get('layanan-by-pelanggan/{pelangganId}', [InvoiceController::class, 'getLayananByPelanggan'])->name('layanan.by.pelanggan');
 
+    // PERBAIKAN DI SINI: Hapus 'invoice' dari prefix agar nama rute tidak ganda
+    Route::prefix('invoice')->name('invoice.')->group(function () {
+        Route::get('/', [InvoiceController::class, 'index'])->name('index');
+        Route::post('/', [InvoiceController::class, 'store'])->name('store');
+        Route::get('/create', [InvoiceController::class, 'create'])->name('create');
+        Route::get('/{invoice}', [InvoiceController::class, 'show'])->name('show');
+        Route::get('/{invoice}/edit', [InvoiceController::class, 'edit'])->name('edit');
+        Route::put('/{invoice}', [InvoiceController::class, 'update'])->name('update');
+        Route::delete('/{invoice}', [InvoiceController::class, 'destroy'])->name('destroy');
+        Route::get('/{invoice}/print', [InvoiceController::class, 'printInvoice'])->name('print');
+
+    });
+    // Definisi rute utama untuk daftar semua pelanggan (menggantikan personal/perusahaan)
+    Route::get('/pelanggan', [PelangganController::class, 'index'])->name('pelanggan.index');
+    
+    // Pastikan rute lainnya juga didefinisikan dengan benar
+    Route::post('/pelanggan', [PelangganController::class, 'store'])->name('pelanggan.store');
+    Route::get('/pelanggan/create', [PelangganController::class, 'create'])->name('pelanggan.create');
+    Route::get('/pelanggan/{pelanggan}/edit', [PelangganController::class, 'edit'])->name('pelanggan.edit');
+    Route::put('/pelanggan/{pelanggan}', [PelangganController::class, 'update'])->name('pelanggan.update');
+    Route::delete('/pelanggan/{pelanggan}', [PelangganController::class, 'destroy'])->name('pelanggan.destroy');
+    Route::get('/pelanggan/{pelanggan}', [PelangganController::class, 'show'])->name('pelanggan.show');
+        Route::post('kategori', [KategoriController::class, 'store'])->name('kategori.store');
+    Route::delete('kategori/{kategori}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 // Rute untuk SPK
 Route::prefix('spk')->name('spk.')->group(function () {
     Route::get('/', [SpkController::class, 'index'])->name('index');
     Route::post('/', [SpkController::class, 'store'])->name('store');
-    
+        Route::get('{spk}/print', [SpkController::class, 'printSpk'])->name('print')->where('spk', '.*');
+
     // Rute yang lebih spesifik harus diletakkan di atas
     Route::get('{spk}/edit', [SpkController::class, 'edit'])->name('edit')->where('spk', '.*');
     
@@ -121,6 +152,7 @@ Route::prefix('spk')->name('spk.')->group(function () {
     
     Route::put('{spk}', [SpkController::class, 'update'])->name('update')->where('spk', '.*');
     Route::delete('{spk}', [SpkController::class, 'destroy'])->name('destroy')->where('spk', '.*');
+
 });
 });
 
@@ -132,14 +164,16 @@ Route::put('/profile/update', [ProfilesController::class, 'update'])->name('prof
 
  * Profile routes.
  */
-Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
-    Route::prefix('pelanggan')->name('pelanggan.')->group(function () {
-        Route::get('/personal', [PelangganController::class, 'personal'])->name('personal');
-        Route::get('/perusahaan', [PelangganController::class, 'perusahaan'])->name('perusahaan');
-        Route::post('/store', [PelangganController::class, 'store'])->name('store');
-        Route::get('/{id}/edit', [PelangganController::class, 'edit'])->name('edit'); // Ini yang penting!
-        Route::put('/{id}', [PelangganController::class, 'update'])->name('update');
-        Route::get('/{id}', [PelangganController::class, 'show'])->name('show'); // Tambahkan ini
-        Route::delete('/{id}', [PelangganController::class, 'destroy'])->name('destroy');
-    });
-});
+
+// Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
+//     Route::prefix('pelanggan')->name('pelanggan.')->group(function () {
+//         Route::get('/personal', [PelangganController::class, 'personal'])->name('personal');
+//         Route::get('/perusahaan', [PelangganController::class, 'perusahaan'])->name('perusahaan');
+//         Route::post('/store', [PelangganController::class, 'store'])->name('store');
+//         Route::get('/{id}/edit', [PelangganController::class, 'edit'])->name('edit'); // Ini yang penting!
+//         Route::put('/{id}', [PelangganController::class, 'update'])->name('update');
+//         Route::get('/{id}', [PelangganController::class, 'show'])->name('show'); // Tambahkan ini
+//         Route::delete('/{id}', [PelangganController::class, 'destroy'])->name('destroy');
+//     });
+    // di routes/web.php atau routes/admin.php
+// });

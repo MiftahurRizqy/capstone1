@@ -32,28 +32,28 @@
 
                         {{-- Display success or error messages --}}
                         @if (session('success'))
-                            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-                                <strong class="font-bold">Sukses!</strong>
-                                <span class="block sm:inline">{{ session('success') }}</span>
-                            </div>
+                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                            <strong class="font-bold">Sukses!</strong>
+                            <span class="block sm:inline">{{ session('success') }}</span>
+                        </div>
                         @endif
                         @if (session('error'))
-                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                                <strong class="font-bold">Gagal!</strong>
-                                <span class="block sm:inline">{{ session('error') }}</span>
-                            </div>
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                            <strong class="font-bold">Gagal!</strong>
+                            <span class="block sm:inline">{{ session('error') }}</span>
+                        </div>
                         @endif
                         {{-- Display validation errors --}}
                         @if ($errors->any())
-                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                                <strong class="font-bold">Oops!</strong>
-                                <span class="block sm:inline">Ada beberapa masalah dengan input Anda.</span>
-                                <ul class="mt-3 list-disc list-inside">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                            <strong class="font-bold">Oops!</strong>
+                            <span class="block sm:inline">Ada beberapa masalah dengan input Anda.</span>
+                            <ul class="mt-3 list-disc list-inside">
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
                         @endif
 
                         {{-- Form untuk menambahkan pelanggan perusahaan --}}
@@ -67,20 +67,20 @@
                                     <nav class="-mb-px flex space-x-8" aria-label="Tabs">
                                         {{-- Tab Informasi Perusahaan --}}
                                         <button type="button" @click="activeTab = 'informasi_perusahaan'"
-                                                :class="activeTab === 'informasi_perusahaan' ? 'border-blue-500 text-blue-600 dark:border-blue-400 dark:text-blue-400' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-600'"
-                                                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                                            :class="activeTab === 'informasi_perusahaan' ? 'border-blue-500 text-blue-600 dark:border-blue-400 dark:text-blue-400' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-600'"
+                                            class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                                             Informasi Perusahaan
                                         </button>
                                         {{-- Tab Layanan --}}
                                         <button type="button" @click="activeTab = 'layanan'"
-                                                :class="activeTab === 'layanan' ? 'border-blue-500 text-blue-600 dark:border-blue-400 dark:text-blue-400' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-600'"
-                                                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                                            :class="activeTab === 'layanan' ? 'border-blue-500 text-blue-600 dark:border-blue-400 dark:text-blue-400' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-600'"
+                                            class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                                             Layanan
                                         </button>
                                         {{-- Tab Penagihan --}}
                                         <button type="button" @click="activeTab = 'penagihan'"
-                                                :class="activeTab === 'penagihan' ? 'border-blue-500 text-blue-600 dark:border-blue-400 dark:text-blue-400' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-600'"
-                                                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                                            :class="activeTab === 'penagihan' ? 'border-blue-500 text-blue-600 dark:border-blue-400 dark:text-blue-400' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-600'"
+                                            class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                                             Penagihan
                                         </button>
                                     </nav>
@@ -170,7 +170,7 @@
                                                 <option value="">Pilih POP</option>
                                                 {{-- Melakukan loop untuk setiap data pop --}}
                                                 @foreach($pops as $pop)
-                                                    <option value="{{ $pop->id }}" {{ old('pop_id') == $pop->id ? 'selected' : '' }}>{{ $pop->nama_pop }}</option>
+                                                <option value="{{ $pop->id }}" {{ old('pop_id') == $pop->id ? 'selected' : '' }}>{{ $pop->nama_pop }}</option>
                                                 @endforeach
                                             </select>
                                             @error('pop_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
@@ -189,10 +189,16 @@
                                             <input type="text" name="homepass" id="homepass" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('homepass') border-red-500 @enderror" value="{{ old('homepass') }}">
                                             @error('homepass') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                         </div>
+                                        {{-- PERBAIKAN: Mengubah input teks menjadi dropdown yang benar --}}
                                         <div>
-                                            <label for="jenis_layanan" class="block text-sm text-gray-700 dark:text-gray-300">Jenis Layanan</label>
-                                            <input type="text" name="jenis_layanan" id="jenis_layanan" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('jenis_layanan') border-red-500 @enderror" value="{{ old('jenis_layanan') }}">
-                                            @error('jenis_layanan') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                            <label for="layanan_entry_id" class="block text-sm text-gray-700 dark:text-gray-300">Jenis Layanan</label>
+                                            <select name="layanan_entry_id" id="layanan_entry_id" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('layanan_entry_id') border-red-500 @enderror">
+                                                <option value="">Pilih Layanan</option>
+                                                @foreach($layananEntries as $entry)
+                                                <option value="{{ $entry->id }}" {{ old('layanan_entry_id') == $entry->id ? 'selected' : '' }}>{{ $entry->nama_paket }} ({{ $entry->kode }})</option>
+                                                @endforeach
+                                            </select>
+                                            @error('layanan_entry_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                         </div>
                                         <div>
                                             <label for="mulai_kontrak" class="block text-sm text-gray-700 dark:text-gray-300">Mulai Kontrak</label>
@@ -333,7 +339,26 @@
                 </div>
             </div>
         </div>
+        {{-- Filter Form --}}
+        <div class="mb-4">
+            <form action="{{ route('admin.pelanggan.perusahaan') }}" method="GET" class="flex flex-col sm:flex-row gap-4 items-center">
+                <div class="flex-1 w-full">
+                    <label for="search" class="sr-only">Cari Pelanggan</label>
+                    {{-- Input Teks Pencarian --}}
+                    <input type="text" name="search" id="search" placeholder="Cari nomor pelanggan, nama perusahaan, atau member card..."
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        value="{{ request('search') }}">
+                </div>
 
+                <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg shadow dark:bg-green-500 dark:hover:bg-green-600">
+                    <i class="fas fa-search"></i>
+                    <span>Cari</span>
+                </button>
+                <a href="{{ route('admin.pelanggan.perusahaan') }}" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500">
+                    <span>Reset</span>
+                </a>
+            </form>
+        </div>
         <div class="card bg-white shadow rounded-lg dark:bg-white/[0.03] dark:border dark:border-gray-700">
             <div class="card-body p-6">
                 <div class="overflow-x-auto">
@@ -352,54 +377,55 @@
                         </thead>
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                             @forelse($pelanggan as $index => $p)
-                                <tr>
-                                    <td class="px-4 py-3">{{ $index + 1 }}</td>
-                                    <td class="px-4 py-3">{{ $p->member_card }}</td>
-                                    <td class="px-4 py-3">{{ $p->nama_perusahaan }}</td>
-                                    <td class="px-4 py-3">{{ $p->jenis_usaha }}</td>
-                                    <td class="px-4 py-3">{{ $p->account_manager }}</td>
-                                    <td class="px-4 py-3">{{ $p->no_hp }}</td>
-                                    <td class="px-4 py-3">
-                                        @if($p->layanan->isNotEmpty())
-                                            {{ $p->layanan->first()->jenis_layanan }}
-                                        @else
-                                            Belum ada layanan
-                                        @endif
-                                    </td>
-                                    <td class="px-4 py-3 flex gap-2">
-                                        {{-- Tombol Detail dengan ikon saja --}}
-                                        <a href="{{ route('admin.pelanggan.show', ['id' => $p->id, 'type' => 'perusahaan']) }}"
-                                           class="inline-flex items-center justify-center w-8 h-8 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200"
-                                           title="Cek Detail">
-                                            <i class="fas fa-eye"></i>
-                                            <span class="sr-only">Cek Detail</span> {{-- Untuk aksesibilitas --}}
-                                        </a>
-                                        {{-- Tombol Edit dengan ikon saja --}}
-                                        <a href="{{ route('admin.pelanggan.edit', ['id' => $p->id, 'type' => 'perusahaan']) }}"
-                                           class="inline-flex items-center justify-center w-8 h-8 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
-                                           title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                            <span class="sr-only">Edit</span> {{-- Untuk aksesibilitas --}}
-                                        </a>
-                                        {{-- Tombol Hapus dengan ikon saja --}}
-                                        <form action="{{ route('admin.pelanggan.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pelanggan ini?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                    class="inline-flex items-center justify-center w-8 h-8 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200"
-                                                    title="Hapus">
-                                                <i class="fas fa-trash"></i>
-                                                <span class="sr-only">Hapus</span> {{-- Untuk aksesibilitas --}}
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td class="px-4 py-3">{{ $index + 1 }}</td>
+                                <td class="px-4 py-3">{{ $p->member_card }}</td>
+                                <td class="px-4 py-3">{{ $p->nama_perusahaan }}</td>
+                                <td class="px-4 py-3">{{ $p->jenis_usaha }}</td>
+                                <td class="px-4 py-3">{{ $p->account_manager }}</td>
+                                <td class="px-4 py-3">{{ $p->no_hp }}</td>
+                                <td class="px-4 py-3">
+                                    {{-- PERBAIKAN: Menggunakan relasi yang benar --}}
+                                    @if($p->layanan->isNotEmpty())
+                                    {{ $p->layanan->first()->layananEntry->nama_paket ?? 'N/A' }}
+                                    @else
+                                    Belum ada layanan
+                                    @endif
+                                </td>
+                                <td class="px-4 py-3 flex gap-2">
+                                    {{-- Tombol Detail dengan ikon saja --}}
+                                    <a href="{{ route('admin.pelanggan.show', ['id' => $p->id, 'type' => 'perusahaan']) }}"
+                                        class="inline-flex items-center justify-center w-8 h-8 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200"
+                                        title="Cek Detail">
+                                        <i class="fas fa-eye"></i>
+                                        <span class="sr-only">Cek Detail</span>
+                                    </a>
+                                    {{-- Tombol Edit dengan ikon saja --}}
+                                    <a href="{{ route('admin.pelanggan.edit', ['id' => $p->id, 'type' => 'perusahaan']) }}"
+                                        class="inline-flex items-center justify-center w-8 h-8 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
+                                        title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                        <span class="sr-only">Edit</span>
+                                    </a>
+                                    {{-- Tombol Hapus dengan ikon saja --}}
+                                    <form action="{{ route('admin.pelanggan.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pelanggan ini?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="inline-flex items-center justify-center w-8 h-8 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200"
+                                            title="Hapus">
+                                            <i class="fas fa-trash"></i>
+                                            <span class="sr-only">Hapus</span>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
                             @empty
-                                <tr>
-                                    <td colspan="8" class="text-center py-4 text-gray-500 dark:text-gray-400">
-                                        Belum ada data pelanggan perusahaan.
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td colspan="8" class="text-center py-4 text-gray-500 dark:text-gray-400">
+                                    Belum ada data pelanggan perusahaan.
+                                </td>
+                            </tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -417,16 +443,16 @@
 {{-- Script untuk membuka modal jika ada error validasi --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        @if ($errors->any() || session('error'))
-            // Buka modal jika ada error validasi atau pesan error dari session
-            document.querySelector('[x-data="{ open: false }"]')._x_dataStack[0].open = true;
+        @if($errors - > any() || session('error'))
+        // Buka modal jika ada error validasi atau pesan error dari session
+        document.querySelector('[x-data="{ open: false }"]')._x_dataStack[0].open = true;
 
-            // Jika ada error pada tab Layanan atau Penagihan, pindah ke tab tersebut
-            @if ($errors->hasAny(['homepass', 'jenis_layanan', 'mulai_kontrak', 'selesai_kontrak', 'perjanjian_trial', 'email_alternatif_1', 'email_alternatif_2', 'pembelian_modem', 'jumlah_tv_kabel']))
-                document.querySelector('[x-data="{ activeTab: \'informasi_perusahaan\' }"]')._x_dataStack[0].activeTab = 'layanan';
-            @elseif ($errors->hasAny(['kontak_penagihan', 'alamat_penagihan', 'kode_pos_penagihan', 'kabupaten_penagihan', 'kota_penagihan', 'no_hp_penagihan', 'telepon_penagihan', 'fax_penagihan', 'email_penagihan', 'cara_pembayaran', 'waktu_pembayaran', 'invoice_instalasi', 'invoice_reguler', 'mata_uang', 'biaya_reguler', 'kenakan_ppn', 'keterangan']))
-                document.querySelector('[x-data="{ activeTab: \'informasi_perusahaan\' }"]')._x_dataStack[0].activeTab = 'penagihan';
-            @endif
+        // Jika ada error pada tab Layanan atau Penagihan, pindah ke tab tersebut
+        @if($errors - > hasAny(['homepass', 'layanan_entry_id', 'mulai_kontrak', 'selesai_kontrak', 'perjanjian_trial', 'email_alternatif_1', 'email_alternatif_2', 'pembelian_modem', 'jumlah_tv_kabel']))
+        document.querySelector('[x-data]')._x_dataStack[0].activeTab = 'layanan';
+        @elseif($errors - > hasAny(['kontak_penagihan', 'alamat_penagihan', 'kode_pos_penagihan', 'kabupaten_penagihan', 'kota_penagihan', 'no_hp_penagihan', 'telepon_penagihan', 'fax_penagihan', 'email_penagihan', 'cara_pembayaran', 'waktu_pembayaran', 'invoice_instalasi', 'invoice_reguler', 'mata_uang', 'biaya_reguler', 'kenakan_ppn', 'keterangan']))
+        document.querySelector('[x-data]')._x_dataStack[0].activeTab = 'penagihan';
+        @endif
         @endif
     });
 </script>

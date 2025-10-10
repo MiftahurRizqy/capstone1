@@ -16,19 +16,15 @@ return new class extends Migration
             $table->string('nomor_invoice')->unique();
             $table->foreignId('pelanggan_id')->constrained('pelanggan')->onDelete('cascade');
             $table->foreignId('layanan_id')->constrained('layanan')->onDelete('cascade');
+            $table->enum('tipe', ['Instalasi', 'Reguler', 'Deposit', 'Droping', 'lain-lain']);
             $table->date('jatuh_tempo');
             $table->date('tanggal_bayar')->nullable();
-            $table->enum('status', ['pending', 'paid', 'overdue', 'cancelled'])->default('pending');
-            $table->enum('tipe', ['bulanan', 'layanan_baru', 'lain-lain']);
+            $table->enum('status', ['belum bayar', 'lunas'])->default('belum bayar');
+            $table->decimal('total_biaya', 12, 2)->nullable(); // Menambahkan kolom untuk total biaya
             $table->string('mata_uang')->default('IDR');
             $table->text('keterangan')->nullable();
-            $table->enum('metode_pembayaran', ['bank_transfer', 'tunai', 'kartu_kredit'])->nullable();
+            $table->enum('metode_pembayaran', ['bank_transfer', 'kartu_kredit', 'Cash', 'E-Wallet'])->nullable();
             $table->timestamps();
-
-            // Tambahkan index jika diperlukan
-            $table->index('pelanggan_id');
-            $table->index('layanan_id');
-            $table->index('nomor_invoice');
         });
     }
 
