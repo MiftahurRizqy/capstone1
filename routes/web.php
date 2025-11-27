@@ -136,7 +136,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::put('/pelanggan/{pelanggan}', [PelangganController::class, 'update'])->name('pelanggan.update');
     Route::delete('/pelanggan/{pelanggan}', [PelangganController::class, 'destroy'])->name('pelanggan.destroy');
     Route::get('/pelanggan/{pelanggan}', [PelangganController::class, 'show'])->name('pelanggan.show');
-        Route::post('kategori', [KategoriController::class, 'store'])->name('kategori.store');
+
+    // Kategori Pelanggan
+    Route::get('kategori', [KategoriController::class, 'index'])->name('kategori.index');
+    Route::post('kategori', [KategoriController::class, 'store'])->name('kategori.store');
+    Route::get('kategori/{kategori}/edit', [KategoriController::class, 'edit'])->name('kategori.edit');
+    Route::put('kategori/{kategori}', [KategoriController::class, 'update'])->name('kategori.update');
     Route::delete('kategori/{kategori}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 // Rute untuk SPK
 Route::prefix('spk')->name('spk.')->group(function () {

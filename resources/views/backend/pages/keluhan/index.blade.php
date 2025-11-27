@@ -168,6 +168,26 @@
             </div>
         @endif
 
+        <!-- Filter Form -->
+        <div class="card bg-white shadow rounded-lg dark:bg-white/[0.03] dark:border dark:border-gray-700 p-4 mb-6">
+            <form method="GET" action="{{ route('admin.keluhan.index') }}">
+                <div class="flex items-center gap-2">
+                    <select name="prioritas" class="form-select dark:bg-gray-700 dark:border-gray-600 dark:text-white w-1/5">
+                        <option value="">-- Semua Prioritas --</option>
+                        <option value="low" {{ request('prioritas') == 'low' ? 'selected' : '' }}>Low</option>
+                        <option value="medium" {{ request('prioritas') == 'medium' ? 'selected' : '' }}>Medium</option>
+                        <option value="high" {{ request('prioritas') == 'high' ? 'selected' : '' }}>High</option>
+                    </select>
+                    <input type="text" name="search" class="form-input w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Cari keluhan, deskripsi, nama, atau nomor pelanggan..." value="{{ request('search') }}">
+                    <button type="submit" class="btn btn-primary inline-flex items-center gap-2">
+                        <i class="fas fa-search"></i>
+                        <span>Cari</span>
+                    </button>
+                    <a href="{{ route('admin.keluhan.index') }}" class="btn btn-secondary">Reset</a>
+                </div>
+            </form>
+        </div>
+
         <div class="card bg-white shadow rounded-lg dark:bg-white/[0.03] dark:border dark:border-gray-700">
             <div class="card-body p-6">
                 <div class="overflow-x-auto">

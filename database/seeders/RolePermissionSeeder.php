@@ -96,6 +96,69 @@ class RolePermissionSeeder extends Seeder
                     'settings.edit',
                 ],
             ],
+            [
+                'group_name' => 'pelanggan',
+                'permissions' => [
+                    'pelanggan.create',
+                    'pelanggan.view',
+                    'pelanggan.edit',
+                    'pelanggan.delete',
+                ],
+            ],
+            [
+                'group_name' => 'jaringan',
+                'permissions' => [
+                    'jaringan.create',
+                    'jaringan.view',
+                    'jaringan.edit',
+                    'jaringan.delete',
+                ],
+            ],
+            [
+                'group_name' => 'layanan',
+                'permissions' => [
+                    'layanan.create',
+                    'layanan.view',
+                    'layanan.edit',
+                    'layanan.delete',
+                ],
+            ],
+            [
+                'group_name' => 'keluhan',
+                'permissions' => [
+                    'keluhan.create',
+                    'keluhan.view',
+                    'keluhan.edit',
+                    'keluhan.delete',
+                ],
+            ],
+            [
+                'group_name' => 'spk',
+                'permissions' => [
+                    'spk.create',
+                    'spk.view',
+                    'spk.edit',
+                    'spk.delete',
+                ],
+            ],
+            [
+                'group_name' => 'invoice',
+                'permissions' => [
+                    'invoice.create',
+                    'invoice.view',
+                    'invoice.edit',
+                    'invoice.delete',
+                ],
+            ],
+            [
+                'group_name' => 'kategori',
+                'permissions' => [
+                    'kategori.create',
+                    'kategori.view',
+                    'kategori.edit',
+                    'kategori.delete',
+                ],
+            ],
         ];
 
         // Create and Assign Permissions

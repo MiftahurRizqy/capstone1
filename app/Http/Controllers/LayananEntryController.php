@@ -9,6 +9,14 @@ use Illuminate\Validation\ValidationException;
 
 class LayananEntryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:layanan.view')->only(['index', 'show']);
+        $this->middleware('can:layanan.create')->only(['create', 'store']);
+        $this->middleware('can:layanan.edit')->only(['edit', 'update']);
+        $this->middleware('can:layanan.delete')->only('destroy');
+    }
+
     /**
      * Menampilkan daftar Layanan Entry.
      */

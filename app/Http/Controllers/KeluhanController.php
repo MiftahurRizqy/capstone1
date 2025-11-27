@@ -13,14 +13,43 @@ use Illuminate\Support\Str;
 
 class KeluhanController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:keluhan.view')->only('index');
+        $this->middleware('can:keluhan.create')->only(['create', 'store']);
+        $this->middleware('can:keluhan.edit')->only(['edit', 'update']);
+        $this->middleware('can:keluhan.delete')->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $keluhan = Keluhan::latest()->paginate(10);
-        $layananInduks = LayananInduk::all(); // Perbaikan: Mengubah nama variabel
+        $query = Keluhan::with(['pelanggan', 'layananInduk'])->latest();
+
+        // Filter pencarian umum
+        if ($search = $request->get('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('deskripsi', 'like', "%{$search}%")
+                  ->orWhere('keluhan1', 'like', "%{$search}%")
+                  ->orWhere('keluhan2', 'like', "%{$search}%")
+                  ->orWhereHas('pelanggan', function ($subq) use ($search) {
+                      $subq->where('nama_lengkap', 'like', "%{$search}%")
+                           ->orWhere('nomor_pelanggan', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        // Filter berdasarkan prioritas
+        if ($request->filled('prioritas')) {
+            $query->where('prioritas', $request->prioritas);
+        }
+
+        $keluhan = $query->paginate(10)->appends($request->query());
+        $layananInduks = LayananInduk::all();
         $pelanggan = Pelanggan::all();
+
         return view('backend.pages.keluhan.index', compact('keluhan', 'layananInduks', 'pelanggan'));
     }
 

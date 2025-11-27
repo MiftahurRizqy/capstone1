@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\DB;
 
 class PelangganController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:pelanggan.view')->only('index');
+        $this->middleware('can:pelanggan.create')->only(['create', 'store']);
+        $this->middleware('can:pelanggan.edit')->only(['edit', 'update']);
+        $this->middleware('can:pelanggan.delete')->only('destroy');
+    }
     /**
      * Menampilkan daftar semua pelanggan dan menyediakan data untuk form.
      * Menggantikan metode personal() dan perusahaan().
@@ -24,6 +31,7 @@ class PelangganController extends Controller
         // Ambil semua data master yang diperlukan
         $pops = Pop::all();
         $layananEntries = LayananEntry::all();
+        // Ambil semua kategori yang tersedia (default + kategori baru)
         $kategoriPelanggan = KategoriPelanggan::all(); 
         
         // Dapatkan daftar field yang tersedia dari KategoriController
@@ -40,10 +48,25 @@ class PelangganController extends Controller
         });
 
 
-        $query = Pelanggan::with(['pop', 'layanan.layananEntry', 'kategori']) 
+        $query = Pelanggan::with(['pop', 'layanan.layananEntry', 'kategori'])
             ->latest();
 
-        // ... (Filter Logika) ...
+        // Filter berdasarkan kategori_pelanggan_id (dropdown)
+        if ($request->filled('kategori_pelanggan_id')) {
+            $query->where('kategori_pelanggan_id', $request->kategori_pelanggan_id);
+        }
+
+        // Filter pencarian umum (nomor pelanggan, member card, nama, no hp)
+        if ($search = $request->get('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nomor_pelanggan', 'like', "%{$search}%")
+                  ->orWhere('member_card', 'like', "%{$search}%")
+                  ->orWhere('nama_lengkap', 'like', "%{$search}%")
+                  ->orWhere('nama_perusahaan', 'like', "%{$search}%")
+                  ->orWhere('nama_kontak', 'like', "%{$search}%")
+                  ->orWhere('no_hp', 'like', "%{$search}%");
+            });
+        }
 
         $pelanggan = $query->paginate(10)->appends($request->query()); 
         
@@ -374,7 +397,7 @@ class PelangganController extends Controller
             
             DB::commit();
 
-            return redirect()->back()->with('success', 'Data pelanggan berhasil diperbarui.');
+            return redirect()->route('admin.pelanggan.index')->with('success', 'Data pelanggan berhasil diperbarui.');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Gagal memperbarui data pelanggan: ' . $e->getMessage(), ['exception' => $e]);

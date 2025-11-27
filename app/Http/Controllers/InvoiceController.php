@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\Log;
 
 class InvoiceController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:invoice.view')->only(['index', 'show', 'printInvoice']);
+        $this->middleware('can:invoice.create')->only(['create', 'store', 'getLayananByPelanggan', 'searchPelanggan']);
+        $this->middleware('can:invoice.edit')->only(['edit', 'update']);
+        $this->middleware('can:invoice.delete')->only('destroy');
+    }
     /**
      * Menampilkan daftar semua invoice dan data pendukung untuk modal.
      * @return \Illuminate\View\View

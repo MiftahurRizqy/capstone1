@@ -7,14 +7,7 @@
     <div class="flex flex-col gap-6">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-white/90">Edit Data Pelanggan</h1>
-            @php
-            // Tentukan rute kembali berdasarkan parameter 'type' di URL
-            $backRoute = 'admin.pelanggan.personal'; // Default jika tidak ada parameter 'type'
-            if (request()->query('type') === 'perusahaan') {
-            $backRoute = 'admin.pelanggan.perusahaan';
-            }
-            @endphp
-            <a href="{{ route($backRoute) }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 rounded-lg shadow dark:bg-gray-500 dark:hover:bg-gray-600 transition-all duration-200">
+            <a href="{{ url()->previous() }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 rounded-lg shadow dark:bg-gray-500 dark:hover:bg-gray-600 transition-all duration-200">
                 <i class="fas fa-arrow-left"></i>
                 <span>Kembali</span>
             </a>
@@ -54,7 +47,11 @@
                 {{-- Hidden field untuk tipe pelanggan (pastikan tidak berubah saat edit) --}}
                 <input type="hidden" name="tipe" value="{{ $pelanggan->tipe }}">
 
-                <div x-data="{ activeTab: 'informasi_pelanggan' }">
+                <div x-data="{ 
+                    activeTab: 'informasi_pelanggan',
+                    selectedKategoriId: '{{ old('kategori_pelanggan_id', $pelanggan->kategori_pelanggan_id) }}',
+                    kategoriData: {{ $kategoriDataForAlpine->toJson() }}
+                }">
                     <div class="border-b border-gray-200 dark:border-gray-700 mb-6">
                         <nav class="-mb-px flex space-x-8" aria-label="Tabs">
                             <button type="button" @click="activeTab = 'informasi_pelanggan'"
@@ -78,151 +75,250 @@
                     <div class="space-y-6">
                         {{-- TAB 1: Informasi Pelanggan --}}
                         <div x-show="activeTab === 'informasi_pelanggan'" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {{-- Field umum --}}
-                            <div>
-                                <label for="member_card" class="block text-sm text-gray-700 dark:text-gray-300">Member Card</label>
-                                <input type="text" name="member_card" id="member_card" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('member_card') border-red-500 @enderror" value="{{ old('member_card', $pelanggan->member_card) }}" required>
-                                @error('member_card') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            <div>
-                                <label for="no_hp" class="block text-sm text-gray-700 dark:text-gray-300">No. HP</label>
-                                <input type="text" name="no_hp" id="no_hp" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('no_hp') border-red-500 @enderror" value="{{ old('no_hp', $pelanggan->no_hp) }}" required>
-                                @error('no_hp') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            <div>
-                                <label for="nama_kontak" class="block text-sm text-gray-700 dark:text-gray-300">Nama Kontak Lain</label>
-                                <input type="text" name="nama_kontak" id="nama_kontak" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('nama_kontak') border-red-500 @enderror" value="{{ old('nama_kontak', $pelanggan->nama_kontak) }}">
-                                @error('nama_kontak') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            <div>
-                                <label for="alamat" class="block text-sm text-gray-700 dark:text-gray-300">Alamat</label>
-                                <textarea name="alamat" id="alamat" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('alamat') border-red-500 @enderror" rows="2" required>{{ old('alamat', $pelanggan->alamat) }}</textarea>
-                                @error('alamat') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            <div>
-                                <label for="kode_pos" class="block text-sm text-gray-700 dark:text-gray-300">Kode Pos</label>
-                                <input type="text" name="kode_pos" id="kode_pos" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('kode_pos') border-red-500 @enderror" value="{{ old('kode_pos', $pelanggan->kode_pos) }}">
-                                @error('kode_pos') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            <div>
-                                <label for="kabupaten" class="block text-sm text-gray-700 dark:text-gray-300">Kabupaten</label>
-                                <input type="text" name="kabupaten" id="kabupaten" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('kabupaten') border-red-500 @enderror" value="{{ old('kabupaten', $pelanggan->kabupaten) }}">
-                                @error('kabupaten') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            <div>
-                                <label for="kota" class="block text-sm text-gray-700 dark:text-gray-300">Kota</label>
-                                <input type="text" name="kota" id="kota" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('kota') border-red-500 @enderror" value="{{ old('kota', $pelanggan->kota) }}">
-                                @error('kota') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            <div>
-                                <label for="wilayah" class="block text-sm text-gray-700 dark:text-gray-300">Wilayah</label>
-                                <input type="text" name="wilayah" id="wilayah" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('wilayah') border-red-500 @enderror" value="{{ old('wilayah', $pelanggan->wilayah) }}">
-                                @error('wilayah') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            <div>
-                                <label for="pop_id" class="block text-sm text-gray-700 dark:text-gray-300">POP</label>
-                                <select name="pop_id" id="pop_id" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('pop_id') border-red-500 @enderror">
-                                    <option value="">Pilih POP</option>
-                                    @foreach($pops as $pop)
-                                    <option value="{{ $pop->id }}" {{ old('pop_id', $pelanggan->pop_id) == $pop->id ? 'selected' : '' }}>{{ $pop->nama_pop }}</option>
+                            {{-- KATEGORI PELANGGAN --}}
+                            <div class="md:col-span-2">
+                                <label for="kategori_pelanggan_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kategori Pelanggan <span class="text-red-500">*</span></label>
+                                <select name="kategori_pelanggan_id" id="kategori_pelanggan_id"
+                                    class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('kategori_pelanggan_id') border-red-500 @enderror"
+                                    x-model="selectedKategoriId" required>
+                                    <option value="">Pilih Kategori</option>
+                                    @foreach($kategoriPelanggan as $kategori)
+                                        <option value="{{ $kategori->id }}" {{ old('kategori_pelanggan_id', $pelanggan->kategori_pelanggan_id) == $kategori->id ? 'selected' : '' }}>{{ $kategori->nama }}</option>
                                     @endforeach
                                 </select>
-                                @error('pop_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            @if($pelanggan->tipe === 'personal')
-                            <div>
-                                <label for="tipe_identitas" class="block text-sm text-gray-700 dark:text-gray-300">Tipe Identitas</label>
-                                <select name="tipe_identitas" id="tipe_identitas" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('tipe_identitas') border-red-500 @enderror">
-                                    <option value="">Pilih Tipe Identitas</option>
-                                    <option value="KTP" {{ old('tipe_identitas', $pelanggan->tipe_identitas) == 'KTP' ? 'selected' : '' }}>KTP</option>
-                                    <option value="SIM" {{ old('tipe_identitas', $pelanggan->tipe_identitas) == 'SIM' ? 'selected' : '' }}>SIM</option>
-                                    <option value="Paspor" {{ old('tipe_identitas', $pelanggan->tipe_identitas) == 'Paspor' ? 'selected' : '' }}>Paspor</option>
-                                </select>
-                                @error('tipe_identitas') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            <div>
-                                <label for="nomor_identitas" class="block text-sm text-gray-700 dark:text-gray-300">Nomor Identitas</label>
-                                <input type="text" name="nomor_identitas" id="nomor_identitas" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('nomor_identitas') border-red-500 @enderror" value="{{ old('nomor_identitas', $pelanggan->nomor_identitas) }}">
-                                @error('nomor_identitas') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            @endif
-                            <div class="flex items-center gap-2">
-                                <input type="checkbox" name="reseller" id="reseller" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('reseller', $pelanggan->reseller) ? 'checked' : '' }}>
-                                <label for="reseller" class="text-sm text-gray-700 dark:text-gray-300">Reseller</label>
-                                @error('reseller') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                @error('kategori_pelanggan_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
 
-                            {{-- Field spesifik personal (hanya tampil jika tipe personal) --}}
-                            @if($pelanggan->tipe === 'personal')
-                            <div>
-                                <label for="nama_lengkap" class="block text-sm text-gray-700 dark:text-gray-300">Nama Lengkap</label>
-                                <input type="text" name="nama_lengkap" id="nama_lengkap" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('nama_lengkap') border-red-500 @enderror" value="{{ old('nama_lengkap', $pelanggan->nama_lengkap) }}" required>
-                                @error('nama_lengkap') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            <div>
-                                <label for="tanggal_lahir" class="block text-sm text-gray-700 dark:text-gray-300">Tanggal Lahir</label>
-                                <input type="date" name="tanggal_lahir" id="tanggal_lahir" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('tanggal_lahir') border-red-500 @enderror" value="{{ old('tanggal_lahir', $pelanggan->tanggal_lahir?->format('Y-m-d')) }}">
-                                @error('tanggal_lahir') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            <div>
-                                <label for="jenis_kelamin" class="block text-sm text-gray-700 dark:text-gray-300">Jenis Kelamin</label>
-                                <select name="jenis_kelamin" id="jenis_kelamin" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('jenis_kelamin') border-red-500 @enderror">
-                                    <option value="">Pilih Jenis Kelamin</option>
-                                    <option value="L" {{ old('jenis_kelamin', $pelanggan->jenis_kelamin) == 'L' ? 'selected' : '' }}>Laki-laki</option>
-                                    <option value="P" {{ old('jenis_kelamin', $pelanggan->jenis_kelamin) == 'P' ? 'selected' : '' }}>Perempuan</option>
-                                </select>
-                                @error('jenis_kelamin') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            <div>
-                                <label for="pekerjaan" class="block text-sm text-gray-700 dark:text-gray-300">Pekerjaan</label>
-                                <input type="text" name="pekerjaan" id="pekerjaan" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('pekerjaan') border-red-500 @enderror" value="{{ old('pekerjaan', $pelanggan->pekerjaan) }}">
-                                @error('pekerjaan') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            <div>
-                                <label for="email" class="block text-sm text-gray-700 dark:text-gray-300">Email Utama</label>
-                                <input type="email" name="email" id="email" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('email') border-red-500 @enderror" value="{{ old('email', $pelanggan->email) }}">
-                                @error('email') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            @endif
+                            {{-- FIELD DINAMIS UNTUK PERSONAL --}}
+                            <template x-if="
+                                selectedKategoriId &&
+                                kategoriData[selectedKategoriId] &&
+                                (
+                                    (kategoriData[selectedKategoriId].nama && kategoriData[selectedKategoriId].nama.toLowerCase() === 'personal') ||
+                                    (kategoriData[selectedKategoriId].personal_fields && kategoriData[selectedKategoriId].personal_fields.length > 0)
+                                )
+                            ">
+                                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 border-l-4 border-green-500 pl-4 py-2">
 
-                            {{-- Field spesifik perusahaan (hanya tampil jika tipe perusahaan) --}}
-                            @if($pelanggan->tipe === 'perusahaan')
-                            <div>
-                                <label for="nama_perusahaan" class="block text-sm text-gray-700 dark:text-gray-300">Nama Perusahaan</label>
-                                <input type="text" name="nama_perusahaan" id="nama_perusahaan" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('nama_perusahaan') border-red-500 @enderror" value="{{ old('nama_perusahaan', $pelanggan->nama_perusahaan) }}" required>
-                                @error('nama_perusahaan') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                    {{-- Nama Lengkap --}}
+                                    <template x-if="
+                                        (kategoriData[selectedKategoriId].nama && kategoriData[selectedKategoriId].nama.toLowerCase() === 'personal') ||
+                                        (kategoriData[selectedKategoriId].personal_fields || []).includes('nama_lengkap')
+                                    ">
+                                        <div>
+                                            <label for="nama_lengkap" class="block text-sm text-gray-700 dark:text-gray-300">Nama Lengkap <span class="text-red-500">*</span></label>
+                                            <input type="text" name="nama_lengkap" id="nama_lengkap" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('nama_lengkap') border-red-500 @enderror" value="{{ old('nama_lengkap', $pelanggan->nama_lengkap) }}">
+                                            @error('nama_lengkap') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                        </div>
+                                    </template>
+
+                                    {{-- Tanggal Lahir --}}
+                                    <template x-if="
+                                        (kategoriData[selectedKategoriId].nama && kategoriData[selectedKategoriId].nama.toLowerCase() === 'personal') ||
+                                        (kategoriData[selectedKategoriId].personal_fields || []).includes('tanggal_lahir')
+                                    ">
+                                        <div>
+                                            <label for="tanggal_lahir" class="block text-sm text-gray-700 dark:text-gray-300">Tanggal Lahir</label>
+                                            <input type="date" name="tanggal_lahir" id="tanggal_lahir" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('tanggal_lahir') border-red-500 @enderror" value="{{ old('tanggal_lahir', $pelanggan->tanggal_lahir?->format('Y-m-d')) }}">
+                                            @error('tanggal_lahir') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                        </div>
+                                    </template>
+
+                                    {{-- Jenis Kelamin --}}
+                                    <template x-if="
+                                        (kategoriData[selectedKategoriId].nama && kategoriData[selectedKategoriId].nama.toLowerCase() === 'personal') ||
+                                        (kategoriData[selectedKategoriId].personal_fields || []).includes('jenis_kelamin')
+                                    ">
+                                        <div>
+                                            <label for="jenis_kelamin" class="block text-sm text-gray-700 dark:text-gray-300">Jenis Kelamin</label>
+                                            <select name="jenis_kelamin" id="jenis_kelamin" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('jenis_kelamin') border-red-500 @enderror">
+                                                <option value="">Pilih Jenis Kelamin</option>
+                                                <option value="L" {{ old('jenis_kelamin', $pelanggan->jenis_kelamin) == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                                                <option value="P" {{ old('jenis_kelamin', $pelanggan->jenis_kelamin) == 'P' ? 'selected' : '' }}>Perempuan</option>
+                                            </select>
+                                            @error('jenis_kelamin') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                        </div>
+                                    </template>
+
+                                    {{-- Pekerjaan --}}
+                                    <template x-if="
+                                        (kategoriData[selectedKategoriId].nama && kategoriData[selectedKategoriId].nama.toLowerCase() === 'personal') ||
+                                        (kategoriData[selectedKategoriId].personal_fields || []).includes('pekerjaan')
+                                    ">
+                                        <div>
+                                            <label for="pekerjaan" class="block text-sm text-gray-700 dark:text-gray-300">Pekerjaan</label>
+                                            <input type="text" name="pekerjaan" id="pekerjaan" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('pekerjaan') border-red-500 @enderror" value="{{ old('pekerjaan', $pelanggan->pekerjaan) }}">
+                                            @error('pekerjaan') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                        </div>
+                                    </template>
+
+                                </div>
+                            </template>
+
+                            {{-- FIELD DINAMIS UNTUK PERUSAHAAN --}}
+                            <template x-if="
+                                selectedKategoriId &&
+                                kategoriData[selectedKategoriId] &&
+                                (
+                                    (kategoriData[selectedKategoriId].nama && kategoriData[selectedKategoriId].nama.toLowerCase() === 'perusahaan') ||
+                                    (kategoriData[selectedKategoriId].perusahaan_fields && kategoriData[selectedKategoriId].perusahaan_fields.length > 0)
+                                )
+                            ">
+                                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 border-l-4 border-yellow-500 pl-4 py-2">
+
+                                    {{-- Nama Perusahaan --}}
+                                    <template x-if="
+                                        (kategoriData[selectedKategoriId].nama && kategoriData[selectedKategoriId].nama.toLowerCase() === 'perusahaan') ||
+                                        (kategoriData[selectedKategoriId].perusahaan_fields || []).includes('nama_perusahaan')
+                                    ">
+                                        <div>
+                                            <label for="nama_perusahaan" class="block text-sm text-gray-700 dark:text-gray-300">Nama Perusahaan <span class="text-red-500">*</span></label>
+                                            <input type="text" name="nama_perusahaan" id="nama_perusahaan" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('nama_perusahaan') border-red-500 @enderror" value="{{ old('nama_perusahaan', $pelanggan->nama_perusahaan) }}">
+                                            @error('nama_perusahaan') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                        </div>
+                                    </template>
+
+                                    {{-- Jenis Usaha --}}
+                                    <template x-if="
+                                        (kategoriData[selectedKategoriId].nama && kategoriData[selectedKategoriId].nama.toLowerCase() === 'perusahaan') ||
+                                        (kategoriData[selectedKategoriId].perusahaan_fields || []).includes('jenis_usaha')
+                                    ">
+                                        <div>
+                                            <label for="jenis_usaha" class="block text-sm text-gray-700 dark:text-gray-300">Jenis Usaha</label>
+                                            <input type="text" name="jenis_usaha" id="jenis_usaha" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('jenis_usaha') border-red-500 @enderror" value="{{ old('jenis_usaha', $pelanggan->jenis_usaha) }}">
+                                            @error('jenis_usaha') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                        </div>
+                                    </template>
+
+                                    {{-- Account Manager --}}
+                                    <template x-if="
+                                        (kategoriData[selectedKategoriId].nama && kategoriData[selectedKategoriId].nama.toLowerCase() === 'perusahaan') ||
+                                        (kategoriData[selectedKategoriId].perusahaan_fields || []).includes('account_manager')
+                                    ">
+                                        <div>
+                                            <label for="account_manager" class="block text-sm text-gray-700 dark:text-gray-300">Account Manager</label>
+                                            <input type="text" name="account_manager" id="account_manager" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('account_manager') border-red-500 @enderror" value="{{ old('account_manager', $pelanggan->account_manager) }}">
+                                            @error('account_manager') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                        </div>
+                                    </template>
+
+                                    {{-- Telepon Perusahaan --}}
+                                    <template x-if="
+                                        (kategoriData[selectedKategoriId].nama && kategoriData[selectedKategoriId].nama.toLowerCase() === 'perusahaan') ||
+                                        (kategoriData[selectedKategoriId].perusahaan_fields || []).includes('telepon_perusahaan')
+                                    ">
+                                        <div>
+                                            <label for="telepon_perusahaan" class="block text-sm text-gray-700 dark:text-gray-300">Telepon Perusahaan</label>
+                                            <input type="text" name="telepon_perusahaan" id="telepon_perusahaan" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('telepon_perusahaan') border-red-500 @enderror" value="{{ old('telepon_perusahaan', $pelanggan->telepon_perusahaan) }}">
+                                            @error('telepon_perusahaan') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                        </div>
+                                    </template>
+
+                                    {{-- Fax --}}
+                                    <template x-if="
+                                        (kategoriData[selectedKategoriId].nama && kategoriData[selectedKategoriId].nama.toLowerCase() === 'perusahaan') ||
+                                        (kategoriData[selectedKategoriId].perusahaan_fields || []).includes('fax')
+                                    ">
+                                        <div>
+                                            <label for="fax" class="block text-sm text-gray-700 dark:text-gray-300">Fax</label>
+                                            <input type="text" name="fax" id="fax" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('fax') border-red-500 @enderror" value="{{ old('fax', $pelanggan->fax) }}">
+                                            @error('fax') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                        </div>
+                                    </template>
+
+                                    {{-- NPWP --}}
+                                    <template x-if="
+                                        (kategoriData[selectedKategoriId].nama && kategoriData[selectedKategoriId].nama.toLowerCase() === 'perusahaan') ||
+                                        (kategoriData[selectedKategoriId].perusahaan_fields || []).includes('npwp')
+                                    ">
+                                        <div>
+                                            <label for="npwp" class="block text-sm text-gray-700 dark:text-gray-300">NPWP</label>
+                                            <input type="text" name="npwp" id="npwp" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('npwp') border-red-500 @enderror" value="{{ old('npwp', $pelanggan->npwp) }}">
+                                            @error('npwp') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                        </div>
+                                    </template>
+
+                                </div>
+                            </template>
+
+                            {{-- FIELD UMUM --}}
+                            <div class="md:col-span-2 border-t pt-4 mt-4 border-gray-200 dark:border-gray-700 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="member_card" class="block text-sm text-gray-700 dark:text-gray-300">Member Card <span class="text-red-500">*</span></label>
+                                    <input type="text" name="member_card" id="member_card" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('member_card') border-red-500 @enderror" value="{{ old('member_card', $pelanggan->member_card) }}" required>
+                                    @error('member_card') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                </div>
+                                <div>
+                                    <label for="no_hp" class="block text-sm text-gray-700 dark:text-gray-300">No. HP <span class="text-red-500">*</span></label>
+                                    <input type="text" name="no_hp" id="no_hp" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('no_hp') border-red-500 @enderror" value="{{ old('no_hp', $pelanggan->no_hp) }}" required>
+                                    @error('no_hp') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label for="email" class="block text-sm text-gray-700 dark:text-gray-300">Email Utama</label>
+                                    <input type="email" name="email" id="email" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('email') border-red-500 @enderror" value="{{ old('email', $pelanggan->email) }}">
+                                    @error('email') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label for="alamat" class="block text-sm text-gray-700 dark:text-gray-300">Alamat <span class="text-red-500">*</span></label>
+                                    <textarea name="alamat" id="alamat" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('alamat') border-red-500 @enderror" rows="2" required>{{ old('alamat', $pelanggan->alamat) }}</textarea>
+                                    @error('alamat') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                </div>
+                                <div>
+                                    <label for="kode_pos" class="block text-sm text-gray-700 dark:text-gray-300">Kode Pos</label>
+                                    <input type="text" name="kode_pos" id="kode_pos" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('kode_pos') border-red-500 @enderror" value="{{ old('kode_pos', $pelanggan->kode_pos) }}">
+                                    @error('kode_pos') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                </div>
+                                <div>
+                                    <label for="kabupaten" class="block text-sm text-gray-700 dark:text-gray-300">Kabupaten</label>
+                                    <input type="text" name="kabupaten" id="kabupaten" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('kabupaten') border-red-500 @enderror" value="{{ old('kabupaten', $pelanggan->kabupaten) }}">
+                                    @error('kabupaten') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                </div>
+                                <div>
+                                    <label for="kota" class="block text-sm text-gray-700 dark:text-gray-300">Kota</label>
+                                    <input type="text" name="kota" id="kota" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('kota') border-red-500 @enderror" value="{{ old('kota', $pelanggan->kota) }}">
+                                    @error('kota') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                </div>
+                                <div>
+                                    <label for="wilayah" class="block text-sm text-gray-700 dark:text-gray-300">Wilayah</label>
+                                    <input type="text" name="wilayah" id="wilayah" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('wilayah') border-red-500 @enderror" value="{{ old('wilayah', $pelanggan->wilayah) }}">
+                                    @error('wilayah') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                </div>
+                                <div>
+                                    <label for="pop_id" class="block text-sm text-gray-700 dark:text-gray-300">POP</label>
+                                    <select name="pop_id" id="pop_id" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('pop_id') border-red-500 @enderror">
+                                        <option value="">Pilih POP</option>
+                                        @foreach($pops as $pop)
+                                            <option value="{{ $pop->id }}" {{ old('pop_id', $pelanggan->pop_id) == $pop->id ? 'selected' : '' }}>{{ $pop->nama_pop }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('pop_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                </div>
+                                <div>
+                                    <label for="tipe_identitas" class="block text-sm text-gray-700 dark:text-gray-300">Tipe Identitas</label>
+                                    <select name="tipe_identitas" id="tipe_identitas" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('tipe_identitas') border-red-500 @enderror">
+                                        <option value="">Pilih Tipe Identitas</option>
+                                        <option value="KTP" {{ old('tipe_identitas', $pelanggan->tipe_identitas) == 'KTP' ? 'selected' : '' }}>KTP</option>
+                                        <option value="SIM" {{ old('tipe_identitas', $pelanggan->tipe_identitas) == 'SIM' ? 'selected' : '' }}>SIM</option>
+                                        <option value="Paspor" {{ old('tipe_identitas', $pelanggan->tipe_identitas) == 'Paspor' ? 'selected' : '' }}>Paspor</option>
+                                    </select>
+                                    @error('tipe_identitas') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                </div>
+                                <div>
+                                    <label for="nomor_identitas" class="block text-sm text-gray-700 dark:text-gray-300">Nomor Identitas</label>
+                                    <input type="text" name="nomor_identitas" id="nomor_identitas" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('nomor_identitas') border-red-500 @enderror" value="{{ old('nomor_identitas', $pelanggan->nomor_identitas) }}">
+                                    @error('nomor_identitas') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                </div>
+                                <div>
+                                    <label for="nama_kontak" class="block text-sm text-gray-700 dark:text-gray-300">Nama Kontak Lain</label>
+                                    <input type="text" name="nama_kontak" id="nama_kontak" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('nama_kontak') border-red-500 @enderror" value="{{ old('nama_kontak', $pelanggan->nama_kontak) }}">
+                                    @error('nama_kontak') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" name="reseller" id="reseller" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('reseller', $pelanggan->reseller) ? 'checked' : '' }}>
+                                    <label for="reseller" class="text-sm text-gray-700 dark:text-gray-300">Reseller</label>
+                                    @error('reseller') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                </div>
                             </div>
-                            <div>
-                                <label for="jenis_usaha" class="block text-sm text-gray-700 dark:text-gray-300">Jenis Usaha</label>
-                                <input type="text" name="jenis_usaha" id="jenis_usaha" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('jenis_usaha') border-red-500 @enderror" value="{{ old('jenis_usaha', $pelanggan->jenis_usaha) }}">
-                                @error('jenis_usaha') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            <div>
-                                <label for="account_manager" class="block text-sm text-gray-700 dark:text-gray-300">Account Manager</label>
-                                <input type="text" name="account_manager" id="account_manager" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('account_manager') border-red-500 @enderror" value="{{ old('account_manager', $pelanggan->account_manager) }}">
-                                @error('account_manager') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            <div>
-                                <label for="telepon_perusahaan" class="block text-sm text-gray-700 dark:text-gray-300">Telepon Perusahaan</label>
-                                <input type="text" name="telepon_perusahaan" id="telepon_perusahaan" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('telepon_perusahaan') border-red-500 @enderror" value="{{ old('telepon_perusahaan', $pelanggan->telepon_perusahaan) }}">
-                                @error('telepon_perusahaan') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            <div>
-                                <label for="fax" class="block text-sm text-gray-700 dark:text-gray-300">Fax</label>
-                                <input type="text" name="fax" id="fax" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('fax') border-red-500 @enderror" value="{{ old('fax', $pelanggan->fax) }}">
-                                @error('fax') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            <div>
-                                <label for="email" class="block text-sm text-gray-700 dark:text-gray-300">Email Perusahaan</label>
-                                <input type="email" name="email" id="email" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('email') border-red-500 @enderror" value="{{ old('email', $pelanggan->email) }}">
-                                @error('email') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            <div>
-                                <label for="npwp" class="block text-sm text-gray-700 dark:text-gray-300">NPWP</label>
-                                <input type="text" name="npwp" id="npwp" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('npwp') border-red-500 @enderror" value="{{ old('npwp', $pelanggan->npwp) }}">
-                                @error('npwp') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            @endif
                         </div>
 
                         {{-- TAB 2: Layanan --}}

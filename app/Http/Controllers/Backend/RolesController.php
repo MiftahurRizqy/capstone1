@@ -47,10 +47,7 @@ class RolesController extends Controller
         // Process Data.
         $role = Role::create(['name' => $request->name]);
         $permissions = $request->input('permissions');
-
-        if (!empty($permissions)) {
-            $role->syncPermissions($permissions);
-        }
+        $role->syncPermissions($permissions);
 
         session()->flash('success', 'Role has been created.');
 
@@ -88,14 +85,13 @@ class RolesController extends Controller
             return back();
         }
 
-        $permissions = $request->input('permissions');
-        if (!empty($permissions)) {
-            $role->name = $request->name;
-            $role->save();
-            $role->syncPermissions($permissions);
+        $role->name = $request->name;
+        $role->save();
 
-            $this->storeActionLog(ActionType::UPDATED, ['role' => $role]);
-        }
+        $permissions = $request->input('permissions');
+        $role->syncPermissions($permissions);
+
+        $this->storeActionLog(ActionType::UPDATED, ['role' => $role]);
 
         session()->flash('success', 'Role has been updated.');
 

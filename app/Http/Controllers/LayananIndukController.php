@@ -8,6 +8,14 @@ use Illuminate\Validation\ValidationException;
 
 class LayananIndukController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:layanan.view')->only('index');
+        $this->middleware('can:layanan.create')->only(['create', 'store']);
+        $this->middleware('can:layanan.edit')->only(['edit', 'update']);
+        $this->middleware('can:layanan.delete')->only('destroy');
+    }
+
     /**
      * Menampilkan daftar Layanan Induk.
      */

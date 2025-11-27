@@ -24,6 +24,28 @@
             </div>
         @endif
 
+        <!-- Filter Form -->
+        <div class="card bg-white shadow rounded-lg dark:bg-white/[0.03] dark:border dark:border-gray-700 p-4 mb-6">
+            <form method="GET" action="{{ route('admin.spk.index') }}">
+                <div class="flex items-center gap-2">
+                    <select name="status" class="form-select dark:bg-gray-700 dark:border-gray-600 dark:text-white w-1/5">
+                        <option value="">-- Semua Status --</option>
+                        <option value="dijadwalkan" {{ request('status') == 'dijadwalkan' ? 'selected' : '' }}>Dijadwalkan</option>
+                        <option value="dalam_pengerjaan" {{ request('status') == 'dalam_pengerjaan' ? 'selected' : '' }}>Dalam Pengerjaan</option>
+                        <option value="reschedule" {{ request('status') == 'reschedule' ? 'selected' : '' }}>Reschedule</option>
+                        <option value="selesai_sebagian" {{ request('status') == 'selesai_sebagian' ? 'selected' : '' }}>Selesai Sebagian</option>
+                        <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                    </select>
+                    <input type="text" name="search" class="form-input w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Cari nomor SPK, nama pelanggan..." value="{{ request('search') }}">
+                    <button type="submit" class="btn btn-primary inline-flex items-center gap-2">
+                        <i class="fas fa-search"></i>
+                        <span>Cari</span>
+                    </button>
+                    <a href="{{ route('admin.spk.index') }}" class="btn btn-secondary">Reset</a>
+                </div>
+            </form>
+        </div>
+
         <div class="card bg-white shadow rounded-lg dark:bg-white/[0.03] dark:border dark:border-gray-700">
             <div class="card-body p-6">
                 <div class="overflow-x-auto">

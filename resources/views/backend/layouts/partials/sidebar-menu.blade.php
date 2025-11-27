@@ -24,7 +24,7 @@
         </h3>
 
         <ul class="flex flex-col gap-4 mb-6">
-            @if ($user->can('dashboard.view'))
+            @can('dashboard.view')
             <li>
                 <a href="{{ route('admin.dashboard') }}"
                     class="menu-item group {{ Route::is('admin.dashboard') ? 'menu-item-active' : 'menu-item-inactive' }}">
@@ -35,20 +35,22 @@
                     </span>
                 </a>
             </li>
-            @endif
+            @endcan
             @php echo ld_apply_filters('sidebar_menu_after_dashboard', '') @endphp
 
-<li>
-    <a href="{{ route('admin.pelanggan.index') }}"
-        class="menu-item group w-full text-left {{ Route::is('admin.pelanggan.*') ? 'menu-item-active' : 'menu-item-inactive text-white' }}">
-        
-        <i class="bi bi-people text-xl text-center"></i>
-        <span :style="`color: ${textColor}`">Pelanggan</span>
-        </a>
-    
-    </li>
+            @can('pelanggan.view')
+            <li>
+                <a href="{{ route('admin.pelanggan.index') }}"
+                    class="menu-item group w-full text-left {{ Route::is('admin.pelanggan.*') ? 'menu-item-active' : 'menu-item-inactive text-white' }}">
+                    
+                    <i class="bi bi-people text-xl text-center"></i>
+                    <span :style="`color: ${textColor}`">Pelanggan</span>
+                </a>
+            </li>
+            @endcan
 
             <!-- Menu Jaringan -->
+            @can('jaringan.view')
             <li>
                 <button
                     class="menu-item group w-full text-left {{ Route::is('admin.jaringan.*') ? 'menu-item-active' : 'menu-item-inactive text-white' }}"
@@ -60,16 +62,9 @@
                 <ul id="jaringan-submenu"
                     class="submenu {{ Route::is('admin.jaringan.*') ? '' : 'hidden' }} pl-12 mt-2 space-y-2">
                     <li>
-                        {{-- PERUBAHAN: Menunjuk ke rute POP yang baru --}}
                         <a href="{{ route('admin.jaringan.pop.index') }}"
                             class="block px-4 py-2 rounded-lg {{ Route::is('admin.jaringan.pop.*') ? 'menu-item-active' : 'menu-item-inactive' }}">
                             {{ __('POP') }}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.jaringan.node') }}"
-                            class="block px-4 py-2 rounded-lg {{ Route::is('admin.jaringan.node') ? 'menu-item-active' : 'menu-item-inactive' }}">
-                            {{ __('NODE') }}
                         </a>
                     </li>
                     <li>
@@ -80,7 +75,10 @@
                     </li>
                 </ul>
             </li>
+            @endcan
+
             <!-- Menu Layanan -->
+            @can('layanan.view')
             <li>
                 <button
                     class="menu-item group w-full text-left {{ Route::is('admin.layanan.*') ? 'menu-item-active' : 'menu-item-inactive text-white' }}"
@@ -105,7 +103,10 @@
                     </li>
                 </ul>
             </li>
+            @endcan
+
             <!-- Menu Keluhan -->
+            @can('keluhan.view')
             <li>
                 <a href="{{ route('admin.keluhan.index') }}"
                     class="menu-item group w-full text-left {{ Route::is('admin.keluhan.*') ? 'menu-item-active' : 'menu-item-inactive text-white' }}">
@@ -113,7 +114,10 @@
                     <span :style="`color: ${textColor}`">Keluhan</span>
                 </a>
             </li>
+            @endcan
+
             <!-- Menu SPK -->
+            @can('spk.view')
             <li>
                 <a href="{{ route('admin.spk.index') }}"
                     class="menu-item group w-full text-left {{ Route::is('admin.spk.*') ? 'menu-item-active' : 'menu-item-inactive text-white' }}">
@@ -121,7 +125,10 @@
                     <span :style="`color: ${textColor}`">SPK</span>
                 </a>
             </li>
+            @endcan
+
             <!-- Menu Invoice -->
+            @can('invoice.view')
             <li>
                 <a href="{{ route('admin.invoice.index') }}"
                     class="menu-item group w-full text-left {{ Route::is('admin.invoice.*') ? 'menu-item-active' : 'menu-item-inactive text-white' }}">
@@ -129,8 +136,9 @@
                     <span :style="`color: ${textColor}`">Invoice</span>
                 </a>
             </li>
+            @endcan
 
-            @if ($user->can('user.create') || $user->can('user.view') || $user->can('user.edit') || $user->can('user.delete'))
+            @canany(['user.create', 'user.view', 'user.edit', 'user.delete'])
             <li>
                 <button
                     class="menu-item group w-full text-left {{ Route::is('admin.users.*') ? 'menu-item-active' : 'menu-item-inactive text-white' }}"
@@ -141,28 +149,28 @@
                 </button>
                 <ul id="users-submenu"
                     class="submenu {{ Route::is('admin.users.*') ? '' : 'hidden' }} pl-12 mt-2 space-y-2">
-                    @if ($user->can('user.view'))
+                    @can('user.view')
                     <li>
                         <a href="{{ route('admin.users.index') }}"
                             class="block px-4 py-2 rounded-lg {{ Route::is('admin.users.index') || Route::is('admin.users.edit') ? 'menu-item-active' : 'menu-item-inactive' }}">
                             {{ __('Users') }}
                         </a>
                     </li>
-                    @endif
-                    @if ($user->can('user.create'))
+                    @endcan
+                    @can('user.create')
                     <li>
                         <a href="{{ route('admin.users.create') }}"
                             class="block px-4 py-2 rounded-lg {{ Route::is('admin.users.create') ? 'menu-item-active' : 'menu-item-inactive' }}">
                             {{ __('New User') }}
                         </a>
                     </li>
-                    @endif
+                    @endcan
                 </ul>
             </li>
-            @endif
+            @endcanany
             @php echo ld_apply_filters('sidebar_menu_after_users', '') @endphp
 
-            @if ($user->can('role.create') || $user->can('role.view') || $user->can('role.edit') || $user->can('role.delete'))
+            @canany(['role.create', 'role.view', 'role.edit', 'role.delete'])
             <li>
                 <button
                     class="menu-item group w-full text-left {{ Route::is('admin.roles.*') ? 'menu-item-active' : 'menu-item-inactive text-white' }}"
@@ -173,30 +181,28 @@
                 </button>
                 <ul id="roles-submenu"
                     class="submenu {{ Route::is('admin.roles.*') ? '' : 'hidden' }} pl-12 mt-2 space-y-2">
-                    @if ($user->can('role.view'))
+                    @can('role.view')
                     <li>
                         <a href="{{ route('admin.roles.index') }}"
                             class="block px-4 py-2 rounded-lg {{ Route::is('admin.roles.index') || Route::is('admin.roles.edit') ? 'menu-item-active' : 'menu-item-inactive' }}">
                             {{ __('Roles') }}
                         </a>
                     </li>
-                    @endif
-                    @if ($user->can('role.create'))
+                    @endcan
+                    @can('role.create')
                     <li>
                         <a href="{{ route('admin.roles.create') }}"
                             class="block px-4 py-2 rounded-lg {{ Route::is('admin.roles.create') ? 'menu-item-active' : 'menu-item-inactive' }}">
                             {{ __('New Role') }}
                         </a>
                     </li>
-                    @endif
+                    @endcan
                 </ul>
             </li>
-            @endif
+            @endcanany
             @php echo ld_apply_filters('sidebar_menu_after_roles', '') @endphp
 
-
-
-            @if ($user->can('module.view'))
+            @can('module.view')
             <li>
                 <a href="{{ route('admin.modules.index') }}"
                     class="menu-item group {{ Route::is('admin.modules.index') ? 'menu-item-active' : 'menu-item-inactive' }}">
@@ -204,10 +210,10 @@
                     <span :style="`color: ${textColor}`">{{ __('Modules') }}</span>
                 </a>
             </li>
-            @endif
+            @endcan
             @php echo ld_apply_filters('sidebar_menu_after_modules', '') @endphp
 
-            @if ($user->can('pulse.view') || $user->can('actionlog.view'))
+            @canany(['pulse.view', 'actionlog.view'])
             <li>
                 <button
                     class="menu-item group w-full text-left menu-item-inactive text-white {{ Route::is('actionlog.*') ? 'menu-item-active' : 'menu-item-inactive text-white' }}"
@@ -218,26 +224,26 @@
                 </button>
                 <ul id="monitoring-submenu"
                     class="submenu {{ Route::is('actionlog.*') ? '' : 'hidden' }} pl-12 mt-2 space-y-2">
-                    @if ($user->can('actionlog.view'))
+                    @can('actionlog.view')
                     <li>
                         <a href="{{ route('actionlog.index') }}"
                             class="block px-4 py-2 rounded-lg {{ Route::is('actionlog.index') ? 'menu-item-active' : 'menu-item-inactive text-white' }}">
                             {{ __('Action Logs') }}
                         </a>
                     </li>
-                    @endif
+                    @endcan
 
-                    @if ($user->can('pulse.view'))
+                    @can('pulse.view')
                     <li>
                         <a href="{{ route('pulse') }}" class="block px-4 py-2 rounded-lg menu-item-inactive"
                             target="_blank">
                             {{ __('Laravel Pulse') }}
                         </a>
                     </li>
-                    @endif
+                    @endcan
                 </ul>
             </li>
-            @endif
+            @endcanany
             @php echo ld_apply_filters('sidebar_menu_after_monitoring', '') @endphp
         </ul>
     </div>
@@ -260,7 +266,20 @@
                 </a>
             </li>
             @endif
-
+{{-- Menu Baru: Kategori Pelanggan --}}
+            @can('kategori.view')
+            <li class="menu-item-inactive rounded-md ">
+                {{-- Pastikan route 'admin.kategori.index' sudah dibuat di web.php --}}
+                <a href="{{ route('admin.kategori.index') }}" 
+                   class="menu-item group w-full text-left {{ Route::is('admin.kategori.*') ? 'menu-item-active' : 'menu-item-inactive' }}">
+                    {{-- Menggunakan icon tags/list --}}
+                    <i class="bi bi-tags text-xl text-center dark:text-white/90"></i>
+                    <span class="dark:text-white/90" :class="sidebarToggle ? 'lg:hidden' : ''" :style="`color: ${textColor}`">
+                        {{ __('Kategori Pelanggan') }}
+                    </span>
+                </a>
+            </li>
+            @endcan
             <!-- Logout Menu Item -->
             <li class="menu-item-inactive rounded-md ">
                 <form method="POST" action="{{ route('logout') }}">

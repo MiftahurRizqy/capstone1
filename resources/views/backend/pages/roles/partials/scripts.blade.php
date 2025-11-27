@@ -4,59 +4,48 @@
          * Check all the permissions
          */
         const checkPermissionAll = document.getElementById("checkPermissionAll");
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-
         checkPermissionAll.addEventListener("click", function () {
             const isChecked = this.checked;
-            checkboxes.forEach(checkbox => {
+            // Check all permission checkboxes
+            document.querySelectorAll('input[name="permissions[]"]').forEach(checkbox => {
+                checkbox.checked = isChecked;
+            });
+            // Check all group checkboxes
+            document.querySelectorAll('.mb-6 input[type="checkbox"]:not([name="permissions[]"])').forEach(checkbox => {
                 checkbox.checked = isChecked;
             });
         });
 
-        function checkPermissionByGroup(className, checkThis) {
-            const groupInput = checkThis.querySelector('input[type="checkbox"]');
-            if (!groupInput) {
-                console.error(`Checkbox input not found inside label with ID ${checkThis.id}.`);
-                return;
-            }
-
-            const isChecked = groupInput.checked;
-            const classCheckBoxes = document.querySelectorAll(`.${className} input[type="checkbox"]`);
-            if (!classCheckBoxes.length) {
-                console.error(`No checkboxes found for class ${className}.`);
-                return;
-            }
-
-            classCheckBoxes.forEach(checkbox => {
-                checkbox.checked = isChecked;
-            });
-
-            implementAllChecked();
-        }
-
-        function checkSinglePermission(groupClassName, groupID, countTotalPermission) {
-            const classCheckBoxes = document.querySelectorAll(`.${groupClassName} input`);
-            const groupIDCheckBox = document.getElementById(groupID);
-
-            const checkedCount = Array.from(classCheckBoxes).filter(checkbox => checkbox.checked).length;
-
-            groupIDCheckBox.checked = (checkedCount === countTotalPermission);
-
-            implementAllChecked();
-        }
-
         function implementAllChecked() {
-            const countPermissions = {{ count($all_permissions) }};
-            const countPermissionGroups = {{ count($permission_groups) }};
-            const totalCheckboxes = countPermissions + countPermissionGroups;
-
-            const checkedCount = document.querySelectorAll('input[type="checkbox"]:checked').length;
-
-            checkPermissionAll.checked = (checkedCount >= totalCheckboxes);
+            const permissionCheckboxes = document.querySelectorAll('input[name="permissions[]"]');
+            const allChecked = Array.from(permissionCheckboxes).every(checkbox => checkbox.checked);
+            checkPermissionAll.checked = allChecked;
         }
 
-        // Expose functions to the global scope if needed
-        window.checkPermissionByGroup = checkPermissionByGroup;
-        window.checkSinglePermission = checkSinglePermission;
+        document.querySelectorAll('input[name="permissions[]"]').forEach(permissionCheckbox => {
+            permissionCheckbox.addEventListener('change', () => {
+                implementAllChecked();
+                // Update group checkbox status
+                const groupContainer = permissionCheckbox.closest('.mb-6');
+                const groupCheckbox = groupContainer.querySelector('input[type="checkbox"]:not([name="permissions[]"])');
+                const permissionCheckboxesInGroup = groupContainer.querySelectorAll('input[name="permissions[]"]');
+                const allInGroupChecked = Array.from(permissionCheckboxesInGroup).every(cb => cb.checked);
+                groupCheckbox.checked = allInGroupChecked;
+            });
+        });
+
+        document.querySelectorAll('.mb-6 input[type="checkbox"]:not([name="permissions[]"])').forEach(groupCheckbox => {
+            groupCheckbox.addEventListener('change', function() {
+                const groupContainer = this.closest('.mb-6');
+                const permissionCheckboxes = groupContainer.querySelectorAll('input[name="permissions[]"]');
+                permissionCheckboxes.forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                });
+                implementAllChecked();
+            });
+        });
+
+        // Initial check
+        implementAllChecked();
     });
 </script>

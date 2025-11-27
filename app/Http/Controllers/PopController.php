@@ -8,6 +8,13 @@ use Illuminate\Support\Facades\Log;
 
 class PopController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:jaringan.view')->only('index');
+        $this->middleware('can:jaringan.create')->only(['create', 'store']);
+        $this->middleware('can:jaringan.edit')->only(['edit', 'update']);
+        $this->middleware('can:jaringan.delete')->only('destroy');
+    }
     /**
      * Menampilkan daftar semua Point of Presence (POP).
      *

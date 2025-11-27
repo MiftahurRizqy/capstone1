@@ -40,14 +40,53 @@ class KategoriController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Tampilkan daftar kategori pelanggan dalam halaman backend.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $kategori = KategoriPelanggan::all();
-        return response()->json($kategori);
+        $query = KategoriPelanggan::query();
+
+        if ($search = $request->get('search')) {
+            $query->where('nama', 'like', "%{$search}%");
+        }
+
+        $kategori = $query->orderBy('nama')->paginate(10);
+        $availableFields = self::getFieldsForView();
+
+        return view('backend.pages.kategori.index', compact('kategori', 'availableFields', 'search'));
     }
     
+    public function edit(KategoriPelanggan $kategori)
+    {
+        $availableFields = self::getFieldsForView();
+        return view('backend.pages.kategori.edit', compact('kategori', 'availableFields'));
+    }
+
+    public function update(Request $request, KategoriPelanggan $kategori)
+    {
+        $validPersonalFields = array_keys(self::PERSONAL_FIELDS);
+        $validPerusahaanFields = array_keys(self::PERUSAHAAN_FIELDS);
+
+        $request->validate([
+            'nama' => 'required|string|max:255|unique:kategori_pelanggan,nama,' . $kategori->id,
+            'personal_fields.*' => 'nullable|string|in:' . implode(',', $validPersonalFields),
+            'perusahaan_fields.*' => 'nullable|string|in:' . implode(',', $validPerusahaanFields),
+        ]);
+
+        try {
+            $data = $request->only('nama');
+            $data['personal_fields'] = $request->input('personal_fields', []);
+            $data['perusahaan_fields'] = $request->input('perusahaan_fields', []);
+
+            $kategori->update($data);
+
+            return redirect()->route('admin.kategori.index')->with('success', 'Kategori pelanggan berhasil diperbarui.');
+        } catch (\Exception $e) {
+            Log::error('Gagal memperbarui kategori pelanggan: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal memperbarui data: ' . $e->getMessage())->withInput();
+        }
+    }
+
     public function store(Request $request)
     {
         // Ambil daftar kunci field yang valid

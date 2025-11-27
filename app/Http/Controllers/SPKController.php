@@ -14,12 +14,38 @@ use Illuminate\Support\Facades\Log;
 
 class SpkController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:spk.view')->only(['index', 'show', 'printSpk']);
+        $this->middleware('can:spk.edit')->only(['edit', 'update']);
+        $this->middleware('can:spk.delete')->only('destroy');
+    }
     /**
      * Tampilkan daftar SPK.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $spk = Spk::with(['keluhan.pelanggan', 'layananInduk'])->latest()->paginate(10);
+        $query = Spk::with(['keluhan.pelanggan', 'layananInduk'])->latest();
+
+        // Filter pencarian umum
+        if ($search = $request->get('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nomor_spk', 'like', "%{$search}%")
+                  ->orWhere('keterangan', 'like', "%{$search}%")
+                  ->orWhereHas('keluhan.pelanggan', function ($subq) use ($search) {
+                      $subq->where('nama_lengkap', 'like', "%{$search}%")
+                           ->orWhere('nomor_pelanggan', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        // Filter berdasarkan status SPK
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $spk = $query->paginate(10)->appends($request->query());
+
         return view('backend.pages.spk.index', compact('spk'));
     }
     

@@ -9,6 +9,13 @@ use Illuminate\Support\Facades\Log;
 
 class WilayahController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:jaringan.view')->only(['index', 'getChildren']);
+        $this->middleware('can:jaringan.create')->only('store');
+        $this->middleware('can:jaringan.delete')->only('destroy');
+    }
+
     private $apiBaseUrl = 'https://www.emsifa.com/api-wilayah-indonesia/api/';
 
     public function index()
