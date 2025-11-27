@@ -252,7 +252,7 @@
     <div>
         <h3 class="mb-4 text-xs uppercase leading-[20px] text-gray-400">
             {{ __('More') }}
-        </h3>
+        </h3> 
 
         <ul class="flex flex-col gap-4 mb-6">
             @if ($user->can('settings.edit'))
