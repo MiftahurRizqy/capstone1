@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Pop;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PopController extends Controller
 {
@@ -14,6 +15,42 @@ class PopController extends Controller
         $this->middleware('can:jaringan.create')->only(['create', 'store']);
         $this->middleware('can:jaringan.edit')->only(['edit', 'update']);
         $this->middleware('can:jaringan.delete')->only('destroy');
+    }
+
+    /**
+     * Export daftar POP sebagai CSV
+     */
+    public function exportCsv(Request $request): StreamedResponse
+    {
+        $filename = 'pop_' . now()->format('Ymd_His') . '.csv';
+
+        $query = Pop::query()->latest();
+
+        $columns = ['ID', 'Nama POP', 'Kabupaten/Kota', 'Daerah', 'RT/RW', 'Dibuat'];
+
+        return response()->streamDownload(function () use ($query, $columns) {
+            $handle = fopen('php://output', 'w');
+            // BOM UTF-8 agar kompatibel Excel
+            fwrite($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
+            fputcsv($handle, $columns);
+
+            $query->chunk(500, function ($rows) use ($handle) {
+                foreach ($rows as $r) {
+                    fputcsv($handle, [
+                        $r->id,
+                        $r->nama_pop,
+                        $r->kabupaten_kota,
+                        $r->daerah,
+                        $r->rt_rw,
+                        optional($r->created_at)?->toDateTimeString(),
+                    ]);
+                }
+            });
+
+            fclose($handle);
+        }, $filename, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+        ]);
     }
     /**
      * Menampilkan daftar semua Point of Presence (POP).

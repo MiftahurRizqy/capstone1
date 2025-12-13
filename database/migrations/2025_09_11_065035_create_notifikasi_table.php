@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasTable('notifikasi')) {
+            return;
+        }
+
         Schema::create('notifikasi', function (Blueprint $table) {
             $table->id();
             $table->foreignId('keluhan_id')->nullable()->constrained('keluhan')->onDelete('cascade');

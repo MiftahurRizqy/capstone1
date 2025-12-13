@@ -73,6 +73,39 @@ x-init="init()"
                 </button>
                 @php ld_apply_filters('dark_mode_toggler_after_button', '') @endphp
 
+                <div class="relative" x-data="{ notifOpen: false }" @click.outside="notifOpen = false">
+                    @php
+                        $unread = auth()->user()->unreadNotifications ?? collect();
+                        $unreadCount = $unread->count();
+                    @endphp
+                    <button class="hover:text-dark-900 relative flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white" @click.prevent="notifOpen = !notifOpen">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C10.343 2 9 3.343 9 5V6.146C6.718 7.141 5.25 9.4 5.25 11.9V15L4 16.25V17H20V16.25L18.75 15V11.9C18.75 9.4 17.282 7.141 15 6.146V5C15 3.343 13.657 2 12 2Z" fill="currentColor"/>
+                            <path d="M9.75 18C9.75 19.242 10.758 20.25 12 20.25C13.242 20.25 14.25 19.242 14.25 18H9.75Z" fill="currentColor"/>
+                        </svg>
+                        @if($unreadCount > 0)
+                            <span class="absolute -top-0.5 -right-0.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold text-white">{{ $unreadCount }}</span>
+                        @endif
+                    </button>
+                    <div x-show="notifOpen" class="absolute right-0 mt-3 w-80 rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark" style="display: none">
+                        <div class="mb-2 text-theme-sm font-medium text-gray-700 dark:text-gray-400">Notifikasi</div>
+                        <ul class="max-h-72 space-y-2 overflow-auto">
+                            @forelse($unread as $n)
+                                @php $data = $n->data ?? []; @endphp
+                                <li class="rounded-lg px-3 py-2 text-theme-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/5">
+                                    <a href="{{ $data['url'] ?? '#' }}" class="flex flex-col gap-0.5">
+                                        <span class="font-medium">{{ $data['title'] ?? 'Notifikasi' }}</span>
+                                        <span class="text-xs text-gray-500 dark:text-gray-400">Pelanggan: {{ $data['pelanggan'] ?? '-' }} • Prioritas: {{ ucfirst($data['prioritas'] ?? '-') }}</span>
+                                        <span class="text-xs text-gray-500 dark:text-gray-400">Keluhan: {{ $data['keluhan1'] ?? '-' }} • Via: {{ $data['via'] ?? '-' }}</span>
+                                    </a>
+                                </li>
+                            @empty
+                                <li class="rounded-lg px-3 py-2 text-theme-sm text-gray-600 dark:text-gray-300">Tidak ada notifikasi baru</li>
+                            @endforelse
+                        </ul>
+                    </div>
+                </div>
+
             </div>
 
             <div class="relative" x-data="{ dropdownOpen: false }" @click.outside="dropdownOpen = false">

@@ -7,7 +7,11 @@
     <div class="flex flex-col gap-6">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-white/90">Manajemen Point of Presence (POP)</h1>
-            <div x-data="{ open: false }">
+            <div class="flex items-center gap-2" x-data="{ open: false }">
+                <a href="{{ route('admin.jaringan.pop.export.csv', request()->query()) }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg shadow transition-colors duration-200" title="Export POP CSV">
+                    <i class="fas fa-file-csv"></i>
+                    <span>Export CSV</span>
+                </a>
                 <button @click="open = true" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-200">
                     <i class="fas fa-plus"></i>
                     <span>Tambah POP</span>
