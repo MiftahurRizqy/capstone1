@@ -11,7 +11,6 @@ use App\Models\Pop;
 use App\Models\KategoriPelanggan; // Wajib di-import
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PelangganController extends Controller
 {
@@ -21,65 +20,6 @@ class PelangganController extends Controller
         $this->middleware('can:pelanggan.create')->only(['create', 'store']);
         $this->middleware('can:pelanggan.edit')->only(['edit', 'update']);
         $this->middleware('can:pelanggan.delete')->only('destroy');
-    }
-
-    /**
-     * Export data pelanggan as CSV
-     */
-    public function exportCsv(Request $request): StreamedResponse
-    {
-        $filename = 'pelanggan_' . now()->format('Ymd_His') . '.csv';
-
-        $query = Pelanggan::with(['pop', 'layanan.layananEntry', 'kategori'])->latest();
-        if ($request->filled('kategori_pelanggan_id')) {
-            $query->where('kategori_pelanggan_id', $request->kategori_pelanggan_id);
-        }
-        if ($search = $request->get('search')) {
-            $query->where(function ($q) use ($search) {
-                $q->where('nomor_pelanggan', 'like', "%{$search}%")
-                  ->orWhere('member_card', 'like', "%{$search}%")
-                  ->orWhere('nama_lengkap', 'like', "%{$search}%")
-                  ->orWhere('nama_perusahaan', 'like', "%{$search}%")
-                  ->orWhere('nama_kontak', 'like', "%{$search}%")
-                  ->orWhere('no_hp', 'like', "%{$search}%");
-            });
-        }
-
-        $columns = [
-            'ID','Nomor Pelanggan','Member Card','Kategori','Tipe','Nama Lengkap','Nama Perusahaan','Nama Kontak','No HP','Email','POP','Alamat','Kabupaten','Kota','Wilayah'
-        ];
-
-        return response()->streamDownload(function() use ($query, $columns) {
-            $handle = fopen('php://output', 'w');
-            // BOM for Excel compatibility
-            fwrite($handle, chr(0xEF).chr(0xBB).chr(0xBF));
-            fputcsv($handle, $columns);
-            $query->chunk(500, function($rows) use ($handle) {
-                foreach ($rows as $r) {
-                    $tipe = $r->nama_perusahaan ? 'perusahaan' : 'personal';
-                    fputcsv($handle, [
-                        $r->id,
-                        $r->nomor_pelanggan,
-                        $r->member_card,
-                        optional($r->kategori)->nama,
-                        $tipe,
-                        $r->nama_lengkap,
-                        $r->nama_perusahaan,
-                        $r->nama_kontak,
-                        $r->no_hp,
-                        $r->email,
-                        optional($r->pop)->nama_pop,
-                        $r->alamat,
-                        $r->kabupaten,
-                        $r->kota,
-                        $r->wilayah,
-                    ]);
-                }
-            });
-            fclose($handle);
-        }, $filename, [
-            'Content-Type' => 'text/csv; charset=UTF-8',
-        ]);
     }
     /**
      * Menampilkan daftar semua pelanggan dan menyediakan data untuk form.

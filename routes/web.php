@@ -74,14 +74,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
         // Rute untuk CRUD Wilayah (Provinsi, Kabupaten, Kelurahan, Bagian)
         Route::prefix('wilayah')->name('wilayah.')->group(function () {
             Route::get('/', [WilayahController::class, 'index'])->name('index');
-            Route::get('/export/csv', [WilayahController::class, 'exportCsv'])->name('export.csv');
             Route::post('/', [WilayahController::class, 'store'])->name('store');
             Route::delete('/{id}', [WilayahController::class, 'destroy'])->name('destroy');
         });
         // PERUBAHAN UTAMA: Rute untuk POP, menggunakan PopController
         Route::prefix('pop')->name('pop.')->group(function () {
             Route::get('/', [PopController::class, 'index'])->name('index');
-            Route::get('/export/csv', [PopController::class, 'exportCsv'])->name('export.csv');
             Route::post('/', [PopController::class, 'store'])->name('store');
             Route::get('/{id}/edit', [PopController::class, 'edit'])->name('edit');
             Route::put('/{id}', [PopController::class, 'update'])->name('update');
@@ -130,7 +128,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     });
     // Definisi rute utama untuk daftar semua pelanggan (menggantikan personal/perusahaan)
     Route::get('/pelanggan', [PelangganController::class, 'index'])->name('pelanggan.index');
-    Route::get('/pelanggan/export/csv', [PelangganController::class, 'exportCsv'])->name('pelanggan.export.csv');
     
     // Pastikan rute lainnya juga didefinisikan dengan benar
     Route::post('/pelanggan', [PelangganController::class, 'store'])->name('pelanggan.store');
