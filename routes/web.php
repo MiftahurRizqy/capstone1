@@ -20,6 +20,7 @@ use App\Http\Controllers\LayananEntryController;
 use App\Http\Controllers\Backend\SettingsController;
 use App\Http\Controllers\Backend\ProfilesController;
 use App\Http\Controllers\Backend\UserLoginAsController;
+use App\Http\Controllers\ExportController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
@@ -74,6 +75,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
         // Rute untuk CRUD Wilayah (Provinsi, Kabupaten, Kelurahan, Bagian)
         Route::prefix('wilayah')->name('wilayah.')->group(function () {
             Route::get('/', [WilayahController::class, 'index'])->name('index');
+            Route::get('/export', [ExportController::class, 'wilayahBagian'])->name('export');
             Route::post('/', [WilayahController::class, 'store'])->name('store');
             Route::delete('/{id}', [WilayahController::class, 'destroy'])->name('destroy');
         });
@@ -97,6 +99,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
 
         // Pastikan route ini ada
         Route::get('/entry', [LayananEntryController::class, 'index'])->name('entry.index'); 
+        Route::get('/entry/export', [ExportController::class, 'layananEntry'])->name('entry.export');
         Route::post('/entry', [LayananEntryController::class, 'store'])->name('entry.store');
         Route::get('/entry/{layananEntry}', [LayananEntryController::class, 'show'])->name('entry.show');
         Route::get('/entry/{layananEntry}/edit', [LayananEntryController::class, 'edit'])->name('entry.edit');
@@ -109,6 +112,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::get('keluhan/{keluhan}/edit', [KeluhanController::class, 'edit'])->name('keluhan.edit');
     Route::put('keluhan/{keluhan}', [KeluhanController::class, 'update'])->name('keluhan.update');
     Route::delete('keluhan/{keluhan}', [KeluhanController::class, 'destroy'])->name('keluhan.destroy');
+
+    // Export Excel (mengikuti filter/search aktif)
+    Route::get('keluhan/export', [ExportController::class, 'keluhan'])->name('keluhan.export');
+    Route::get('pelanggan/export', [ExportController::class, 'pelanggan'])->name('pelanggan.export');
     
     // RUTE BARU UNTUK PENCARIAN PELANGGAN, DIPINDAHKAN KE DALAM GROUP INI
     Route::get('pelanggan-search', [InvoiceController::class, 'searchPelanggan'])->name('pelanggan.search');
@@ -117,6 +124,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     // PERBAIKAN DI SINI: Hapus 'invoice' dari prefix agar nama rute tidak ganda
     Route::prefix('invoice')->name('invoice.')->group(function () {
         Route::get('/', [InvoiceController::class, 'index'])->name('index');
+        Route::get('/export', [ExportController::class, 'invoice'])->name('export');
         Route::post('/', [InvoiceController::class, 'store'])->name('store');
         Route::get('/create', [InvoiceController::class, 'create'])->name('create');
         Route::get('/{invoice}', [InvoiceController::class, 'show'])->name('show');
@@ -146,6 +154,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
 // Rute untuk SPK
 Route::prefix('spk')->name('spk.')->group(function () {
     Route::get('/', [SpkController::class, 'index'])->name('index');
+    Route::get('export', [ExportController::class, 'spk'])->name('export');
     Route::post('/', [SpkController::class, 'store'])->name('store');
         Route::get('{spk}/print', [SpkController::class, 'printSpk'])->name('print')->where('spk', '.*');
 

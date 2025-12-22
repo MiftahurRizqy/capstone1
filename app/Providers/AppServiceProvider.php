@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use App\Models\Setting;
 use App\Models\User;
+use App\Models\Keluhan;
+use App\Notifications\KeluhanSubmitted;
+use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
@@ -44,5 +47,40 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('viewPulse', function (User $user) {
             return $user->can('pulse.view');
         });
+
+        // Kirim notifikasi saat keluhan baru dibuat
+        try {
+            Keluhan::created(function (Keluhan $keluhan) {
+                try {
+                    // Pastikan tabel notifications tersedia sebelum mengirim notifikasi
+                    if (!Schema::hasTable('notifications')) {
+                        return;
+                    }
+                    $recipients = User::permission('keluhan.view')->get();
+                    foreach ($recipients as $user) {
+                        $user->notify(new KeluhanSubmitted($keluhan));
+                    }
+                } catch (\Throwable $e) {
+                    // Abaikan error agar tidak mengganggu proses lain
+                }
+            });
+            // Tandai notifikasi terkait keluhan sebagai terbaca ketika keluhan diupdate
+            Keluhan::updated(function (Keluhan $keluhan) {
+                try {
+                    if (!Schema::hasTable('notifications')) {
+                        return;
+                    }
+                    DatabaseNotification::query()
+                        ->whereNull('read_at')
+                        ->where('type', KeluhanSubmitted::class)
+                        ->whereJsonContains('data->keluhan_id', $keluhan->id_keluhan)
+                        ->update(['read_at' => now()]);
+                } catch (\Throwable $e) {
+                    // Abaikan error
+                }
+            });
+        } catch (\Throwable $e) {
+            // Abaikan jika model belum siap saat proses tertentu (misalnya saat migrate awal)
+        }
     }
 }

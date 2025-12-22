@@ -12,10 +12,16 @@
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-white/90">Manajemen Wilayah (Bagian)</h1>
             <div x-data="{ open: {{ $errors->any() ? 'true' : 'false' }} }">
-                <button @click="open = true" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-200">
-                    <i class="fas fa-plus"></i>
-                    <span>Tambah Bagian</span>
-                </button>
+                <div class="flex items-center gap-2">
+                    <a href="{{ route('admin.jaringan.wilayah.export', request()->query()) }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg shadow dark:bg-green-500 dark:hover:bg-green-600 transition-colors duration-200">
+                        <i class="fas fa-file-excel"></i>
+                        <span>Export Excel</span>
+                    </a>
+                    <button @click="open = true" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-200">
+                        <i class="fas fa-plus"></i>
+                        <span>Tambah Bagian</span>
+                    </button>
+                </div>
 
                 {{-- Modal Tambah Bagian --}}
                 <div x-show="open"

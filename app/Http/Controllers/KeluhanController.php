@@ -62,7 +62,7 @@ class KeluhanController extends Controller
         $pelanggan = Pelanggan::all();
         return view('backend.pages.keluhan.create', compact('layananInduks', 'pelanggan'));
     }
-
+ 
     /**
      * Store a newly created resource in storage.
      */

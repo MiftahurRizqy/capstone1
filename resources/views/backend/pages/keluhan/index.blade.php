@@ -184,6 +184,10 @@
                         <span>Cari</span>
                     </button>
                     <a href="{{ route('admin.keluhan.index') }}" class="btn btn-secondary">Reset</a>
+                    <a href="{{ route('admin.keluhan.export', request()->query()) }}" class="btn btn-success inline-flex items-center gap-2">
+                        <i class="fas fa-file-excel"></i>
+                        <span>Export Excel</span>
+                    </a>
                 </div>
             </form>
         </div>

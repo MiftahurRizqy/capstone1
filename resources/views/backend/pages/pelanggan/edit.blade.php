@@ -325,7 +325,7 @@
                         <div x-show="activeTab === 'layanan'" style="display: none;" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label for="homepass" class="block text-sm text-gray-700 dark:text-gray-300">Homepass</label>
-                                <input type="text" name="homepass" id="homepass" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('homepass') border-red-500 @enderror" value="{{ old('homepass', $pelanggan->layanan->first()->homepass ?? '') }}">
+                                <input type="text" name="homepass" id="homepass" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('homepass') border-red-500 @enderror" value="{{ old('homepass', $pelanggan->layanan->first()?->homepass ?? '') }}">
                                 @error('homepass') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div>
@@ -333,44 +333,44 @@
                                 <select name="layanan_entry_id" id="layanan_entry_id" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('layanan_entry_id') border-red-500 @enderror">
                                     <option value="">Pilih Layanan</option>
                                     @foreach($layananEntries as $entry)
-                                        <option value="{{ $entry->id }}" {{ old('layanan_entry_id', $pelanggan->layanan->first()->layanan_entry_id ?? '') == $entry->id ? 'selected' : '' }}>{{ $entry->nama_paket }} ({{ $entry->kode }})</option>
+                                        <option value="{{ $entry->id }}" {{ old('layanan_entry_id', $pelanggan->layanan->first()?->layanan_entry_id ?? '') == $entry->id ? 'selected' : '' }}>{{ $entry->nama_paket }} ({{ $entry->kode }})</option>
                                     @endforeach
                                 </select>
                                 @error('layanan_entry_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label for="mulai_kontrak" class="block text-sm text-gray-700 dark:text-gray-300">Mulai Kontrak</label>
-                                <input type="date" name="mulai_kontrak" id="mulai_kontrak" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('mulai_kontrak') border-red-500 @enderror" value="{{ old('mulai_kontrak', $pelanggan->layanan->first()->mulai_kontrak?->format('Y-m-d') ?? '') }}">
+                                <input type="date" name="mulai_kontrak" id="mulai_kontrak" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('mulai_kontrak') border-red-500 @enderror" value="{{ old('mulai_kontrak', $pelanggan->layanan->first()?->mulai_kontrak?->format('Y-m-d') ?? '') }}">
                                 @error('mulai_kontrak') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label for="selesai_kontrak" class="block text-sm text-gray-700 dark:text-gray-300">Selesai Kontrak</label>
-                                <input type="date" name="selesai_kontrak" id="selesai_kontrak" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('selesai_kontrak') border-red-500 @enderror" value="{{ old('selesai_kontrak', $pelanggan->layanan->first()->selesai_kontrak?->format('Y-m-d') ?? '') }}">
+                                <input type="date" name="selesai_kontrak" id="selesai_kontrak" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('selesai_kontrak') border-red-500 @enderror" value="{{ old('selesai_kontrak', $pelanggan->layanan->first()?->selesai_kontrak?->format('Y-m-d') ?? '') }}">
                                 @error('selesai_kontrak') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div class="flex items-center gap-2">
-                                <input type="checkbox" name="perjanjian_trial" id="perjanjian_trial" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('perjanjian_trial', $pelanggan->layanan->first()->perjanjian_trial ?? false) ? 'checked' : '' }}>
+                                <input type="checkbox" name="perjanjian_trial" id="perjanjian_trial" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('perjanjian_trial', $pelanggan->layanan->first()?->perjanjian_trial ?? false) ? 'checked' : '' }}>
                                 <label for="perjanjian_trial" class="text-sm text-gray-700 dark:text-gray-300">Perjanjian Trial</label>
                                 @error('perjanjian_trial') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div class="flex items-center gap-2">
-                                <input type="checkbox" name="pembelian_modem" id="pembelian_modem" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('pembelian_modem', $pelanggan->layanan->first()->pembelian_modem ?? false) ? 'checked' : '' }}>
+                                <input type="checkbox" name="pembelian_modem" id="pembelian_modem" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('pembelian_modem', $pelanggan->layanan->first()?->pembelian_modem ?? false) ? 'checked' : '' }}>
                                 <label for="pembelian_modem" class="text-sm text-gray-700 dark:text-gray-300">Pembelian Modem</label>
                                 @error('pembelian_modem') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label for="email_alternatif_1" class="block text-sm text-gray-700 dark:text-gray-300">Email Alternatif 1</label>
-                                <input type="email" name="email_alternatif_1" id="email_alternatif_1" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('email_alternatif_1') border-red-500 @enderror" value="{{ old('email_alternatif_1', $pelanggan->layanan->first()->email_alternatif_1 ?? '') }}">
+                                <input type="email" name="email_alternatif_1" id="email_alternatif_1" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('email_alternatif_1') border-red-500 @enderror" value="{{ old('email_alternatif_1', $pelanggan->layanan->first()?->email_alternatif_1 ?? '') }}">
                                 @error('email_alternatif_1') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label for="email_alternatif_2" class="block text-sm text-gray-700 dark:text-gray-300">Email Alternatif 2</label>
-                                <input type="email" name="email_alternatif_2" id="email_alternatif_2" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('email_alternatif_2') border-red-500 @enderror" value="{{ old('email_alternatif_2', $pelanggan->layanan->first()->email_alternatif_2 ?? '') }}">
+                                <input type="email" name="email_alternatif_2" id="email_alternatif_2" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('email_alternatif_2') border-red-500 @enderror" value="{{ old('email_alternatif_2', $pelanggan->layanan->first()?->email_alternatif_2 ?? '') }}">
                                 @error('email_alternatif_2') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label for="jumlah_tv_kabel" class="block text-sm text-gray-700 dark:text-gray-300">Jumlah TV Kabel</label>
-                                <input type="number" name="jumlah_tv_kabel" id="jumlah_tv_kabel" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('jumlah_tv_kabel') border-red-500 @enderror" min="0" value="{{ old('jumlah_tv_kabel', $pelanggan->layanan->first()->jumlah_tv_kabel ?? 0) }}">
+                                <input type="number" name="jumlah_tv_kabel" id="jumlah_tv_kabel" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('jumlah_tv_kabel') border-red-500 @enderror" min="0" value="{{ old('jumlah_tv_kabel', $pelanggan->layanan->first()?->jumlah_tv_kabel ?? 0) }}">
                                 @error('jumlah_tv_kabel') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
                         </div>

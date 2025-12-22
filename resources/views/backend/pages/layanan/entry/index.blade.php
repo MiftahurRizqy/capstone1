@@ -244,7 +244,6 @@
             </div>
         </div>
 
-        {{-- Pesan Status --}}
         @if (session('success') && session('modal_open') !== 'add_layanan_entry_error')
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
                 <strong class="font-bold">Sukses!</strong>
@@ -258,7 +257,23 @@
             </div>
         @endif
 
-        {{-- Tabel Data --}}
+        <div class="card bg-white shadow rounded-lg dark:bg-white/[0.03] dark:border dark:border-gray-700 p-4 mb-6">
+            <form method="GET" action="{{ route('admin.layanan.entry.index') }}">
+                <div class="flex items-center gap-2">
+                    <input type="text" name="search" class="form-input w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Cari kode atau nama paket..." value="{{ request('search') }}">
+                    <button type="submit" class="btn btn-primary inline-flex items-center gap-2">
+                        <i class="fas fa-search"></i>
+                        <span>Cari</span>
+                    </button>
+                    <a href="{{ route('admin.layanan.entry.index') }}" class="btn btn-secondary">Reset</a>
+                    <a href="{{ route('admin.layanan.entry.export', request()->query()) }}" class="btn btn-success inline-flex items-center gap-2">
+                        <i class="fas fa-file-excel"></i>
+                        <span>Export Excel</span>
+                    </a>
+                </div>
+            </form>
+        </div>
+
         <div class="card bg-white shadow rounded-lg dark:bg-white/[0.03] dark:border dark:border-gray-700">
             <div class="card-body p-6">
                 <div class="overflow-x-auto">

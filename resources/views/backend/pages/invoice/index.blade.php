@@ -142,6 +142,10 @@
                 <a href="{{ route('admin.invoice.index') }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500">
                     <span>Reset</span>
                 </a>
+                <a href="{{ route('admin.invoice.export', request()->query()) }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg shadow dark:bg-green-500 dark:hover:bg-green-600">
+                    <i class="fas fa-file-excel"></i>
+                    <span>Export Excel</span>
+                </a>
             </form>
         </div>
         
