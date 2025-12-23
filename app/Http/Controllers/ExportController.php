@@ -323,10 +323,14 @@ class ExportController extends Controller
         $rows = $query->get();
 
         $dataRows = $rows->map(function ($row) {
+            $namaPelanggan = $row->pelanggan?->nama_lengkap
+                ?? $row->pelanggan?->nama_perusahaan
+                ?? 'N/A';
+
             return [
                 $row->nomor_invoice,
                 $row->pelanggan?->nomor_pelanggan,
-                $row->pelanggan?->nama_lengkap,
+                $namaPelanggan,
                 $row->layanan?->layananEntry?->nama_paket,
                 $row->tipe,
                 $row->status,
