@@ -22,9 +22,9 @@
                     x-transition:leave="ease-in duration-200"
                     x-transition:leave-start="opacity-100 scale-100"
                     x-transition:leave-end="opacity-0 scale-95"
-                    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+                    class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
                     style="display: none;">
-                    <div @click.away="open = false" class="bg-white dark:bg-gray-800 rounded-xl w-full max-w-2xl shadow-lg p-6 max-h-[90vh] overflow-y-auto">
+                    <div @click.away="open = false" class="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-2xl shadow-2xl p-8 max-h-[90vh] overflow-y-auto">
                         <div class="flex justify-between items-center mb-4">
                             <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Tambah Layanan Baru</h2>
                             <button @click="open = false" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white">
@@ -260,12 +260,12 @@
         <div class="card bg-white shadow rounded-lg dark:bg-white/[0.03] dark:border dark:border-gray-700 p-4 mb-6">
             <form method="GET" action="{{ route('admin.layanan.entry.index') }}">
                 <div class="flex items-center gap-2">
-                    <input type="text" name="search" class="form-input w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Cari kode atau nama paket..." value="{{ request('search') }}">
+                    <input type="text" name="search" class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Cari kode atau nama paket..." value="{{ request('search') }}">
                     <button type="submit" class="btn btn-primary inline-flex items-center gap-2">
                         <i class="fas fa-search"></i>
                         <span>Cari</span>
                     </button>
-                    <a href="{{ route('admin.layanan.entry.index') }}" class="btn btn-secondary">Reset</a>
+                    <a href="{{ route('admin.layanan.entry.index') }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500 transition-colors duration-200">Reset</a>
                     <a href="{{ route('admin.layanan.entry.export', request()->query()) }}" class="btn btn-success inline-flex items-center gap-2">
                         <i class="fas fa-file-excel"></i>
                         <span>Export Excel</span>
@@ -291,34 +291,42 @@
                         </thead>
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                             @forelse($layananEntries as $entry)
-                                <tr>
+                                <tr class="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                                     <td class="px-4 py-3">
-                                        <a href="{{ route('admin.layanan.entry.show', $entry->id) }}" class="text-blue-600 hover:underline">
+                                        <a href="{{ route('admin.layanan.entry.show', $entry->id) }}" class="text-blue-600 hover:underline font-medium">
                                             {{ $entry->kode }}
                                         </a>
                                     </td>
-                                    <td class="px-4 py-3">{{ $entry->nama_paket }}</td>
-                                    <td class="px-4 py-3">{{ ucfirst($entry->status) }}</td>
-                                    <td class="px-4 py-3">{{ $entry->tipe }}</td>
-                                    <td class="px-4 py-3">{{ $entry->kelompok_layanan }}</td>
-                                    <td class="px-4 py-3">{{ $entry->layananInduk->nama_layanan_induk ?? '-' }}</td>
+                                    <td class="px-4 py-3 font-medium text-gray-800 dark:text-gray-200">{{ $entry->nama_paket }}</td>
+                                    <td class="px-4 py-3">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ strtolower($entry->status) == 'aktif' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' }}">
+                                            {{ ucfirst($entry->status) }}
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3 text-gray-600 dark:text-gray-400">{{ $entry->tipe }}</td>
+                                    <td class="px-4 py-3 text-gray-600 dark:text-gray-400">{{ $entry->kelompok_layanan }}</td>
+                                    <td class="px-4 py-3 text-gray-600 dark:text-gray-400">{{ $entry->layananInduk->nama_layanan_induk ?? '-' }}</td>
                                     <td class="px-4 py-3 flex gap-2">
-                                        {{-- Tombol Edit dan Hapus --}}
+                                        {{-- Tombol Edit --}}
                                         <a href="{{ route('admin.layanan.entry.edit', $entry->id) }}"
-                                           class="inline-flex items-center justify-center w-8 h-8 bg-blue-500 text-white rounded-md hover:bg-blue-600" title="Edit">
+                                           class="inline-flex items-center justify-center w-8 h-8 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200" title="Edit">
                                             <i class="fas fa-edit"></i>
+                                            <span class="sr-only">Edit</span>
                                         </a>
+                                        {{-- Tombol Hapus --}}
                                         <form action="{{ route('admin.layanan.entry.destroy', $entry->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus layanan ini?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
-                                                    class="inline-flex items-center justify-center w-8 h-8 bg-red-500 text-white rounded-md hover:bg-red-600" title="Hapus">
+                                                    class="inline-flex items-center justify-center w-8 h-8 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200" title="Hapus">
                                                 <i class="fas fa-trash"></i>
+                                                <span class="sr-only">Hapus</span>
                                             </button>
                                         </form>
                                     </td>
                                 </tr>
                             @empty
+
                                 <tr>
                                     <td colspan="7" class="text-center py-4 text-gray-500 dark:text-gray-400">
                                         Belum ada data layanan.

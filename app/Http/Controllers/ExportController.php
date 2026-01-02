@@ -56,7 +56,7 @@ class ExportController extends Controller
 
     public function keluhan(Request $request)
     {
-        $query = Keluhan::with(['pelanggan', 'layananInduk'])->latest();
+        $query = Keluhan::with(['pelanggan', 'layananInduk', 'spk'])->latest();
 
         if ($search = $request->get('search')) {
             $query->where(function ($q) use ($search) {
@@ -77,13 +77,14 @@ class ExportController extends Controller
         $rows = $query->get();
 
         $dataRows = $rows->map(function ($row) {
+            $namaPelanggan = $row->pelanggan?->nama_lengkap ?: $row->pelanggan?->nama_perusahaan ?? '-';
             return [
                 $row->created_at?->format('Y-m-d H:i:s'),
                 $row->pelanggan?->nomor_pelanggan,
-                $row->pelanggan?->nama_lengkap,
-                $row->layananInduk?->nama_layanan,
+                $namaPelanggan,
+                $row->layananInduk?->nama_layanan_induk,
                 $row->prioritas,
-                $row->status,
+                $row->spk?->status ?? 'Open',
                 $row->deskripsi,
                 $row->keluhan1,
                 $row->keluhan2,
@@ -125,15 +126,17 @@ class ExportController extends Controller
         $rows = $query->get();
 
         $dataRows = $rows->map(function ($row) {
-            $layanan = $row->layanan instanceof \Illuminate\Support\Collection
-                ? $row->layanan->first()
-                : $row->layanan;
+            $layananNames = $row->layanan->map(function ($l) {
+                return $l->layananEntry?->nama_paket;
+            })->filter()->unique()->join(', ');
 
             $status = 'Belum Ada Layanan';
-            if ($layanan) {
+            $firstLayanan = $row->layanan->first();
+            
+            if ($firstLayanan) {
                 $today = Carbon::today();
-                $mulai = $layanan->mulai_kontrak ? Carbon::parse($layanan->mulai_kontrak) : null;
-                $selesai = $layanan->selesai_kontrak ? Carbon::parse($layanan->selesai_kontrak) : null;
+                $mulai = $firstLayanan->mulai_kontrak ? Carbon::parse($firstLayanan->mulai_kontrak) : null;
+                $selesai = $firstLayanan->selesai_kontrak ? Carbon::parse($firstLayanan->selesai_kontrak) : null;
 
                 if ($mulai && $selesai) {
                     if ($today->lt($mulai)) {
@@ -157,7 +160,7 @@ class ExportController extends Controller
                 $row->no_hp,
                 $row->kategori?->nama,
                 $row->pop?->nama,
-                $layanan?->layananEntry?->nama_paket,
+                $layananNames,
                 $status,
             ];
         });
@@ -247,7 +250,7 @@ class ExportController extends Controller
                 $row->status,
                 $row->tipe,
                 $row->kelompok_layanan,
-                $row->layananInduk?->nama_layanan,
+                $row->layananInduk?->nama_layanan_induk,
             ];
         });
 
@@ -283,11 +286,12 @@ class ExportController extends Controller
         $rows = $query->get();
 
         $dataRows = $rows->map(function ($row) {
+            $namaPelanggan = $row->keluhan?->pelanggan?->nama_lengkap ?: $row->keluhan?->pelanggan?->nama_perusahaan ?? '-';
             return [
                 $row->nomor_spk,
                 $row->keluhan?->pelanggan?->nomor_pelanggan,
-                $row->keluhan?->pelanggan?->nama_lengkap,
-                $row->layananInduk?->nama_layanan,
+                $namaPelanggan,
+                $row->layananInduk?->nama_layanan_induk,
                 $row->status,
                 $row->keterangan,
                 $row->created_at?->format('Y-m-d H:i:s'),
