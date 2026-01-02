@@ -91,7 +91,7 @@ class PelangganController extends Controller
 
         // Aturan validasi dasar
         $rules = [
-            'member_card' => 'required|string|max:255|unique:pelanggan,member_card',
+            'member_card' => 'nullable|string|max:255|unique:pelanggan,member_card',
             'kategori_pelanggan_id' => 'required|exists:kategori_pelanggan,id', 
             // ... (lanjutan validasi umum) ...
             'pop_id' => 'required|exists:pop,id',
@@ -129,9 +129,9 @@ class PelangganController extends Controller
         // ... (lanjutan validasi layanan dan penagihan) ...
         if ($request->filled('layanan_entry_id')) {
              $rules['homepass'] = 'nullable|string|max:255';
-             $rules['layanan_entry_id'] = 'required|exists:layanan_entry,id';
-             $rules['mulai_kontrak'] = 'required|date';
-             $rules['selesai_kontrak'] = 'required|date|after_or_equal:mulai_kontrak';
+             $rules['layanan_entry_id'] = 'nullable|exists:layanan_entry,id';
+             $rules['mulai_kontrak'] = 'nullable|date';
+             $rules['selesai_kontrak'] = 'nullable|date|after_or_equal:mulai_kontrak';
              $rules['perjanjian_trial'] = 'boolean';
              $rules['pembelian_modem'] = 'boolean';
              $rules['jumlah_tv_kabel'] = 'nullable|integer|min:0';
@@ -140,22 +140,22 @@ class PelangganController extends Controller
          }
 
         if ($request->filled('kontak_penagihan')) {
-            $rules['kontak_penagihan'] = 'required|string|max:255';
+            $rules['kontak_penagihan'] = 'nullable|string|max:255';
             // ... (lanjutan validasi penagihan) ...
-            $rules['alamat_penagihan'] = 'required|string|max:255';
-            $rules['kode_pos_penagihan'] = 'required|string|max:10';
-            $rules['kabupaten_penagihan'] = 'required|string|max:255';
-            $rules['kota_penagihan'] = 'required|string|max:255';
-            $rules['no_hp_penagihan'] = 'required|string|max:20';
+            $rules['alamat_penagihan'] = 'nullable|string|max:255';
+            $rules['kode_pos_penagihan'] = 'nullable|string|max:10';
+            $rules['kabupaten_penagihan'] = 'nullable|string|max:255';
+            $rules['kota_penagihan'] = 'nullable|string|max:255';
+            $rules['no_hp_penagihan'] = 'nullable|string|max:20';
             $rules['telepon_penagihan'] = 'nullable|string|max:20';
             $rules['fax_penagihan'] = 'nullable|string|max:20';
             $rules['email_penagihan'] = 'nullable|email|max:255';
-            $rules['cara_pembayaran'] = 'required|string|max:255';
-            $rules['waktu_pembayaran'] = 'required|string|max:255';
+            $rules['cara_pembayaran'] = 'nullable|string|max:255';
+            $rules['waktu_pembayaran'] = 'nullable|string|max:255';
             $rules['invoice_instalasi'] = 'nullable|string|max:255';
-            $rules['invoice_reguler'] = 'required|string|max:255';
-            $rules['mata_uang'] = 'required|in:IDR';
-            $rules['biaya_reguler'] = 'required|numeric|min:0';
+            $rules['invoice_reguler'] = 'nullable|string|max:255';
+            $rules['mata_uang'] = 'nullable|in:IDR';
+            $rules['biaya_reguler'] = 'nullable|numeric|min:0';
             $rules['kenakan_ppn'] = 'boolean';
             $rules['keterangan'] = 'nullable|string';
         }
@@ -184,7 +184,7 @@ class PelangganController extends Controller
             ]);
 
             $pelangganData['nomor_pelanggan'] = $nomor_pelanggan;
-            $pelangganData['reseller'] = $request->has('reseller');
+            $pelangganData['reseller'] = $request->input('reseller', 0);
 
             // Simpan data pelanggan
             $pelanggan = Pelanggan::create($pelangganData);
@@ -196,8 +196,8 @@ class PelangganController extends Controller
                     'email_alternatif_1', 'email_alternatif_2', 'jumlah_tv_kabel'
                 ]);
                 $layananData['pelanggan_id'] = $pelanggan->id;
-                $layananData['perjanjian_trial'] = $request->has('perjanjian_trial');
-                $layananData['pembelian_modem'] = $request->has('pembelian_modem');
+                $layananData['perjanjian_trial'] = $request->input('perjanjian_trial', 0);
+                $layananData['pembelian_modem'] = $request->input('pembelian_modem', 0);
 
                 Layanan::create($layananData);
             }
@@ -212,7 +212,7 @@ class PelangganController extends Controller
                     'invoice_reguler', 'mata_uang', 'biaya_reguler', 'keterangan'
                 ]);
                 $penagihanData['pelanggan_id'] = $pelanggan->id;
-                $penagihanData['kenakan_ppn'] = $request->has('kenakan_ppn');
+                $penagihanData['kenakan_ppn'] = $request->input('kenakan_ppn', 0);
 
                 Penagihan::create($penagihanData);
             }
@@ -271,7 +271,7 @@ class PelangganController extends Controller
 
         // Aturan validasi dasar untuk update
         $rules = [
-            'member_card' => 'required|string|max:255|unique:pelanggan,member_card,' . $id,
+            'member_card' => 'nullable|string|max:255|unique:pelanggan,member_card,' . $id,
             'kategori_pelanggan_id' => 'required|exists:kategori_pelanggan,id', // PERUBAHAN
             'pop_id' => 'required|exists:pop,id',
             'alamat' => 'required|string|max:255',
@@ -317,9 +317,9 @@ class PelangganController extends Controller
         // ... (Validasi Layanan dan Penagihan tetap sama)
         if ($request->filled('layanan_entry_id')) {
              $rules['homepass'] = 'nullable|string|max:255';
-             $rules['layanan_entry_id'] = 'required|exists:layanan_entry,id';
-             $rules['mulai_kontrak'] = 'required|date';
-             $rules['selesai_kontrak'] = 'required|date|after_or_equal:mulai_kontrak';
+             $rules['layanan_entry_id'] = 'nullable|exists:layanan_entry,id';
+             $rules['mulai_kontrak'] = 'nullable|date';
+             $rules['selesai_kontrak'] = 'nullable|date|after_or_equal:mulai_kontrak';
              $rules['perjanjian_trial'] = 'boolean';
              $rules['pembelian_modem'] = 'boolean';
              $rules['jumlah_tv_kabel'] = 'nullable|integer|min:0';
@@ -328,21 +328,21 @@ class PelangganController extends Controller
          }
 
         if ($request->filled('kontak_penagihan')) {
-            $rules['kontak_penagihan'] = 'required|string|max:255';
-            $rules['alamat_penagihan'] = 'required|string|max:255';
-            $rules['kode_pos_penagihan'] = 'required|string|max:10';
-            $rules['kabupaten_penagihan'] = 'required|string|max:255';
-            $rules['kota_penagihan'] = 'required|string|max:255';
-            $rules['no_hp_penagihan'] = 'required|string|max:20';
+            $rules['kontak_penagihan'] = 'nullable|string|max:255';
+            $rules['alamat_penagihan'] = 'nullable|string|max:255';
+            $rules['kode_pos_penagihan'] = 'nullable|string|max:10';
+            $rules['kabupaten_penagihan'] = 'nullable|string|max:255';
+            $rules['kota_penagihan'] = 'nullable|string|max:255';
+            $rules['no_hp_penagihan'] = 'nullable|string|max:20';
             $rules['telepon_penagihan'] = 'nullable|string|max:20';
             $rules['fax_penagihan'] = 'nullable|string|max:20';
             $rules['email_penagihan'] = 'nullable|email|max:255';
-            $rules['cara_pembayaran'] = 'required|string|max:255';
-            $rules['waktu_pembayaran'] = 'required|string|max:255';
+            $rules['cara_pembayaran'] = 'nullable|string|max:255';
+            $rules['waktu_pembayaran'] = 'nullable|string|max:255';
             $rules['invoice_instalasi'] = 'nullable|string|max:255';
-            $rules['invoice_reguler'] = 'required|string|max:255';
-            $rules['mata_uang'] = 'required|in:IDR';
-            $rules['biaya_reguler'] = 'required|numeric|min:0';
+            $rules['invoice_reguler'] = 'nullable|string|max:255';
+            $rules['mata_uang'] = 'nullable|in:IDR';
+            $rules['biaya_reguler'] = 'nullable|numeric|min:0';
             $rules['kenakan_ppn'] = 'boolean';
             $rules['keterangan'] = 'nullable|string';
         }
@@ -360,7 +360,7 @@ class PelangganController extends Controller
                 'telepon_perusahaan', 'fax', 'email', 'npwp', 'reseller'
             ]);
             
-            $pelangganData['reseller'] = $request->has('reseller');
+            $pelangganData['reseller'] = $request->input('reseller', 0);
 
             // Update data pelanggan
             $pelanggan->update($pelangganData);
@@ -371,8 +371,8 @@ class PelangganController extends Controller
                     'homepass', 'layanan_entry_id', 'mulai_kontrak', 'selesai_kontrak',
                     'email_alternatif_1', 'email_alternatif_2', 'jumlah_tv_kabel'
                 ]);
-                $layananData['perjanjian_trial'] = $request->has('perjanjian_trial');
-                $layananData['pembelian_modem'] = $request->has('pembelian_modem');
+                $layananData['perjanjian_trial'] = $request->input('perjanjian_trial', 0);
+                $layananData['pembelian_modem'] = $request->input('pembelian_modem', 0);
 
                 $pelanggan->layanan()->updateOrCreate(['pelanggan_id' => $pelanggan->id], $layananData);
             } else {
@@ -388,7 +388,7 @@ class PelangganController extends Controller
                     'cara_pembayaran', 'waktu_pembayaran', 'invoice_instalasi',
                     'invoice_reguler', 'mata_uang', 'biaya_reguler', 'keterangan'
                 ]);
-                $penagihanData['kenakan_ppn'] = $request->has('kenakan_ppn');
+                $penagihanData['kenakan_ppn'] = $request->input('kenakan_ppn', 0);
 
                 $pelanggan->penagihan()->updateOrCreate(['pelanggan_id' => $pelanggan->id], $penagihanData);
             } else {
@@ -410,12 +410,23 @@ class PelangganController extends Controller
      */
     public function destroy($id)
     {
+        DB::beginTransaction();
+        
         try {
             $pelanggan = Pelanggan::findOrFail($id);
+            
+            // Hapus relasi terlebih dahulu untuk menghindari foreign key constraint error
+            $pelanggan->layanan()->delete();
+            $pelanggan->penagihan()->delete();
+            
+            // Hapus pelanggan
             $pelanggan->delete();
+            
+            DB::commit();
 
             return redirect()->back()->with('success', 'Data pelanggan berhasil dihapus.');
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error('Gagal menghapus data pelanggan: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()->back()->with('error', 'Gagal menghapus data: ' . $e->getMessage());
         }

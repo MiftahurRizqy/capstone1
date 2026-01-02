@@ -13,8 +13,8 @@ return new class extends Migration
             $table->foreignId('pelanggan_id')->constrained('pelanggan')->onDelete('cascade');
             $table->foreignId('layanan_entry_id')->constrained('layanan_entry')->onDelete('cascade');
             $table->string('homepass')->nullable();
-            $table->date('mulai_kontrak');
-            $table->date('selesai_kontrak');
+            $table->date('mulai_kontrak')->nullable();
+            $table->date('selesai_kontrak')->nullable();
             $table->boolean('perjanjian_trial')->default(false);
             $table->string('email_alternatif_1')->nullable();
             $table->string('email_alternatif_2')->nullable();

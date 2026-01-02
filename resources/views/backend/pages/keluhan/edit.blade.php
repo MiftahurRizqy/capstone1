@@ -28,7 +28,7 @@
                 <select name="pelanggan_id" id="pelanggan_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                     @foreach($pelanggan as $p)
                         <option value="{{ $p->id }}" {{ $keluhan->pelanggan_id == $p->id ? 'selected' : '' }}>
-                            {{ ($p->tipe == 'personal') ? ($p->nama_lengkap ?? '-') : ($p->nama_perusahaan ?? '-') }}
+                            {{ $p->nama_lengkap ?: $p->nama_perusahaan }}
                         </option>
                     @endforeach
                 </select>

@@ -77,7 +77,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
             Route::get('/', [WilayahController::class, 'index'])->name('index');
             Route::get('/export', [ExportController::class, 'wilayahBagian'])->name('export');
             Route::post('/', [WilayahController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [WilayahController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [WilayahController::class, 'update'])->name('update');
             Route::delete('/{id}', [WilayahController::class, 'destroy'])->name('destroy');
+            // API endpoint untuk cascading dropdown
+            Route::get('/children', [WilayahController::class, 'getChildren'])->name('children');
         });
         // PERUBAHAN UTAMA: Rute untuk POP, menggunakan PopController
         Route::prefix('pop')->name('pop.')->group(function () {

@@ -26,7 +26,7 @@ class KeluhanController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Keluhan::with(['pelanggan', 'layananInduk'])->latest();
+        $query = Keluhan::with(['pelanggan', 'layananInduk'])->oldest();
 
         // Filter pencarian umum
         if ($search = $request->get('search')) {
@@ -36,6 +36,7 @@ class KeluhanController extends Controller
                   ->orWhere('keluhan2', 'like', "%{$search}%")
                   ->orWhereHas('pelanggan', function ($subq) use ($search) {
                       $subq->where('nama_lengkap', 'like', "%{$search}%")
+                           ->orWhere('nama_perusahaan', 'like', "%{$search}%")
                            ->orWhere('nomor_pelanggan', 'like', "%{$search}%");
                   });
             });

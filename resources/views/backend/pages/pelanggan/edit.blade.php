@@ -244,8 +244,8 @@
                             {{-- FIELD UMUM --}}
                             <div class="md:col-span-2 border-t pt-4 mt-4 border-gray-200 dark:border-gray-700 grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label for="member_card" class="block text-sm text-gray-700 dark:text-gray-300">Member Card <span class="text-red-500">*</span></label>
-                                    <input type="text" name="member_card" id="member_card" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('member_card') border-red-500 @enderror" value="{{ old('member_card', $pelanggan->member_card) }}" required>
+                                    <label for="member_card" class="block text-sm text-gray-700 dark:text-gray-300">Member Card</label>
+                                    <input type="text" name="member_card" id="member_card" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('member_card') border-red-500 @enderror" value="{{ old('member_card', $pelanggan->member_card) }}">
                                     @error('member_card') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                 </div>
                                 <div>
@@ -314,7 +314,8 @@
                                     @error('nama_kontak') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <input type="checkbox" name="reseller" id="reseller" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('reseller', $pelanggan->reseller) ? 'checked' : '' }}>
+                                    <input type="hidden" name="reseller" value="0">
+                                    <input type="checkbox" name="reseller" id="reseller" value="1" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('reseller', $pelanggan->reseller) ? 'checked' : '' }}>
                                     <label for="reseller" class="text-sm text-gray-700 dark:text-gray-300">Reseller</label>
                                     @error('reseller') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                 </div>
@@ -349,12 +350,14 @@
                                 @error('selesai_kontrak') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div class="flex items-center gap-2">
-                                <input type="checkbox" name="perjanjian_trial" id="perjanjian_trial" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('perjanjian_trial', $pelanggan->layanan->first()?->perjanjian_trial ?? false) ? 'checked' : '' }}>
+                                <input type="hidden" name="perjanjian_trial" value="0">
+                                <input type="checkbox" name="perjanjian_trial" id="perjanjian_trial" value="1" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('perjanjian_trial', $pelanggan->layanan->first()?->perjanjian_trial ?? false) ? 'checked' : '' }}>
                                 <label for="perjanjian_trial" class="text-sm text-gray-700 dark:text-gray-300">Perjanjian Trial</label>
                                 @error('perjanjian_trial') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div class="flex items-center gap-2">
-                                <input type="checkbox" name="pembelian_modem" id="pembelian_modem" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('pembelian_modem', $pelanggan->layanan->first()?->pembelian_modem ?? false) ? 'checked' : '' }}>
+                                <input type="hidden" name="pembelian_modem" value="0">
+                                <input type="checkbox" name="pembelian_modem" id="pembelian_modem" value="1" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('pembelian_modem', $pelanggan->layanan->first()?->pembelian_modem ?? false) ? 'checked' : '' }}>
                                 <label for="pembelian_modem" class="text-sm text-gray-700 dark:text-gray-300">Pembelian Modem</label>
                                 @error('pembelian_modem') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
@@ -453,7 +456,8 @@
                                 @error('biaya_reguler') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div class="flex items-center gap-2">
-                                <input type="checkbox" name="kenakan_ppn" id="kenakan_ppn" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('kenakan_ppn', $pelanggan->penagihan->kenakan_ppn ?? false) ? 'checked' : '' }}>
+                                <input type="hidden" name="kenakan_ppn" value="0">
+                                <input type="checkbox" name="kenakan_ppn" id="kenakan_ppn" value="1" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('kenakan_ppn', $pelanggan->penagihan->kenakan_ppn ?? false) ? 'checked' : '' }}>
                                 <label for="kenakan_ppn" class="text-sm text-gray-700 dark:text-gray-300">Kenakan PPN</label>
                                 @error('kenakan_ppn') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>

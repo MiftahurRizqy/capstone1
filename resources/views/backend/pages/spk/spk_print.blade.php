@@ -211,7 +211,6 @@
                 <p>PT. SARANA INSANMUDA SELARAS</p>
                 <p>YOGYAKARTA - INDONESIA</p>
                 <p>Telp. +62-822-2598-8821</p>
-                <p>Website: http://www.megacleon.com</p>
             </div>
         </div>
 
@@ -254,7 +253,7 @@
             <div class="details-grid">
                 <div class="item">
                     <strong>Nama Pelanggan</strong>
-                    <p>{{ ($spk->keluhan->pelanggan->tipe == 'personal' ? $spk->keluhan->pelanggan->nama_lengkap : $spk->keluhan->pelanggan->nama_perusahaan) ?? '-' }}</p>
+                    <p>{{ ($spk->keluhan->pelanggan->nama_lengkap ?: $spk->keluhan->pelanggan->nama_perusahaan) ?? '-' }}</p>
                 </div>
                 <div class="item">
                     <strong>Nomor Pelanggan</strong>
@@ -286,10 +285,6 @@
                         <div class="item full-width">
                             <strong>Pelaksana 2</strong>
                             <p>{{ $spk->pelaksana_2 ?? '-' }}</p>
-                        </div>
-                        <div class="item full-width">
-                            <strong>Koordinator</strong>
-                            <p>{{ $spk->koordinator ?? '-' }}</p>
                         </div>
                         <div class="item full-width">
                             <strong>Kelengkapan Kerja</strong>
@@ -345,18 +340,15 @@
         <div class="signatures">
             <div class="person">
                 <strong>Dibuat Oleh:</strong>
-                <div class="name">({{ $spk->user->name ?? '-' }})</div>
-                <p>({{ $spk->created_at->format('d/m/Y') }})</p>
+                <div class="name">{{ $spk->user->name ?? '-' }}</div>
             </div>
             <div class="person">
                 <strong>Pelaksana:</strong>
-                <div class="name">({{ $spk->pelaksana_1 ?? '-' }})</div>
-                <p>(Tanggal)</p>
+                <div class="name">{{ $spk->pelaksana_1 ?? '-' }}</div>
             </div>
             <div class="person">
                 <strong>Disetujui Oleh:</strong>
-                <div class="name">(....................)</div>
-                <p>(Tanggal)</p>
+                <div class="name">{{ $spk->koordinator ?? '...................' }}</div>
             </div>
         </div>
     </div>

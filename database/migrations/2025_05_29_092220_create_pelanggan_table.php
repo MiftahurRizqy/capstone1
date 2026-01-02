@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('pelanggan', function (Blueprint $table) {
             $table->id();
             $table->string('nomor_pelanggan')->unique();
-            $table->string('member_card')->unique();
+$table->string('member_card')->nullable()->unique();
             $table->foreignId('kategori_pelanggan_id')->constrained('kategori_pelanggan') ->onDelete('restrict');
 
             // Field umum

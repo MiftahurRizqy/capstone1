@@ -22,13 +22,13 @@
                     x-transition:leave="ease-in duration-200"
                     x-transition:leave-start="opacity-100 scale-100"
                     x-transition:leave-end="opacity-0 scale-95"
-                    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+                    class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
                     style="display: none;">
-                    <div @click.away="open = false" class="bg-white dark:bg-gray-800 rounded-xl w-full max-w-md shadow-lg p-6 max-h-[90vh] overflow-y-auto">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Tambah Keluhan Baru</h2>
-                            <button @click="open = false" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white">
-                                <i class="fas fa-times"></i>
+                    <div @click.away="open = false" class="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-2xl shadow-2xl p-8 max-h-[90vh] overflow-y-auto">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Tambah Keluhan Baru</h2>
+                            <button @click="open = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors duration-200">
+                                <i class="fas fa-times text-xl"></i>
                             </button>
                         </div>
                         
@@ -59,11 +59,11 @@
                             </div>
                             <div>
                                 <label for="pelanggan_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pelanggan</label>
-                                <select name="pelanggan_id" id="pelanggan_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white @error('pelanggan_id') border-red-500 @enderror">
+                                <select name="pelanggan_id" id="pelanggan_id" class="select2-pelanggan mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white @error('pelanggan_id') border-red-500 @enderror">
                                     <option value="">Pilih Pelanggan</option>
                                     @foreach($pelanggan as $p)
                                         <option value="{{ $p->id }}" {{ old('pelanggan_id') == $p->id ? 'selected' : '' }}>
-                                            {{ ($p->tipe == 'personal') ? ($p->nama_lengkap ?? '-') : ($p->nama_perusahaan ?? '-') }}
+                                            {{ $p->nama_lengkap ?: $p->nama_perusahaan }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -168,22 +168,22 @@
             </div>
         @endif
 
-        <!-- Filter Form -->
+        {{-- Filter Form --}}
         <div class="card bg-white shadow rounded-lg dark:bg-white/[0.03] dark:border dark:border-gray-700 p-4 mb-6">
             <form method="GET" action="{{ route('admin.keluhan.index') }}">
-                <div class="flex items-center gap-2">
-                    <select name="prioritas" class="form-select dark:bg-gray-700 dark:border-gray-600 dark:text-white w-1/5">
+                <div class="flex flex-wrap items-center gap-3">
+                    <select name="prioritas" class="px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white min-w-[180px]">
                         <option value="">-- Semua Prioritas --</option>
                         <option value="low" {{ request('prioritas') == 'low' ? 'selected' : '' }}>Low</option>
                         <option value="medium" {{ request('prioritas') == 'medium' ? 'selected' : '' }}>Medium</option>
                         <option value="high" {{ request('prioritas') == 'high' ? 'selected' : '' }}>High</option>
                     </select>
-                    <input type="text" name="search" class="form-input w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Cari keluhan, deskripsi, nama, atau nomor pelanggan..." value="{{ request('search') }}">
+                    <input type="text" name="search" class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Cari keluhan, deskripsi, nama, atau nomor pelanggan..." value="{{ request('search') }}">
                     <button type="submit" class="btn btn-primary inline-flex items-center gap-2">
                         <i class="fas fa-search"></i>
                         <span>Cari</span>
                     </button>
-                    <a href="{{ route('admin.keluhan.index') }}" class="btn btn-secondary">Reset</a>
+                    <a href="{{ route('admin.keluhan.index') }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500 transition-colors duration-200">Reset</a>
                     <a href="{{ route('admin.keluhan.export', request()->query()) }}" class="btn btn-success inline-flex items-center gap-2">
                         <i class="fas fa-file-excel"></i>
                         <span>Export Excel</span>
@@ -198,7 +198,7 @@
                     <table class="table w-full text-sm text-left text-gray-700 dark:text-gray-200">
                         <thead class="bg-gray-100 dark:bg-gray-800 dark:text-white/80">
                             <tr>
-                                <th class="px-4 py-3">ID</th>
+                                <th class="px-4 py-3">No</th>
                                 <th class="px-4 py-3">Layanan</th>
                                 <th class="px-4 py-3">Pelanggan</th>
                                 <th class="px-4 py-3">Buat SPK?</th>
@@ -212,16 +212,12 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                            @forelse($keluhan as $k)
+                            @forelse($keluhan as $index => $k)
                             <tr>
-                                <td class="px-4 py-3">{{ $k->id_keluhan }}</td>
+                                <td class="px-4 py-3">{{ $keluhan->firstItem() + $index }}</td>
                                 <td class="px-4 py-3">{{ $k->layananInduk->nama_layanan_induk ?? '-' }}</td>
                                 <td class="px-4 py-3">
-                                    @if ($k->pelanggan->tipe == 'personal')
-                                        {{ $k->pelanggan->nama_lengkap ?? '-' }}
-                                    @else
-                                        {{ $k->pelanggan->nama_perusahaan ?? '-' }}
-                                    @endif
+                                    {{ $k->pelanggan->nama_lengkap ?: $k->pelanggan->nama_perusahaan ?? '-' }}
                                 </td>
                                 <td class="px-4 py-3">{{ $k->jenis_spk }}</td>
                                 <td class="px-4 py-3">{{ $k->tujuan }}</td>
@@ -229,7 +225,7 @@
                                 <td class="px-4 py-3">{{ $k->keluhan1 }}</td>
                                 <td class="px-4 py-3">{{ $k->keluhan2 }}</td>
                                 <td class="px-4 py-3">{{ $k->via }}</td>
-                                <td class="px-4 py-3">{{ $k->tanggal_input->format('d-m-Y H:i') }}</td>
+                                <td class="px-4 py-3">{{ $k->tanggal_input->format('d-m-Y') }}</td>
                                 <td class="px-4 py-3 flex gap-2">
                                     {{-- Tombol Edit --}}
                                     <a href="{{ route('admin.keluhan.edit', $k->id_keluhan) }}"
@@ -265,4 +261,131 @@
         </div>
     </div>
 </div>
+
+@push('styles')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+    /* Select2 Container Styling */
+    .select2-container--default .select2-selection--single {
+        height: 42px !important;
+        padding: 8px 12px !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 0.5rem !important;
+        background-color: white !important;
+        transition: all 0.2s;
+    }
+    
+    .select2-container--default .select2-selection--single:focus,
+    .select2-container--default.select2-container--focus .select2-selection--single {
+        border-color: #3b82f6 !important;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+        outline: none !important;
+    }
+    
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 26px !important;
+        padding-left: 0 !important;
+        color: #1f2937 !important;
+    }
+    
+    .select2-container--default .select2-selection--single .select2-selection__placeholder {
+        color: #9ca3af !important;
+    }
+    
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 40px !important;
+        right: 8px !important;
+    }
+    
+    /* Dropdown Styling */
+    .select2-dropdown {
+        border: 1px solid #d1d5db !important;
+        border-radius: 0.5rem !important;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    .select2-search--dropdown {
+        padding: 8px !important;
+    }
+    
+    .select2-search--dropdown .select2-search__field {
+        border: 1px solid #d1d5db !important;
+        border-radius: 0.375rem !important;
+        padding: 6px 12px !important;
+    }
+    
+    .select2-search--dropdown .select2-search__field::placeholder {
+        color: #9ca3af !important;
+    }
+    
+    .select2-results__option {
+        padding: 8px 12px !important;
+    }
+    
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #3b82f6 !important;
+    }
+    
+    /* Dark Mode */
+    .dark .select2-container--default .select2-selection--single {
+        background-color: #374151 !important;
+        border-color: #4b5563 !important;
+    }
+    
+    .dark .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: white !important;
+    }
+    
+    .dark .select2-dropdown {
+        background-color: #374151 !important;
+        border-color: #4b5563 !important;
+    }
+    
+    .dark .select2-search--dropdown .select2-search__field {
+        background-color: #1f2937 !important;
+        border-color: #4b5563 !important;
+        color: white !important;
+    }
+    
+    .dark .select2-container--default .select2-results__option {
+        color: white !important;
+        background-color: #374151 !important;
+    }
+    
+    .dark .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #3b82f6 !important;
+    }
+</style>
+@endpush
+
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.select2-pelanggan').select2({
+            placeholder: 'Pilih Pelanggan',
+            allowClear: true,
+            width: '100%',
+            dropdownParent: $('#pelanggan_id').closest('div').parent(),
+            language: {
+                searching: function() {
+                    return 'Mencari...';
+                },
+                noResults: function() {
+                    return 'Tidak ada hasil';
+                }
+            }
+        });
+        
+        // Add placeholder to search field when dropdown opens
+        $('.select2-pelanggan').on('select2:open', function() {
+            setTimeout(function() {
+                $('.select2-search--dropdown .select2-search__field').attr('placeholder', 'Ketik nama pelanggan...');
+            }, 50);
+        });
+    });
+</script>
+@endpush
+
 @endsection

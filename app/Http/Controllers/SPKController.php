@@ -34,6 +34,7 @@ class SpkController extends Controller
                   ->orWhere('keterangan', 'like', "%{$search}%")
                   ->orWhereHas('keluhan.pelanggan', function ($subq) use ($search) {
                       $subq->where('nama_lengkap', 'like', "%{$search}%")
+                           ->orWhere('nama_perusahaan', 'like', "%{$search}%")
                            ->orWhere('nomor_pelanggan', 'like', "%{$search}%");
                   });
             });

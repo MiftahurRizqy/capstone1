@@ -6,7 +6,8 @@
 
 <div class="container mx-auto px-4 py-6">
     <div class="flex flex-col gap-6">
-        <div class="flex justify-between items-center mb-6">
+        <!-- Header Section -->
+        <div class="flex justify-between items-center">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-white/90">Manajemen SPK</h1>
         </div>
         
@@ -24,11 +25,11 @@
             </div>
         @endif
 
-        <!-- Filter Form -->
+        {{-- Filter Form --}}
         <div class="card bg-white shadow rounded-lg dark:bg-white/[0.03] dark:border dark:border-gray-700 p-4 mb-6">
             <form method="GET" action="{{ route('admin.spk.index') }}">
-                <div class="flex items-center gap-2">
-                    <select name="status" class="form-select dark:bg-gray-700 dark:border-gray-600 dark:text-white w-1/5">
+                <div class="flex flex-wrap items-center gap-3">
+                    <select name="status" class="px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white min-w-[200px]">
                         <option value="">-- Semua Status --</option>
                         <option value="dijadwalkan" {{ request('status') == 'dijadwalkan' ? 'selected' : '' }}>Dijadwalkan</option>
                         <option value="dalam_pengerjaan" {{ request('status') == 'dalam_pengerjaan' ? 'selected' : '' }}>Dalam Pengerjaan</option>
@@ -36,12 +37,12 @@
                         <option value="selesai_sebagian" {{ request('status') == 'selesai_sebagian' ? 'selected' : '' }}>Selesai Sebagian</option>
                         <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
                     </select>
-                    <input type="text" name="search" class="form-input w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Cari nomor SPK, nama pelanggan..." value="{{ request('search') }}">
+                    <input type="text" name="search" class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Cari nomor SPK, nama pelanggan..." value="{{ request('search') }}">
                     <button type="submit" class="btn btn-primary inline-flex items-center gap-2">
                         <i class="fas fa-search"></i>
                         <span>Cari</span>
                     </button>
-                    <a href="{{ route('admin.spk.index') }}" class="btn btn-secondary">Reset</a>
+                    <a href="{{ route('admin.spk.index') }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500 transition-colors duration-200">Reset</a>
                     <a href="{{ route('admin.spk.export', request()->query()) }}" class="btn btn-success inline-flex items-center gap-2">
                         <i class="fas fa-file-excel"></i>
                         <span>Export Excel</span>
@@ -75,11 +76,7 @@
                                 </td>
                                 <td class="px-4 py-3">
                                     @if ($s->pelanggan)
-                                        @if ($s->pelanggan->tipe == 'personal')
-                                            {{ $s->pelanggan->nama_lengkap ?? '-' }}
-                                        @else
-                                            {{ $s->pelanggan->nama_perusahaan ?? '-' }}
-                                        @endif
+                                        {{ $s->pelanggan->nama_lengkap ?: $s->pelanggan->nama_perusahaan ?? '-' }}
                                     @else
                                         -
                                     @endif

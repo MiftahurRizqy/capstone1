@@ -21,9 +21,9 @@
         @endif
 
         {{-- ========================================================================= --}}
-        {{-- HEADER & MODAL TAMBAH PELANGGAN (MENGGUNAKAN TEMPLATE X-IF YANG STABIL) --}}
+        {{-- HEADER & MODAL TAMBAH PELANGGAN --}}
         {{-- ========================================================================= --}}
-        <div class="flex justify-between items-center mb-4">
+        <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-white/90">Daftar Semua Pelanggan</h1>
         
             {{-- ALPINE DATA UNTUK MODAL TAMBAH PELANGGAN --}}
@@ -35,7 +35,7 @@
                 kategoriData: {{ $kategoriDataForAlpine->toJson() }}
             }" id="pelanggan-modal-wrapper">
                 
-                <button @click="open = true" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow dark:bg-blue-500 dark:hover:bg-blue-600">
+                <button @click="open = true" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-200">
                     <i class="fas fa-plus"></i>
                     <span>Tambah Pelanggan</span>
                 </button>
@@ -258,8 +258,8 @@
                                         {{-- Field Umum --}}
                                         <div class="md:col-span-2 border-t pt-4 mt-4 border-gray-200 dark:border-gray-700 grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
-                                                <label for="member_card" class="block text-sm text-gray-700 dark:text-gray-300">Member Card <span class="text-red-500">*</span></label>
-                                                <input type="text" name="member_card" id="member_card" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('member_card') border-red-500 @enderror" value="{{ old('member_card') }}" required>
+                                                <label for="member_card" class="block text-sm text-gray-700 dark:text-gray-300">Member Card</label>
+                                                <input type="text" name="member_card" id="member_card" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('member_card') border-red-500 @enderror" value="{{ old('member_card') }}">
                                                 @error('member_card') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                             </div>
                                             <div>
@@ -328,7 +328,8 @@
                                                 @error('nomor_identitas') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                             </div>
                                             <div class="flex items-center gap-2">
-                                                <input type="checkbox" name="reseller" id="reseller" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('reseller') ? 'checked' : '' }}>
+                                                <input type="hidden" name="reseller" value="0">
+                                                <input type="checkbox" name="reseller" id="reseller" value="1" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('reseller') ? 'checked' : '' }}>
                                                 <label for="reseller" class="text-sm text-gray-700 dark:text-gray-300">Reseller</label>
                                                 @error('reseller') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                             </div>
@@ -364,12 +365,14 @@
                                             @error('selesai_kontrak') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                         </div>
                                         <div class="flex items-center gap-2">
-                                            <input type="checkbox" name="perjanjian_trial" id="perjanjian_trial" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('perjanjian_trial') ? 'checked' : '' }}>
+                                            <input type="hidden" name="perjanjian_trial" value="0">
+                                            <input type="checkbox" name="perjanjian_trial" id="perjanjian_trial" value="1" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('perjanjian_trial') ? 'checked' : '' }}>
                                             <label for="perjanjian_trial" class="text-sm text-gray-700 dark:text-gray-300">Perjanjian Trial</label>
                                             @error('perjanjian_trial') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                         </div>
                                         <div class="flex items-center gap-2">
-                                            <input type="checkbox" name="pembelian_modem" id="pembelian_modem" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('pembelian_modem') ? 'checked' : '' }}>
+                                            <input type="hidden" name="pembelian_modem" value="0">
+                                            <input type="checkbox" name="pembelian_modem" id="pembelian_modem" value="1" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('pembelian_modem') ? 'checked' : '' }}>
                                             <label for="pembelian_modem" class="text-sm text-gray-700 dark:text-gray-300">Pembelian Modem</label>
                                             @error('pembelian_modem') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                         </div>
@@ -458,17 +461,20 @@
                                             @error('biaya_reguler') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                         </div>
                                         <div class="flex items-center gap-2">
-                                            <input type="checkbox" name="invoice_instalasi" id="invoice_instalasi" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('invoice_instalasi') ? 'checked' : '' }}>
+                                            <input type="hidden" name="invoice_instalasi" value="0">
+                                            <input type="checkbox" name="invoice_instalasi" id="invoice_instalasi" value="1" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('invoice_instalasi') ? 'checked' : '' }}>
                                             <label for="invoice_instalasi" class="text-sm text-gray-700 dark:text-gray-300">Invoice Instalasi Dibuat</label>
                                             @error('invoice_instalasi') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                         </div>
                                         <div class="flex items-center gap-2">
-                                            <input type="checkbox" name="invoice_reguler" id="invoice_reguler" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('invoice_reguler') ? 'checked' : '' }}>
+                                            <input type="hidden" name="invoice_reguler" value="0">
+                                            <input type="checkbox" name="invoice_reguler" id="invoice_reguler" value="1" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('invoice_reguler') ? 'checked' : '' }}>
                                             <label for="invoice_reguler" class="text-sm text-gray-700 dark:text-gray-300">Invoice Reguler Dibuat</label>
                                             @error('invoice_reguler') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                         </div>
                                         <div class="flex items-center gap-2">
-                                            <input type="checkbox" name="kenakan_ppn" id="kenakan_ppn" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('kenakan_ppn') ? 'checked' : '' }}>
+                                            <input type="hidden" name="kenakan_ppn" value="0">
+                                            <input type="checkbox" name="kenakan_ppn" id="kenakan_ppn" value="1" class="form-checkbox h-4 w-4 text-blue-600 rounded" {{ old('kenakan_ppn') ? 'checked' : '' }}>
                                             <label for="kenakan_ppn" class="text-sm text-gray-700 dark:text-gray-300">Kenakan PPN</label>
                                             @error('kenakan_ppn') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                         </div>
@@ -489,9 +495,13 @@
                     </div>
                 </div>
             </div>
-            {{-- Form Filter (Tidak berubah) --}}
-            <form action="{{ route('admin.pelanggan.index') }}" method="GET" class="flex flex-1 w-full gap-4 items-center">
-                {{-- ... Filter fields ... --}}
+        </div>
+
+        {{-- ========================================================================= --}}
+        {{-- FILTER SECTION --}}
+        {{-- ========================================================================= --}}
+        <div class="card bg-white shadow rounded-lg dark:bg-white/[0.03] dark:border dark:border-gray-700 p-4 mb-6">
+            <form action="{{ route('admin.pelanggan.index') }}" method="GET" class="flex flex-wrap gap-4 items-center">
                 <div class="w-full sm:w-auto">
                     <label for="kategori_pelanggan_id_filter" class="sr-only">Kategori</label>
                     <select name="kategori_pelanggan_id" id="kategori_pelanggan_id_filter" class="w-full sm:w-48 px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
@@ -504,21 +514,21 @@
                     </select>
                 </div>
                 
-                <div class="flex-1 w-full">
+                <div class="flex-1 min-w-[200px]">
                     <label for="search" class="sr-only">Cari Pelanggan</label>
                     <input type="text" name="search" id="search" placeholder="Cari nomor pelanggan, nama, atau member card..." 
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
                             value="{{ request('search') }}">
                 </div>
                 
-                <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg shadow dark:bg-green-500 dark:hover:bg-green-600">
+                <button type="submit" class="btn btn-primary inline-flex items-center gap-2">
                     <i class="fas fa-search"></i>
                     <span>Cari</span>
                 </button>
-                <a href="{{ route('admin.pelanggan.index') }}" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500">
+                <a href="{{ route('admin.pelanggan.index') }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500 transition-colors duration-200">
                     <span>Reset</span>
                 </a>
-                <a href="{{ route('admin.pelanggan.export', request()->query()) }}" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg shadow dark:bg-green-500 dark:hover:bg-green-600">
+                <a href="{{ route('admin.pelanggan.export', request()->query()) }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg shadow dark:bg-green-500 dark:hover:bg-green-600 transition-colors duration-200">
                     <i class="fas fa-file-excel"></i>
                     <span>Export Excel</span>
                 </a>

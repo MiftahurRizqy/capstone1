@@ -130,6 +130,104 @@ class WilayahController extends Controller
         }
     }
 
+    public function edit($id)
+    {
+        try {
+            $bagian = Wilayah::bagian()->findOrFail($id);
+            
+            // Fetch provinces for dropdown
+            $provinsi = [];
+            try {
+                $response = Http::get($this->apiBaseUrl . 'provinces.json');
+                if ($response->successful()) {
+                    $provinsi = $response->json();
+                }
+            } catch (\Exception $e) {
+                Log::error('Failed to fetch provinces for edit: ' . $e->getMessage());
+            }
+            
+            return response()->json([
+                'success' => true,
+                'data' => $bagian,
+                'provinsi' => $provinsi
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Failed to fetch bagian for edit: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengambil data bagian'
+            ], 404);
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'external_provinsi_id' => 'required|string',
+            'external_kabupaten_id' => 'required|string',
+            'external_kecamatan_id' => 'required|string',
+            'external_kelurahan_id' => 'required|string',
+            'nama_bagian' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+        ]);
+
+        try {
+            $bagian = Wilayah::bagian()->findOrFail($id);
+            
+            $provinsiId = $request->input('external_provinsi_id');
+            $kabupatenId = $request->input('external_kabupaten_id');
+            $kecamatanId = $request->input('external_kecamatan_id');
+            $kelurahanId = $request->input('external_kelurahan_id');
+
+            $provinsiNama = $this->getGeoNameById($provinsiId, 'provinsi');
+            if (is_null($provinsiNama)) {
+                throw new \Exception("Gagal mendapatkan nama provinsi dari API untuk ID: {$provinsiId}");
+            }
+
+            $kabupatenNama = $this->getGeoNameById($kabupatenId, 'kabupaten', $provinsiId);
+            if (is_null($kabupatenNama)) {
+                throw new \Exception("Gagal mendapatkan nama kabupaten dari API untuk ID: {$kabupatenId}");
+            }
+
+            $kecamatanNama = $this->getGeoNameById($kecamatanId, 'kecamatan', $kabupatenId);
+            if (is_null($kecamatanNama)) {
+                throw new \Exception("Gagal mendapatkan nama kecamatan dari API untuk ID: {$kecamatanId}");
+            }
+
+            $kelurahanNama = $this->getGeoNameById($kelurahanId, 'kelurahan', $kecamatanId);
+            if (is_null($kelurahanNama)) {
+                throw new \Exception("Gagal mendapatkan nama kelurahan dari API untuk ID: {$kelurahanId}");
+            }
+
+            $parentWilayah = Wilayah::where('tipe', 'kelurahan')
+                                 ->where('external_provinsi_id', $provinsiId)
+                                 ->where('external_kabupaten_id', $kabupatenId)
+                                 ->where('external_kecamatan_id', $kecamatanId)
+                                 ->where('external_kelurahan_id', $kelurahanId)
+                                 ->first();
+
+            $bagian->update([
+                'nama' => $request->nama_bagian,
+                'deskripsi' => $request->deskripsi,
+                'parent_id' => $parentWilayah ? $parentWilayah->id : null,
+                'provinsi_nama' => $provinsiNama,
+                'kabupaten_nama' => $kabupatenNama,
+                'kecamatan_nama' => $kecamatanNama,
+                'kelurahan_nama' => $kelurahanNama,
+                'external_provinsi_id' => $provinsiId,
+                'external_kabupaten_id' => $kabupatenId,
+                'external_kecamatan_id' => $kecamatanId,
+                'external_kelurahan_id' => $kelurahanId,
+            ]);
+
+            return redirect()->back()->with('success', 'Data Bagian berhasil diperbarui!');
+
+        } catch (\Exception $e) {
+            Log::error('Failed to update bagian: ' . $e->getMessage(), ['exception' => $e, 'request_data' => $request->all()]);
+            return redirect()->back()->with('error', 'Gagal memperbarui data Bagian: ' . $e->getMessage())->withInput();
+        }
+    }
+
     public function getChildren(Request $request)
     {
         $request->validate([

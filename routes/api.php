@@ -18,7 +18,3 @@ use App\Http\Controllers\WilayahController; // Pastikan ini diimport
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-// Endpoint untuk cascading dropdown
-// Pastikan ini terdaftar di routes/api.php agar bisa dipanggil dari frontend
-Route::get('/wilayah/children', [WilayahController::class, 'getChildren'])->name('api.wilayah.children');
