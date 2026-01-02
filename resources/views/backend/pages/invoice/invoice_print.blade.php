@@ -47,7 +47,7 @@
                 <p class="text-sm">Jatuh Tempo: <span class="font-semibold">{{ $invoice->jatuh_tempo->format('d F Y') ?? '-' }}</span></p>
                 <p class="text-sm">Total: <span class="font-semibold text-blue-600">{{ number_format($invoice->total_biaya ?? 0, 2, ',', '.') }} {{ $invoice->pelanggan->penagihan->mata_uang ?? 'IDR' }}</span></p>
                 <p class="text-sm">Status: <span class="font-semibold">{{ ucfirst($invoice->status ?? '-') }}</span></p>
-                <p class="text-sm">Metode Pembayaran: {{ $invoice->metode_pembayaran ?? '-' }}</p>
+                <p class="text-sm">Metode Pembayaran: {{ ucwords(str_replace('_', ' ', $invoice->metode_pembayaran)) ?? '-' }}</p>
             </div>
         </div>
         

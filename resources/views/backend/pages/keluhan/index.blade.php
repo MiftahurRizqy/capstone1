@@ -8,11 +8,13 @@
     <div class="flex flex-col gap-6">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-white/90">Manajemen Keluhan</h1>
+            @can('keluhan.create')
             <div x-data="{ open: false }">
                 <button @click="open = true" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-200">
                     <i class="fas fa-plus"></i>
                     <span>Tambah Keluhan</span>
                 </button>
+            @endcan
 
                 {{-- Modal Tambah Keluhan --}}
                 <div x-show="open || ('{{ session('modal_open') }}' === 'add_keluhan_error')"
@@ -212,8 +214,11 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            @php $highlightId = session('highlight_keluhan'); @endphp
                             @forelse($keluhan as $index => $k)
-                            <tr>
+                            <tr id="row-{{ $k->id_keluhan }}" 
+                                class="border-b border-gray-100 dark:border-gray-700 transition-all duration-1000 
+                                {{ $highlightId == $k->id_keluhan ? 'bg-yellow-100 dark:bg-yellow-900/40 ring-2 ring-yellow-400 z-10 relative shadow-lg' : 'hover:bg-gray-50 dark:hover:bg-gray-800' }}">
                                 <td class="px-4 py-3">{{ $keluhan->firstItem() + $index }}</td>
                                 <td class="px-4 py-3">{{ $k->layananInduk->nama_layanan_induk ?? '-' }}</td>
                                 <td class="px-4 py-3">
@@ -228,13 +233,16 @@
                                 <td class="px-4 py-3">{{ $k->tanggal_input->format('d-m-Y') }}</td>
                                 <td class="px-4 py-3 flex gap-2">
                                     {{-- Tombol Edit --}}
+                                    @can('keluhan.edit')
                                     <a href="{{ route('admin.keluhan.edit', $k->id_keluhan) }}"
                                        class="inline-flex items-center justify-center w-8 h-8 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
                                        title="Edit">
                                         <i class="fas fa-edit"></i>
                                         <span class="sr-only">Edit</span>
                                     </a>
+                                    @endcan
                                     {{-- Tombol Hapus --}}
+                                    @can('keluhan.delete')
                                     <form action="{{ route('admin.keluhan.destroy', $k->id_keluhan) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus keluhan ini?');">
                                         @csrf
                                         @method('DELETE')
@@ -245,8 +253,24 @@
                                             <span class="sr-only">Hapus</span>
                                         </button>
                                     </form>
+                                    @endcan
                                 </td>
                             </tr>
+                            @if($highlightId == $k->id_keluhan)
+                            <script>
+                                document.addEventListener("DOMContentLoaded", function() {
+                                    const row = document.getElementById('row-{{ $k->id_keluhan }}');
+                                    if(row) {
+                                        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                        // Optional: Blink effect
+                                        setTimeout(() => {
+                                            row.classList.remove('ring-2', 'ring-yellow-400', 'shadow-lg', 'z-10', 'relative');
+                                            row.classList.add('bg-transparent'); // Fade out background if needed
+                                        }, 10000); // Remove strong highlight after 10 seconds
+                                    }
+                                });
+                            </script>
+                            @endif
                             @empty
                             <tr>
                                 <td colspan="11" class="text-center py-4 text-gray-500 dark:text-gray-400">

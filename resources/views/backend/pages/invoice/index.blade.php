@@ -8,10 +8,12 @@
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-white/90">Daftar Invoice</h1>
             <div x-data="{ open: {{ ($errors->any() || session('error')) ? 'true' : 'false' }} }">
+                @can('invoice.create')
                 <button @click="open = true" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow dark:bg-blue-500 dark:hover:bg-blue-600">
                     <i class="fas fa-plus"></i>
                     <span>Buat Invoice</span>
                 </button>
+                @endcan
 
                 {{-- Modal --}}
                 <div x-show="open"
@@ -49,11 +51,11 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label for="pelanggan_id" class="block text-sm text-gray-700 dark:text-gray-300">Pelanggan</label>
-                                    <select name="pelanggan_id" id="pelanggan_id" class="w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('pelanggan_id') border-red-500 @enderror">
+                                    <select name="pelanggan_id" id="pelanggan_id" class="select2-pelanggan w-full mt-1 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white @error('pelanggan_id') border-red-500 @enderror">
                                         <option value="">Pilih Pelanggan</option>
                                         @foreach($pelanggan as $p)
                                             <option value="{{ $p->id }}" {{ old('pelanggan_id') == $p->id ? 'selected' : '' }}>
-                                                {{ $p->nama_lengkap ?? $p->nama_perusahaan }} ({{ $p->nomor_pelanggan }})
+                                                {{ $p->nama_lengkap ?: $p->nama_perusahaan }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -128,24 +130,42 @@
             </div>
         </div>
 
+        {{-- Pesan Status --}}
+        @if (session('success'))
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <strong class="font-bold">Sukses!</strong>
+                <span class="block sm:inline">{{ session('success') }}</span>
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <strong class="font-bold">Gagal!</strong>
+                <span class="block sm:inline">{{ session('error') }}</span>
+            </div>
+        @endif
+
         {{-- Filter Form --}}
-        <div class="mb-4">
-            <form action="{{ route('admin.invoice.index') }}" method="GET" class="flex gap-4 items-center">
-                <div class="flex-1">
-                    <label for="search" class="sr-only">Cari Invoice</label>
-                    <input type="text" name="search" id="search" placeholder="Cari nomor invoice, nama/nomor pelanggan..." class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" value="{{ request('search') }}">
+        <div class="card bg-white shadow rounded-lg dark:bg-white/[0.03] dark:border dark:border-gray-700 p-4 mb-6">
+            <form action="{{ route('admin.invoice.index') }}" method="GET">
+                <div class="flex flex-wrap items-center gap-3">
+                    <select name="status" class="px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white min-w-[200px]">
+                        <option value="">-- Semua Status --</option>
+                        <option value="belum bayar" {{ request('status') == 'belum bayar' ? 'selected' : '' }}>Belum Bayar</option>
+                        <option value="lunas" {{ request('status') == 'lunas' ? 'selected' : '' }}>Lunas</option>
+                    </select>
+                    <input type="text" name="search" id="search" placeholder="Cari nomor invoice, nama/nomor pelanggan..." class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" value="{{ request('search') }}">
+                    <button type="submit" class="btn btn-primary inline-flex items-center gap-2">
+                        <i class="fas fa-search"></i>
+                        <span>Cari</span>
+                    </button>
+                    <a href="{{ route('admin.invoice.index') }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500 transition-colors duration-200">
+                        <span>Reset</span>
+                    </a>
+                    <a href="{{ route('admin.invoice.export', request()->query()) }}" class="btn btn-success inline-flex items-center gap-2">
+                        <i class="fas fa-file-excel"></i>
+                        <span>Export Excel</span>
+                    </a>
                 </div>
-                <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg shadow dark:bg-green-500 dark:hover:bg-green-600">
-                    <i class="fas fa-search"></i>
-                    <span>Cari</span>
-                </button>
-                <a href="{{ route('admin.invoice.index') }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500">
-                    <span>Reset</span>
-                </a>
-                <a href="{{ route('admin.invoice.export', request()->query()) }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg shadow dark:bg-green-500 dark:hover:bg-green-600">
-                    <i class="fas fa-file-excel"></i>
-                    <span>Export Excel</span>
-                </a>
             </form>
         </div>
         
@@ -186,12 +206,16 @@
                                     </td>
                                     <td class="px-4 py-3 flex gap-2">
                                         <a href="{{ route('admin.invoice.show', $invoice->id) }}" class="inline-flex items-center justify-center w-8 h-8 bg-green-500 text-white rounded-md hover:bg-green-600" title="Cek Detail"><i class="fas fa-eye"></i></a>
+                                        @can('invoice.edit')
                                         <a href="{{ route('admin.invoice.edit', $invoice->id) }}" class="inline-flex items-center justify-center w-8 h-8 bg-blue-500 text-white rounded-md hover:bg-blue-600" title="Edit"><i class="fas fa-edit"></i></a>
+                                        @endcan
+                                        @can('invoice.delete')
                                         <form action="{{ route('admin.invoice.destroy', $invoice->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus invoice ini?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="inline-flex items-center justify-center w-8 h-8 bg-red-500 text-white rounded-md hover:bg-red-600" title="Hapus"><i class="fas fa-trash"></i></button>
                                         </form>
+                                        @endcan
                                     </td>
                                 </tr>
                             @empty
@@ -213,43 +237,161 @@
 </div>
 
 @push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const pelangganSelect = document.getElementById('pelanggan_id');
-        const layananSelect = document.getElementById('layanan_id');
 
-        pelangganSelect.addEventListener('change', function () {
-            const pelangganId = this.value;
-            layananSelect.innerHTML = '<option value="">Memuat layanan...</option>';
+
+{{-- Select2 CSS --}}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+    /* Select2 Container Styling */
+    .select2-container .select2-selection--single {
+        height: 42px !important;
+        margin-top: 0.25rem !important; /* mt-1 matches Tailwind */
+        padding: 8px 12px !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 0.5rem !important;
+        background-color: white !important;
+        transition: all 0.2s;
+        display: flex !important;
+        align-items: center !important;
+    }
+    
+    .select2-container--default .select2-selection--single:focus,
+    .select2-container--default.select2-container--focus .select2-selection--single {
+        border-color: #3b82f6 !important;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+        outline: none !important;
+    }
+    
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 26px !important;
+        padding-left: 0 !important;
+        color: #1f2937 !important;
+    }
+    
+    .select2-container--default .select2-selection--single .select2-selection__placeholder {
+        color: #9ca3af !important;
+    }
+    
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 100% !important;
+        top: 0 !important;
+        right: 10px !important;
+    }
+    
+    /* Dropdown Styling */
+    .select2-dropdown {
+        border: 1px solid #d1d5db !important;
+        border-radius: 0.5rem !important;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    .select2-search--dropdown {
+        padding: 8px !important;
+    }
+    
+    .select2-search--dropdown .select2-search__field {
+        border: 1px solid #d1d5db !important;
+        border-radius: 0.375rem !important;
+        padding: 6px 12px !important;
+    }
+    
+    .select2-search--dropdown .select2-search__field::placeholder {
+        color: #9ca3af !important;
+    }
+    
+    .select2-results__option {
+        padding: 8px 12px !important;
+    }
+    
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #3b82f6 !important;
+    }
+    
+    /* Dark Mode */
+    .dark .select2-container--default .select2-selection--single {
+        background-color: #374151 !important;
+        border-color: #4b5563 !important;
+    }
+    
+    .dark .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: white !important;
+    }
+    
+    .dark .select2-dropdown {
+        background-color: #374151 !important;
+        border-color: #4b5563 !important;
+    }
+    
+    .dark .select2-search--dropdown .select2-search__field {
+        background-color: #1f2937 !important;
+        border-color: #4b5563 !important;
+        color: white !important;
+    }
+    
+    .dark .select2-container--default .select2-results__option {
+        color: white !important;
+        background-color: #374151 !important;
+    }
+    
+    .dark .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #3b82f6 !important;
+    }
+</style>
+
+{{-- jQuery and Select2 JS --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Initialize Select2 for pelanggan dropdown
+        $('.select2-pelanggan').select2({
+            placeholder: 'Pilih atau ketik nama pelanggan',
+            allowClear: true,
+            width: '100%',
+            dropdownParent: $('.select2-pelanggan').parent()
+        });
+        
+        // Add placeholder to search field when dropdown opens
+        $('.select2-pelanggan').on('select2:open', function() {
+            setTimeout(function() {
+                $('.select2-search--dropdown .select2-search__field').attr('placeholder', 'Ketik nama pelanggan...');
+            }, 50);
+        });
+
+        // Event listener for Select2 change
+        $('.select2-pelanggan').on('change', function() {
+            const pelangganId = $(this).val();
+            const layananSelect = $('#layanan_id');
+            
+            layananSelect.html('<option value="">Memuat layanan...</option>');
 
             if (pelangganId) {
-                fetch(`{{ url('admin/layanan-by-pelanggan') }}/${pelangganId}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        layananSelect.innerHTML = '<option value="">Pilih Layanan</option>';
+                $.ajax({
+                    url: `{{ url('admin/layanan-by-pelanggan') }}/${pelangganId}`,
+                    type: 'GET',
+                    success: function(data) {
+                        layananSelect.html('<option value="">Pilih Layanan</option>');
                         if (data.length > 0) {
                             data.forEach(layanan => {
                                 const namaPaket = layanan.layanan_entry ? layanan.layanan_entry.nama_paket : 'N/A';
-                                const option = document.createElement('option');
-                                option.value = layanan.id;
-                                option.textContent = `${namaPaket}`;
-                                layananSelect.appendChild(option);
+                                const option = new Option(namaPaket, layanan.id);
+                                layananSelect.append(option);
                             });
+                            // Auto select the first service
+                            if(data.length > 0) {
+                                layananSelect.val(data[0].id);
+                            }
                         } else {
-                            layananSelect.innerHTML = '<option value="">Tidak ada layanan</option>';
+                            layananSelect.html('<option value="">Tidak ada layanan</option>');
                         }
-                    })
-                    .catch(error => {
+                    },
+                    error: function(xhr, status, error) {
                         console.error('Error fetching layanan:', error);
-                        layananSelect.innerHTML = '<option value="">Gagal memuat layanan</option>';
-                    });
+                        layananSelect.html('<option value="">Gagal memuat layanan</option>');
+                    }
+                });
             } else {
-                layananSelect.innerHTML = '<option value="">Pilih Pelanggan Dulu</option>';
+                layananSelect.html('<option value="">Pilih Pelanggan Dulu</option>');
             }
         });
     });

@@ -30,7 +30,7 @@
                     <p><strong>Status:</strong> <span class="font-medium">{{ ucfirst($invoice->status) }}</span></p>
                     <p><strong>Total Biaya:</strong> <span class="font-medium">{{ number_format($invoice->total_biaya, 2, ',', '.') }}</span></p>
                     <p><strong>Tanggal Bayar:</strong> <span class="font-medium">{{ $invoice->tanggal_bayar ? $invoice->tanggal_bayar->format('d M Y') : '-' }}</span></p>
-                    <p><strong>Metode Pembayaran:</strong> <span class="font-medium">{{ $invoice->metode_pembayaran ?? '-' }}</span></p>
+                    <p><strong>Metode Pembayaran:</strong> <span class="font-medium">{{ ucwords(str_replace('_', ' ', $invoice->metode_pembayaran)) ?? '-' }}</span></p>
                     <p><strong>Keterangan:</strong> <span class="font-medium">{{ $invoice->keterangan ?? '-' }}</span></p>
                 </div>
                 <div>

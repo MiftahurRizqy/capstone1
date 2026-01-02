@@ -1,33 +1,32 @@
 <header id="appHeader"
-
-x-data="{
-    menuToggle: false,
-    textColor: '',
-    isDark: document.documentElement.classList.contains('dark'),
-    init() {
-        this.updateBg();
-        this.updateColor();
-        const observer = new MutationObserver(() => {
+    x-data="{
+        menuToggle: false,
+        textColor: '',
+        isDark: document.documentElement.classList.contains('dark'),
+        init() {
             this.updateBg();
             this.updateColor();
-        });
-        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-    },
-    updateBg() {
-        this.isDark = document.documentElement.classList.contains('dark');
-        const liteBg = '{{ config('settings.navbar_bg_lite') }}';
-        const darkBg = '{{ config('settings.navbar_bg_dark') }}';
-        this.$el.style.backgroundColor = this.isDark ? darkBg : liteBg;
-    },
-    updateColor() {
-        this.isDark = document.documentElement.classList.contains('dark');
-        this.textColor = this.isDark
-            ? '{{ config('settings.navbar_text_dark') }}'
-            : '{{ config('settings.navbar_text_lite') }}';
-    }
-}"
-x-init="init()"
-    class="sticky top-0 flex w-full border-gray-200 lg:border-b dark:border-gray-800">
+            const observer = new MutationObserver(() => {
+                this.updateBg();
+                this.updateColor();
+            });
+            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+        },
+        updateBg() {
+            this.isDark = document.documentElement.classList.contains('dark');
+            const liteBg = '{{ config('settings.navbar_bg_lite') }}';
+            const darkBg = '{{ config('settings.navbar_bg_dark') }}';
+            this.$el.style.backgroundColor = this.isDark ? darkBg : liteBg;
+        },
+        updateColor() {
+            this.isDark = document.documentElement.classList.contains('dark');
+            this.textColor = this.isDark
+                ? '{{ config('settings.navbar_text_dark') }}'
+                : '{{ config('settings.navbar_text_lite') }}';
+        }
+    }"
+    x-init="init()"
+    class="sticky top-0 flex w-full border-gray-200 lg:border-b dark:border-gray-800 z-50">
     <div class="flex grow flex-col items-center justify-between lg:flex-row lg:px-6">
         <div
             class="flex w-full items-center justify-between gap-2 border-b border-gray-200 px-3 py-3 sm:gap-4 lg:justify-normal lg:border-b-0 lg:px-0 lg:py-4 dark:border-gray-800">
@@ -73,10 +72,11 @@ x-init="init()"
                 </button>
                 @php ld_apply_filters('dark_mode_toggler_after_button', '') @endphp
 
-                <div class="relative" x-data="{ notifOpen: false }" @click.outside="notifOpen = false">
+                <div class="relative" x-data="{ notifOpen: false, showAll: false }" @click.outside="notifOpen = false">
                     @php
-                        $unread = auth()->user()->unreadNotifications ?? collect();
-                        $unreadCount = $unread->count();
+                        // Ambil 20 notifikasi terakhir (read & unread)
+                        $notifications = auth()->user()->notifications()->latest()->take(20)->get();
+                        $unreadCount = auth()->user()->unreadNotifications->count();
                     @endphp
                     <button class="hover:text-dark-900 relative flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white" @click.prevent="notifOpen = !notifOpen">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -87,22 +87,49 @@ x-init="init()"
                             <span class="absolute -top-0.5 -right-0.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold text-white">{{ $unreadCount }}</span>
                         @endif
                     </button>
-                    <div x-show="notifOpen" class="absolute right-0 mt-3 w-80 rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark" style="display: none">
-                        <div class="mb-2 text-theme-sm font-medium text-gray-700 dark:text-gray-400">Notifikasi</div>
-                        <ul class="max-h-72 space-y-2 overflow-auto">
-                            @forelse($unread as $n)
+                    <div x-show="notifOpen" class="absolute right-0 mt-3 w-80 rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark z-50" style="display: none">
+                        <div class="mb-2 flex items-center justify-between px-3">
+                            <span class="text-theme-sm font-medium text-gray-700 dark:text-gray-400">Notifikasi</span>
+                            @if($unreadCount > 0)
+                                <span class="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-2 py-0.5 rounded-full">{{ $unreadCount }} Baru</span>
+                            @endif
+                        </div>
+                        <ul class="max-h-80 space-y-1 overflow-y-auto custom-scrollbar">
+                            @forelse($notifications as $n)
                                 @php $data = $n->data ?? []; @endphp
-                                <li class="rounded-lg px-3 py-2 text-theme-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/5">
-                                    <a href="{{ $data['url'] ?? '#' }}" class="flex flex-col gap-0.5">
-                                        <span class="font-medium">{{ $data['title'] ?? 'Notifikasi' }}</span>
-                                        <span class="text-xs text-gray-500 dark:text-gray-400">Pelanggan: {{ $data['pelanggan'] ?? '-' }} • Prioritas: {{ ucfirst($data['prioritas'] ?? '-') }}</span>
-                                        <span class="text-xs text-gray-500 dark:text-gray-400">Keluhan: {{ $data['keluhan1'] ?? '-' }} • Via: {{ $data['via'] ?? '-' }}</span>
+                                <li x-show="showAll || {{ $loop->index }} < 4" class="rounded-lg px-3 py-2 text-theme-sm hover:bg-gray-100 dark:hover:bg-white/5 transition-colors {{ is_null($n->read_at) ? 'bg-blue-50/50 dark:bg-blue-900/10' : '' }}">
+                                    <a href="{{ route('admin.notifications.read', $n->id) }}" class="flex flex-col gap-0.5">
+                                        <div class="flex justify-between items-start">
+                                            <span class="font-medium truncate pr-2 {{ is_null($n->read_at) ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400' }}">
+                                                {{ $data['title'] ?? 'Notifikasi' }}
+                                                @if(is_null($n->read_at))
+                                                <span class="inline-block w-2 h-2 rounded-full bg-blue-500 ml-1"></span>
+                                                @endif
+                                            </span>
+                                            <span class="text-[10px] text-gray-400 whitespace-nowrap">{{ $n->created_at->diffForHumans() }}</span>
+                                        </div>
+                                        <span class="text-xs text-gray-500 dark:text-gray-500 line-clamp-1">
+                                            {{ $data['pelanggan'] ?? '-' }} • {{ $data['keluhan1'] ?? '-' }}
+                                        </span>
+                                        <span class="text-[10px] text-gray-400">
+                                            Via: {{ $data['via'] ?? '-' }} • {{ ucfirst($data['prioritas'] ?? '-') }}
+                                        </span>
                                     </a>
                                 </li>
                             @empty
-                                <li class="rounded-lg px-3 py-2 text-theme-sm text-gray-600 dark:text-gray-300">Tidak ada notifikasi baru</li>
+                                <li class="rounded-lg px-3 py-4 text-center text-theme-sm text-gray-500 dark:text-gray-400">
+                                    <i class="fas fa-bell-slash mb-2 text-xl opacity-50"></i>
+                                    <p>Tidak ada notifikasi</p>
+                                </li>
                             @endforelse
                         </ul>
+                        @if($notifications->count() > 4)
+                            <div x-show="!showAll" class="mt-2 pt-2 border-t border-gray-100 dark:border-gray-700 text-center">
+                                <button @click.stop="showAll = true" class="text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
+                                    Tampilkan Semua ({{ $notifications->count() }})
+                                </button>
+                            </div>
+                        @endif
                     </div>
                 </div>
 
@@ -129,7 +156,7 @@ x-init="init()"
 
                 <!-- Dropdown Start -->
                 <div x-show="dropdownOpen"
-                    class="absolute right-0 mt-[17px] flex w-[260px] flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark"
+                    class="absolute right-0 mt-[17px] flex w-[260px] flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark z-50"
                     style="display: none">
                     <div>
                         <span class="block text-theme-sm font-medium text-gray-700 dark:text-gray-400">

@@ -172,6 +172,7 @@ Route::prefix('spk')->name('spk.')->group(function () {
     Route::delete('{spk}', [SpkController::class, 'destroy'])->name('destroy')->where('spk', '.*');
 
 });
+    Route::get('/notifications/{id}/read', [App\Http\Controllers\Backend\NotificationController::class, 'read'])->name('notifications.read');
 });
 
 

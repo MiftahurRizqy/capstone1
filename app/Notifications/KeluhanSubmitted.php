@@ -35,7 +35,7 @@ class KeluhanSubmitted extends Notification
             'tujuan' => $this->keluhan->tujuan,
             'via' => $this->keluhan->via,
             'tanggal_input' => optional($this->keluhan->tanggal_input)?->toDateTimeString(),
-            'url' => route('admin.keluhan.edit', $this->keluhan->id_keluhan),
+            'url' => route('admin.keluhan.index'),
         ];
     }
 }

@@ -87,13 +87,16 @@
                                 <td class="px-4 py-3">{{ $s->rencana_pengerjaan ? $s->rencana_pengerjaan->format('d-m-Y') : '-' }}</td>
                                 <td class="px-4 py-3 flex gap-2">
                                     {{-- Tombol Edit --}}
+                                    @can('spk.edit')
                                     <a href="{{ route('admin.spk.edit', urlencode($s->nomor_spk)) }}"
                                        class="inline-flex items-center justify-center w-8 h-8 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
                                        title="Edit">
                                         <i class="fas fa-edit"></i>
                                         <span class="sr-only">Edit</span>
                                     </a>
+                                    @endcan
                                     {{-- Tombol Hapus --}}
+                                    @can('spk.delete')
                                     <form action="{{ route('admin.spk.destroy', urlencode($s->nomor_spk)) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus SPK ini?');">
                                         @csrf
                                         @method('DELETE')
@@ -104,6 +107,7 @@
                                             <span class="sr-only">Hapus</span>
                                         </button>
                                     </form>
+                                    @endcan
                                 </td>
                             </tr>
                             @empty

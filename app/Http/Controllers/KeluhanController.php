@@ -157,9 +157,10 @@ class KeluhanController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Keluhan $keluhan)
     {
-        //
+        $keluhan->load(['pelanggan', 'layananInduk']);
+        return view('backend.pages.keluhan.show', compact('keluhan'));
     }
 
     /**

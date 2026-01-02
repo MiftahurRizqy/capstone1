@@ -35,10 +35,12 @@
                 kategoriData: {{ $kategoriDataForAlpine->toJson() }}
             }" id="pelanggan-modal-wrapper">
                 
+                @can('pelanggan.create')
                 <button @click="open = true" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-200">
                     <i class="fas fa-plus"></i>
                     <span>Tambah Pelanggan</span>
                 </button>
+                @endcan
 
                 {{-- Modal Tambah Pelanggan (MAIN MODAL) --}}
                 <div x-show="open"
@@ -601,13 +603,16 @@
                                 </td>
                                 <td class="px-4 py-3 flex gap-2">
                                     {{-- Tombol Edit --}}
+                                    @can('pelanggan.edit')
                                     <a href="{{ route('admin.pelanggan.edit', $p->id) }}"
                                         class="inline-flex items-center justify-center w-8 h-8 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
                                         title="Edit">
                                         <i class="fas fa-edit"></i>
                                         <span class="sr-only">Edit</span>
                                     </a>
+                                    @endcan
                                     {{-- Tombol Hapus --}}
+                                    @can('pelanggan.delete')
                                     <form action="{{ route('admin.pelanggan.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pelanggan ini?');">
                                         @csrf
                                         @method('DELETE')
@@ -618,6 +623,7 @@
                                             <span class="sr-only">Hapus</span>
                                         </button>
                                     </form>
+                                    @endcan
                                 </td>
                             </tr>
                             @empty

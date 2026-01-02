@@ -62,10 +62,10 @@ User Edit - {{ config('app.name') }}
                         <div>
                             <label for="roles" class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ __('Assign Roles') }}</label>
                             <div class="space-y-2">
-                                @foreach ($roles as $id => $name)
+                                @foreach ($roles as $role)
                                     <div class="flex items-center">
-                                        <input type="checkbox" name="roles[]" id="role_{{ $id }}" value="{{ $name }}" {{ $user->roles->pluck('id')->contains($id) ? 'checked' : '' }} class="h-4 w-4 text-brand-500 border-gray-300 rounded focus:ring-brand-400 dark:border-gray-700 dark:bg-gray-900 dark:focus:ring-brand-500">
-                                        <label for="role_{{ $id }}" class="ml-2 text-sm text-gray-700 dark:text-gray-400">{{ ucfirst($name) }}</label>
+                                        <input type="checkbox" name="roles[]" id="role_{{ $role->id }}" value="{{ $role->name }}" {{ $user->hasRole($role->name) ? 'checked' : '' }} class="h-4 w-4 text-brand-500 border-gray-300 rounded focus:ring-brand-400 dark:border-gray-700 dark:bg-gray-900 dark:focus:ring-brand-500">
+                                        <label for="role_{{ $role->id }}" class="ml-2 text-sm text-gray-700 dark:text-gray-400">{{ ucfirst($role->name) }}</label>
                                     </div>
                                 @endforeach
                             </div>

@@ -56,7 +56,7 @@ class AppServiceProvider extends ServiceProvider
                     if (!Schema::hasTable('notifications')) {
                         return;
                     }
-                    $recipients = User::permission('keluhan.view')->get();
+                    $recipients = User::all();
                     foreach ($recipients as $user) {
                         $user->notify(new KeluhanSubmitted($keluhan));
                     }

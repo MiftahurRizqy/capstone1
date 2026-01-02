@@ -1,6 +1,6 @@
 <aside
     :class="sidebarToggle ? 'translate-x-0 lg:w-[85px]' : '-translate-x-full'"
-    class="sidebar fixed left-0 top-0 z-10 flex h-screen w-[290px] flex-col overflow-y-hidden border-r {{ config('settings.sidebar_bg_lite') ? '' : 'bg-gray-800' }} px-5 border-gray-800 dark:bg-gray-900 lg:static lg:translate-x-0"
+    class="sidebar fixed left-0 top-0 z-999 flex h-screen w-[290px] flex-col overflow-y-hidden border-r {{ config('settings.sidebar_bg_lite') ? '' : 'bg-gray-800' }} px-5 border-gray-800 dark:bg-gray-900 lg:static lg:translate-x-0"
     id="appSidebar"
     x-data="{
         init() {

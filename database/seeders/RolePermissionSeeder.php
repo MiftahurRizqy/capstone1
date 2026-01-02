@@ -182,16 +182,16 @@ class RolePermissionSeeder extends Seeder
             for ($j = 0; $j < count($permissions[$i]['permissions']); $j++) {
                 $permissionExist = Permission::where('name', $permissions[$i]['permissions'][$j])->first();
                 if (is_null($permissionExist)) {
-                    $permission = Permission::create(
+                    $permissionExist = Permission::create(
                         [
                             'name' => $permissions[$i]['permissions'][$j],
                             'group_name' => $permissionGroup,
                             'guard_name' => 'web',
                         ]
                     );
-                    $roleSuperAdmin->givePermissionTo($permission);
-                    $permission->assignRole($roleSuperAdmin);
                 }
+                $roleSuperAdmin->givePermissionTo($permissionExist);
+                $permissionExist->assignRole($roleSuperAdmin);
             }
         }
 

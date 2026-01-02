@@ -1,14 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 
 class UserLoginAsController extends Controller
 {
@@ -18,22 +15,30 @@ class UserLoginAsController extends Controller
 
         $user = User::findOrFail($id);
 
-        Session::put('original_user_id', auth()->id());
+        // Simpan ID user asli di session
+        session()->put('original_user_id', auth()->id());
+
         Auth::login($user);
 
         session()->flash('success', __('You are now logged in as :name.', ['name' => $user->name]));
 
-        return redirect()->route('admin.dashboard');
+        if ($user->can('dashboard.view')) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        session()->flash('warning', __('User tidak memiliki izin untuk mengakses Dashboard. Dialihkan ke halaman Home.'));
+        return redirect()->route('home');
     }
 
     public function switchBack(): RedirectResponse
     {
-        $originalUserId = session()->pull('original_user_id');
-        if ($originalUserId) {
-            Auth::loginUsingId($originalUserId);
-            session()->flash('success', __('Switched back to the original user.'));
+        if (session()->has('original_user_id')) {
+            $originalUserId = session()->pull('original_user_id');
+            $originalUser = User::findOrFail($originalUserId);
+            Auth::login($originalUser);
+            session()->flash('success', __('You have switched back to your original account.'));
         }
 
-        return redirect()->route('admin.dashboard');
+        return redirect()->route('admin.users.index');
     }
 }
