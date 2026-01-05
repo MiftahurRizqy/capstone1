@@ -51,43 +51,61 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kode</label>
-                                    <input type="text" name="kode" value="{{ old('kode') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    <input type="text" name="kode" value="{{ old('kode') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white @error('kode') border-red-500 @enderror">
+                                    @error('kode')
+                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Paket</label>
-                                    <input type="text" name="nama_paket" value="{{ old('nama_paket') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    <input type="text" name="nama_paket" value="{{ old('nama_paket') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white @error('nama_paket') border-red-500 @enderror">
+                                    @error('nama_paket')
+                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
-                                    <select name="status" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    <select name="status" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white @error('status') border-red-500 @enderror">
                                         <option value="aktif" {{ old('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
                                         <option value="tidak aktif" {{ old('status') == 'tidak aktif' ? 'selected' : '' }}>Tidak Aktif</option>
                                     </select>
+                                    @error('status')
+                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipe</label>
-                                    <select name="tipe" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    <select name="tipe" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white @error('tipe') border-red-500 @enderror">
                                         <option value="TV" {{ old('tipe') == 'TV' ? 'selected' : '' }}>TV</option>
                                         <option value="Internet" {{ old('tipe') == 'Internet' ? 'selected' : '' }}>Internet</option>
                                         <option value="Lain-Lain" {{ old('tipe') == 'Lain-Lain' ? 'selected' : '' }}>Lain-Lain</option>
                                     </select>
+                                    @error('tipe')
+                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kelompok Layanan</label>
-                                    <select name="kelompok_layanan" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    <select name="kelompok_layanan" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white @error('kelompok_layanan') border-red-500 @enderror">
                                         <option value="Layanan Dasar" {{ old('kelompok_layanan') == 'Layanan Dasar' ? 'selected' : '' }}>Layanan Dasar</option>
                                         <option value="Web Hosting" {{ old('kelompok_layanan') == 'Web Hosting' ? 'selected' : '' }}>Web Hosting</option>
                                         <option value="Colocation" {{ old('kelompok_layanan') == 'Colocation' ? 'selected' : '' }}>Colocation</option>
                                     </select>
+                                    @error('kelompok_layanan')
+                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Layanan Induk</label>
-                                    <select name="layanan_induk_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    <select name="layanan_induk_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white @error('layanan_induk_id') border-red-500 @enderror">
                                         <option value="">Tidak ada</option>
                                         @foreach($layananInduks as $li)
                                         <option value="{{ $li->id }}" {{ old('layanan_induk_id') == $li->id ? 'selected' : '' }}>{{ $li->nama_layanan_induk }}</option>
                                         @endforeach
                                     </select>
+                                    @error('layanan_induk_id')
+                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 {{-- Kolom Checkbox SPK --}}
@@ -135,15 +153,24 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Biaya Setup</label>
-                                    <input type="number" step="0.01" name="biaya_setup" value="{{ old('biaya_setup') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    <input type="number" step="0.01" name="biaya_setup" value="{{ old('biaya_setup') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white @error('biaya_setup') border-red-500 @enderror">
+                                    @error('biaya_setup')
+                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Biaya Reguler 1 Bulan</label>
-                                    <input type="number" step="0.01" name="biaya_reguler_1_bulan" value="{{ old('biaya_reguler_1_bulan') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    <input type="number" step="0.01" name="biaya_reguler_1_bulan" value="{{ old('biaya_reguler_1_bulan') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white @error('biaya_reguler_1_bulan') border-red-500 @enderror">
+                                    @error('biaya_reguler_1_bulan')
+                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Biaya Reguler 3 Bulan</label>
-                                    <input type="number" step="0.01" name="biaya_reguler_3_bulan" value="{{ old('biaya_reguler_3_bulan') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    <input type="number" step="0.01" name="biaya_reguler_3_bulan" value="{{ old('biaya_reguler_3_bulan') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white @error('biaya_reguler_3_bulan') border-red-500 @enderror">
+                                    @error('biaya_reguler_3_bulan')
+                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bonus Reguler 3 Bulan</label>
@@ -156,7 +183,10 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Biaya Reguler 6 Bulan</label>
-                                    <input type="number" step="0.01" name="biaya_reguler_6_bulan" value="{{ old('biaya_reguler_6_bulan') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    <input type="number" step="0.01" name="biaya_reguler_6_bulan" value="{{ old('biaya_reguler_6_bulan') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white @error('biaya_reguler_6_bulan') border-red-500 @enderror">
+                                    @error('biaya_reguler_6_bulan')
+                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bonus Reguler 6 Bulan</label>
@@ -169,7 +199,10 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Biaya Reguler 12 Bulan</label>
-                                    <input type="number" step="0.01" name="biaya_reguler_12_bulan" value="{{ old('biaya_reguler_12_bulan') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    <input type="number" step="0.01" name="biaya_reguler_12_bulan" value="{{ old('biaya_reguler_12_bulan') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white @error('biaya_reguler_12_bulan') border-red-500 @enderror">
+                                    @error('biaya_reguler_12_bulan')
+                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bonus Reguler 12 Bulan</label>
@@ -214,7 +247,10 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Biaya Reguler 1</label>
-                                    <input type="number" step="0.01" name="biaya_reguler_1" value="{{ old('biaya_reguler_1') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    <input type="number" step="0.01" name="biaya_reguler_1" value="{{ old('biaya_reguler_1') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white @error('biaya_reguler_1') border-red-500 @enderror">
+                                    @error('biaya_reguler_1')
+                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Account MYOB 2</label>
@@ -222,7 +258,10 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Biaya Reguler 2</label>
-                                    <input type="number" step="0.01" name="biaya_reguler_2" value="{{ old('biaya_reguler_2') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    <input type="number" step="0.01" name="biaya_reguler_2" value="{{ old('biaya_reguler_2') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white @error('biaya_reguler_2') border-red-500 @enderror">
+                                    @error('biaya_reguler_2')
+                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Milis</label>

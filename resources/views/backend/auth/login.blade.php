@@ -9,7 +9,7 @@
 <div class="p-6 sm:p-8 bg-white dark:bg-gray-800 shadow-xl rounded-lg border border-gray-200 dark:border-gray-700">
     <div class="mb-6">
         <h1 class="mb-2 text-center font-bold text-gray-800 text-title-lg dark:text-white/90 sm:text-title-xl">
-            {{ __('Welcome to Cleon') }}
+            {{ __('Welcome to CCBS') }}
         </h1>
         <p class="text-center text-sm text-gray-500 dark:text-gray-400">
             {{ __('Enter your email and password to sign in to your dashboard.') }}

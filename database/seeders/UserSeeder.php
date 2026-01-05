@@ -22,17 +22,19 @@ class UserSeeder extends Seeder
                 'email' => 'superadmin@example.com',
                 'username' => 'superadmin',
                 'password' => Hash::make('12345678'),
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
-                'name' => 'Subscriber',
-                'email' => 'subscriber@example.com',
-                'username' => 'subscriber',
+                'name' => 'Teknisi',
+                'email' => 'teknisi@example.com',
+                'username' => 'teknisi',
                 'password' => Hash::make('12345678'),
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
         ]);
 
-        // Run factory to create additional users with unique details.
-        User::factory()->count(50)->create();
-        $this->command->info('Users table seeded with 52 users!');
+        $this->command->info('Users table seeded with Super Admin and Teknisi!');
     }
 }
