@@ -2,7 +2,7 @@
 
 @section('title')
     {{-- Updated Title --}}
-    {{ __('Sign In') }} | Cleon
+    {{ __('Sign In') }} | CCBS
 @endsection
 
 @section('admin-content')
