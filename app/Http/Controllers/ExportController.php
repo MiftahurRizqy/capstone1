@@ -17,6 +17,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExportController extends Controller
+
 {
     private function downloadXlsx(string $filename, array $headings, iterable $rows): StreamedResponse
     {
