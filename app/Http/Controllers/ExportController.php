@@ -17,6 +17,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExportController extends Controller
+
 {
     private function downloadXlsx(string $filename, array $headings, iterable $rows): StreamedResponse
     {
@@ -56,7 +57,7 @@ class ExportController extends Controller
 
     public function keluhan(Request $request)
     {
-        $query = Keluhan::with(['pelanggan', 'layananInduk', 'spk'])->latest();
+        $query = Keluhan::with(['pelanggan', 'layananInduk'])->latest();
 
         if ($search = $request->get('search')) {
             $query->where(function ($q) use ($search) {
@@ -77,14 +78,13 @@ class ExportController extends Controller
         $rows = $query->get();
 
         $dataRows = $rows->map(function ($row) {
-            $namaPelanggan = $row->pelanggan?->nama_lengkap ?: $row->pelanggan?->nama_perusahaan ?? '-';
             return [
                 $row->created_at?->format('Y-m-d H:i:s'),
                 $row->pelanggan?->nomor_pelanggan,
-                $namaPelanggan,
-                $row->layananInduk?->nama_layanan_induk,
+                $row->pelanggan?->nama_lengkap,
+                $row->layananInduk?->nama_layanan,
                 $row->prioritas,
-                $row->spk?->status ?? 'Open',
+                $row->status,
                 $row->deskripsi,
                 $row->keluhan1,
                 $row->keluhan2,
@@ -126,17 +126,15 @@ class ExportController extends Controller
         $rows = $query->get();
 
         $dataRows = $rows->map(function ($row) {
-            $layananNames = $row->layanan->map(function ($l) {
-                return $l->layananEntry?->nama_paket;
-            })->filter()->unique()->join(', ');
+            $layanan = $row->layanan instanceof \Illuminate\Support\Collection
+                ? $row->layanan->first()
+                : $row->layanan;
 
             $status = 'Belum Ada Layanan';
-            $firstLayanan = $row->layanan->first();
-            
-            if ($firstLayanan) {
+            if ($layanan) {
                 $today = Carbon::today();
-                $mulai = $firstLayanan->mulai_kontrak ? Carbon::parse($firstLayanan->mulai_kontrak) : null;
-                $selesai = $firstLayanan->selesai_kontrak ? Carbon::parse($firstLayanan->selesai_kontrak) : null;
+                $mulai = $layanan->mulai_kontrak ? Carbon::parse($layanan->mulai_kontrak) : null;
+                $selesai = $layanan->selesai_kontrak ? Carbon::parse($layanan->selesai_kontrak) : null;
 
                 if ($mulai && $selesai) {
                     if ($today->lt($mulai)) {
@@ -160,7 +158,7 @@ class ExportController extends Controller
                 $row->no_hp,
                 $row->kategori?->nama,
                 $row->pop?->nama,
-                $layananNames,
+                $layanan?->layananEntry?->nama_paket,
                 $status,
             ];
         });
@@ -250,7 +248,7 @@ class ExportController extends Controller
                 $row->status,
                 $row->tipe,
                 $row->kelompok_layanan,
-                $row->layananInduk?->nama_layanan_induk,
+                $row->layananInduk?->nama_layanan,
             ];
         });
 
@@ -286,12 +284,11 @@ class ExportController extends Controller
         $rows = $query->get();
 
         $dataRows = $rows->map(function ($row) {
-            $namaPelanggan = $row->keluhan?->pelanggan?->nama_lengkap ?: $row->keluhan?->pelanggan?->nama_perusahaan ?? '-';
             return [
                 $row->nomor_spk,
                 $row->keluhan?->pelanggan?->nomor_pelanggan,
-                $namaPelanggan,
-                $row->layananInduk?->nama_layanan_induk,
+                $row->keluhan?->pelanggan?->nama_lengkap,
+                $row->layananInduk?->nama_layanan,
                 $row->status,
                 $row->keterangan,
                 $row->created_at?->format('Y-m-d H:i:s'),
