@@ -245,24 +245,12 @@
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Account MYOB 1</label>
                                     <input type="text" name="account_myob_1" value="{{ old('account_myob_1') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                                 </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Biaya Reguler 1</label>
-                                    <input type="number" step="0.01" name="biaya_reguler_1" value="{{ old('biaya_reguler_1') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white @error('biaya_reguler_1') border-red-500 @enderror">
-                                    @error('biaya_reguler_1')
-                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                                    @enderror
-                                </div>
+
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Account MYOB 2</label>
                                     <input type="text" name="account_myob_2" value="{{ old('account_myob_2') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                                 </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Biaya Reguler 2</label>
-                                    <input type="number" step="0.01" name="biaya_reguler_2" value="{{ old('biaya_reguler_2') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white @error('biaya_reguler_2') border-red-500 @enderror">
-                                    @error('biaya_reguler_2')
-                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                                    @enderror
-                                </div>
+
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Milis</label>
                                     <input type="text" name="nama_milis" value="{{ old('nama_milis') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">

@@ -12,24 +12,24 @@ return new class extends Migration
             $table->id();
             $table->foreignId('pelanggan_id')->constrained('pelanggan')->onDelete('cascade');            
             // Kontak penagihan
-            $table->string('kontak_penagihan');
-            $table->text('alamat_penagihan');
-            $table->string('kode_pos_penagihan');
-            $table->string('kabupaten_penagihan');
-            $table->string('kota_penagihan');
-            $table->string('no_hp_penagihan');
+            $table->string('kontak_penagihan')->nullable();
+            $table->text('alamat_penagihan')->nullable();
+            $table->string('kode_pos_penagihan')->nullable();
+            $table->string('kabupaten_penagihan')->nullable();
+            $table->string('kota_penagihan')->nullable();
+            $table->string('no_hp_penagihan')->nullable();
             $table->string('telepon_penagihan')->nullable();
             $table->string('fax_penagihan')->nullable();
             $table->string('email_penagihan')->nullable();
             
             // Info pembayaran
-            $table->string('cara_pembayaran');
-            $table->string('waktu_pembayaran');
+            $table->string('cara_pembayaran')->nullable();
+            $table->string('waktu_pembayaran')->nullable();
             $table->string('invoice_instalasi')->nullable();
-            $table->string('invoice_reguler');
-            $table->enum('mata_uang', ['IDR'])->default('IDR');
-            $table->decimal('biaya_reguler', 12, 2);
-            $table->boolean('kenakan_ppn')->default(false);
+            $table->string('invoice_reguler')->nullable();
+            $table->enum('mata_uang', ['IDR'])->default('IDR')->nullable();
+            $table->decimal('biaya_reguler', 12, 2)->nullable();
+            $table->boolean('kenakan_ppn')->default(false)->nullable();
             $table->text('keterangan')->nullable();
             
             $table->timestamps();

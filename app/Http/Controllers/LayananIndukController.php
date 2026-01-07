@@ -19,9 +19,16 @@ class LayananIndukController extends Controller
     /**
      * Menampilkan daftar Layanan Induk.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $layananInduks = LayananInduk::latest()->paginate(10);
+        $query = LayananInduk::query();
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where('nama_layanan_induk', 'like', '%' . $search . '%');
+        }
+
+        $layananInduks = $query->latest()->paginate(10);
         return view('backend.pages.layanan.induk.index', compact('layananInduks'));
     }
 

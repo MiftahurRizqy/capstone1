@@ -139,8 +139,8 @@ class PelangganController extends Controller
              $rules['email_alternatif_2'] = 'nullable|email|max:255';
          }
 
-        if ($request->filled('kontak_penagihan')) {
-            $rules['kontak_penagihan'] = 'nullable|string|max:255';
+        // Validasi Penagihan (Unconditional)
+        $rules['kontak_penagihan'] = 'nullable|string|max:255';
             // ... (lanjutan validasi penagihan) ...
             $rules['alamat_penagihan'] = 'nullable|string|max:255';
             $rules['kode_pos_penagihan'] = 'nullable|string|max:10';
@@ -158,7 +158,6 @@ class PelangganController extends Controller
             $rules['biaya_reguler'] = 'nullable|numeric|min:0';
             $rules['kenakan_ppn'] = 'boolean';
             $rules['keterangan'] = 'nullable|string';
-        }
 
 
         $request->validate($rules);
@@ -203,7 +202,8 @@ class PelangganController extends Controller
             }
 
             // Simpan data penagihan jika ada
-            if ($request->filled('kontak_penagihan')) {
+            // Simpan data penagihan jika ada data utama
+            if ($request->filled('kontak_penagihan') || $request->filled('biaya_reguler') || $request->filled('invoice_reguler')) {
                 $penagihanData = $request->only([
                     'kontak_penagihan', 'alamat_penagihan', 'kode_pos_penagihan',
                     'kabupaten_penagihan', 'kota_penagihan', 'no_hp_penagihan',
@@ -327,7 +327,7 @@ class PelangganController extends Controller
              $rules['email_alternatif_2'] = 'nullable|email|max:255';
          }
 
-        if ($request->filled('kontak_penagihan')) {
+        // Validasi Penagihan (Unconditional)
             $rules['kontak_penagihan'] = 'nullable|string|max:255';
             $rules['alamat_penagihan'] = 'nullable|string|max:255';
             $rules['kode_pos_penagihan'] = 'nullable|string|max:10';
@@ -345,7 +345,6 @@ class PelangganController extends Controller
             $rules['biaya_reguler'] = 'nullable|numeric|min:0';
             $rules['kenakan_ppn'] = 'boolean';
             $rules['keterangan'] = 'nullable|string';
-        }
 
         $request->validate($rules);
         
@@ -380,7 +379,8 @@ class PelangganController extends Controller
             }
 
             // Update atau buat data penagihan
-            if ($request->filled('kontak_penagihan')) {
+            // Update atau buat data penagihan
+            if ($request->filled('kontak_penagihan') || $request->filled('biaya_reguler') || $request->filled('invoice_reguler')) {
                 $penagihanData = $request->only([
                     'kontak_penagihan', 'alamat_penagihan', 'kode_pos_penagihan',
                     'kabupaten_penagihan', 'kota_penagihan', 'no_hp_penagihan',

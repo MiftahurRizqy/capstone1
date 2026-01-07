@@ -50,10 +50,10 @@
                                     onclick="handleRoleFilter('')">
                                     {{ __('All Roles') }}
                                 </li>
-                                @foreach ($roles as $id => $name)
-                                    <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded {{ $name === request('role') ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
-                                        onclick="handleRoleFilter('{{ $name }}')">
-                                        {{ ucfirst($name) }}
+                                @foreach ($roles as $role)
+                                    <li class="cursor-pointer text-sm text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded {{ $role->name === request('role') ? 'bg-gray-200 dark:bg-gray-600' : '' }}"
+                                        onclick="handleRoleFilter('{{ $role->name }}')">
+                                        {{ ucfirst($role->name) }}
                                     </li>
                                 @endforeach
                             </ul>

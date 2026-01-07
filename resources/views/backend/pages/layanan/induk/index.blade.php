@@ -77,6 +77,20 @@
             </div>
         @endif
 
+        {{-- Form Pencarian --}}
+        <div class="card bg-white shadow rounded-lg dark:bg-white/[0.03] dark:border dark:border-gray-700 p-4 mb-6">
+            <form method="GET" action="{{ route('admin.layanan.induk.index') }}">
+                <div class="flex items-center gap-2">
+                    <input type="text" name="search" class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Cari layanan induk..." value="{{ request('search') }}">
+                    <button type="submit" class="btn btn-primary inline-flex items-center gap-2">
+                        <i class="fas fa-search"></i>
+                        <span>Cari</span>
+                    </button>
+                    <a href="{{ route('admin.layanan.induk.index') }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500 transition-colors duration-200">Reset</a>
+                </div>
+            </form>
+        </div>
+
         {{-- Tabel Data --}}
         <div class="card bg-white shadow rounded-lg dark:bg-white/[0.03] dark:border dark:border-gray-700">
             <div class="card-body p-6">
@@ -126,7 +140,7 @@
         
         {{-- Pagination --}}
         <div class="mt-4">
-            {{ $layananInduks->links('pagination::tailwind') }}
+            {{ $layananInduks->appends(request()->query())->links('pagination::tailwind') }}
         </div>
     </div>
 </div>
