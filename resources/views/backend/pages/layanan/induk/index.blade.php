@@ -98,7 +98,7 @@
                     <table class="table w-full text-sm text-left text-gray-700 dark:text-gray-200">
                         <thead class="bg-gray-100 dark:bg-gray-800 dark:text-white/80">
                             <tr>
-                                <th class="px-4 py-3">ID</th>
+                                <th class="px-4 py-3">No</th>
                                 <th class="px-4 py-3">Nama Layanan Induk</th>
                                 <th class="px-4 py-3">Aksi</th>
                             </tr>
@@ -106,7 +106,7 @@
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                             @forelse($layananInduks as $layananInduk)
                                 <tr>
-                                    <td class="px-4 py-3">{{ $layananInduk->id }}</td>
+                                    <td class="px-4 py-3">{{ ($layananInduks->firstItem() ?? 0) + $loop->index }}</td>
                                     <td class="px-4 py-3">{{ $layananInduk->nama_layanan_induk }}</td>
                                     <td class="px-4 py-3 flex gap-2">
                                         {{-- Tombol Edit --}}
