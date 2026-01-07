@@ -28,7 +28,7 @@ class LayananIndukController extends Controller
             $query->where('nama_layanan_induk', 'like', '%' . $search . '%');
         }
 
-        $layananInduks = $query->latest()->paginate(10);
+        $layananInduks = $query->orderBy('id', 'asc')->paginate(10);
         return view('backend.pages.layanan.induk.index', compact('layananInduks'));
     }
 
