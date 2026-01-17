@@ -13,10 +13,6 @@
             <h1 class="text-2xl font-bold text-gray-800 dark:text-white/90">Manajemen Wilayah (Bagian)</h1>
             <div>
                 <div class="flex items-center gap-2">
-                    <a href="{{ route('admin.jaringan.wilayah.export', request()->query()) }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg shadow dark:bg-green-500 dark:hover:bg-green-600 transition-colors duration-200">
-                        <i class="fas fa-file-excel"></i>
-                        <span>Export Excel</span>
-                    </a>
                     <button @click="open = true" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-200">
                         <i class="fas fa-plus"></i>
                         <span>Tambah Bagian</span>
@@ -280,6 +276,21 @@
         </div>
 
         {{-- Tabel daftar Bagian (ubah header jika perlu) --}}
+        <div class="card bg-white shadow rounded-lg dark:bg-white/[0.03] dark:border dark:border-gray-700 p-4 mb-6">
+            <div class="flex items-center gap-2">
+                <input type="text" id="wilayah-search" class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Cari Wilayah...">
+                <button type="button" class="btn btn-primary inline-flex items-center gap-2">
+                    <i class="fas fa-search"></i>
+                    <span>Cari</span>
+                </button>
+                <button type="button" id="wilayah-reset" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500 transition-colors duration-200">Reset</button>
+                <a id="wilayah-export" href="{{ route('admin.jaringan.wilayah.export') }}" class="btn btn-success inline-flex items-center gap-2">
+                    <i class="fas fa-file-excel"></i>
+                    <span>Export Excel</span>
+                </a>
+            </div>
+        </div>
+
         <div class="card bg-white shadow rounded-lg dark:bg-white/[0.03] dark:border dark:border-gray-700">
             <div class="card-body p-6">
                 <div class="overflow-x-auto">
@@ -295,9 +306,9 @@
                                 <th class="px-4 py-3">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <tbody id="wilayah-tbody" class="divide-y divide-gray-200 dark:divide-gray-700">
                             @forelse($bagian as $index => $item)
-                                <tr>
+                                <tr class="wilayah-row">
                                     <td class="px-4 py-3">{{ $index + 1 }}</td>
                                     <td class="px-4 py-3">{{ $item->provinsi_nama ?? '-' }}</td>
                                     <td class="px-4 py-3">{{ $item->kabupaten_nama ?? '-' }}</td>
@@ -332,6 +343,11 @@
                                     </td>
                                 </tr>
                             @endforelse
+                            <tr id="wilayah-no-results" style="display: none;">
+                                <td colspan="7" class="text-center py-4 text-gray-500 dark:text-gray-400">
+                                    Data wilayah tidak ditemukan.
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -440,6 +456,62 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const input = document.getElementById('wilayah-search');
+    const resetBtn = document.getElementById('wilayah-reset');
+    const exportLink = document.getElementById('wilayah-export');
+    const tbody = document.getElementById('wilayah-tbody');
+    const noResultsRow = document.getElementById('wilayah-no-results');
+    if (!input || !tbody) return;
+
+    const rows = Array.from(tbody.querySelectorAll('tr.wilayah-row'));
+
+    function applyFilter() {
+        const q = (input.value || '').toLowerCase().trim();
+        let visibleIndex = 0;
+        let hasAnyVisible = false;
+
+        rows.forEach((row) => {
+            const text = (row.textContent || '').toLowerCase();
+            const match = q === '' || text.includes(q);
+            row.style.display = match ? '' : 'none';
+
+            if (match) {
+                hasAnyVisible = true;
+                visibleIndex += 1;
+                const noCell = row.querySelector('td');
+                if (noCell) noCell.textContent = String(visibleIndex);
+            }
+        });
+
+        if (noResultsRow) {
+            noResultsRow.style.display = hasAnyVisible ? 'none' : '';
+        }
+    }
+
+    input.addEventListener('input', applyFilter);
+    if (exportLink) {
+        exportLink.addEventListener('click', function () {
+            const url = new URL(exportLink.href, window.location.origin);
+            const q = (input.value || '').trim();
+            if (q) {
+                url.searchParams.set('search', q);
+            } else {
+                url.searchParams.delete('search');
+            }
+            exportLink.href = url.toString();
+        });
+    }
+    if (resetBtn) {
+        resetBtn.addEventListener('click', function () {
+            input.value = '';
+            input.dispatchEvent(new Event('input'));
+        });
+    }
+
+    applyFilter();
+});
+
 function wilayahManager() {
     return {
         open: {{ $errors->any() ? 'true' : 'false' }},
@@ -478,7 +550,6 @@ function wilayahManager() {
                     this.editData.nama_bagian = result.data.nama;
                     this.editData.deskripsi = result.data.deskripsi || '';
                     
-                    // Load cascading dropdowns
                     await this.editFetchKabupaten();
                     await this.editFetchKecamatan();
                     await this.editFetchKelurahan();

@@ -169,7 +169,7 @@ class PelangganController extends Controller
         try {
             // Logika penomoran pelanggan otomatis
             $latestPelanggan = Pelanggan::latest('id')->first();
-            $startNumber = 1770;
+            $startNumber = 0;
             $newNumber = $latestPelanggan ? ((int) substr($latestPelanggan->nomor_pelanggan, 3)) + 1 : $startNumber;
             $nomor_pelanggan = 'CMN' . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
 
