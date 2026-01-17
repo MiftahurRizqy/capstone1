@@ -9,6 +9,7 @@ use App\Models\Penagihan;
 use App\Models\LayananEntry;
 use App\Models\Pop;
 use App\Models\KategoriPelanggan; // Wajib di-import
+use App\Models\Setting;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
@@ -167,10 +168,39 @@ class PelangganController extends Controller
         DB::beginTransaction();
 
         try {
-            // Logika penomoran pelanggan otomatis
-            $latestPelanggan = Pelanggan::latest('id')->first();
-            $startNumber = 0;
-            $newNumber = $latestPelanggan ? ((int) substr($latestPelanggan->nomor_pelanggan, 3)) + 1 : $startNumber;
+            $counterKey = 'pelanggan_nomor_counter';
+
+            $counterSetting = Setting::where('option_name', $counterKey)
+                ->lockForUpdate()
+                ->first();
+
+            if (!$counterSetting) {
+                $lastNomor = Pelanggan::where('nomor_pelanggan', 'like', 'CMN%')
+                    ->orderByDesc('nomor_pelanggan')
+                    ->value('nomor_pelanggan');
+
+                $lastUsedNumber = $lastNomor ? (int) substr($lastNomor, 3) : -1;
+
+                try {
+                    $counterSetting = Setting::create([
+                        'option_name' => $counterKey,
+                        'option_value' => (string) $lastUsedNumber,
+                        'autoload' => false,
+                    ]);
+                } catch (\Throwable $e) {
+                    $counterSetting = Setting::where('option_name', $counterKey)
+                        ->lockForUpdate()
+                        ->first();
+
+                    if (!$counterSetting) {
+                        throw $e;
+                    }
+                }
+            }
+
+            $newNumber = ((int) $counterSetting->option_value) + 1;
+            $counterSetting->update(['option_value' => (string) $newNumber]);
+
             $nomor_pelanggan = 'CMN' . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
 
             // Siapkan data untuk Pelanggan
