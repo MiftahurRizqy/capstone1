@@ -69,9 +69,7 @@ class LayananEntryController extends Controller
                 'redaksional_invoice' => 'nullable|string',
                 'redaksional_invoice_2' => 'nullable|string',
                 'account_myob_1' => 'nullable|string',
-                'biaya_reguler_1' => 'nullable|numeric|min:0',
                 'account_myob_2' => 'nullable|string',
-                'biaya_reguler_2' => 'nullable|numeric|min:0',
                 'nama_milis' => 'nullable|string',
                 'deskripsi' => 'nullable|string',
             ]);
@@ -129,9 +127,7 @@ class LayananEntryController extends Controller
             'redaksional_invoice' => 'nullable|string',
             'redaksional_invoice_2' => 'nullable|string',
             'account_myob_1' => 'nullable|string',
-            'biaya_reguler_1' => 'nullable|numeric|min:0',
             'account_myob_2' => 'nullable|string',
-            'biaya_reguler_2' => 'nullable|numeric|min:0',
             'nama_milis' => 'nullable|string',
             'deskripsi' => 'nullable|string',
         ]);

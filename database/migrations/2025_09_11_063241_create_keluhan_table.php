@@ -18,11 +18,11 @@ return new class extends Migration
             $table->enum('tujuan', ['Technical Support', 'Maintenance Cable', 'Maintenance Wireless', 'E-Gov Kota', 'E-Gov Propinsi', 'NOC', 'TV Kabel', 'Helpdesk', 'Admin CLEON', 'Support CLEON', 'SYS Admin CLEON']);
             $table->enum('prioritas', ['low', 'medium', 'high']);
             $table->string('keluhan1');
-            $table->string('keluhan2');
+            $table->string('keluhan2')->nullable();
             $table->enum('jenis_spk', ['Tidak', 'SPK OSP', 'SPK VOIP', 'SPK TS'])->default('Tidak');
             $table->enum('via', ['Datang', 'Telpon/Fax', 'Email', 'SMS/WA/BBM/LINE']);
             $table->text('deskripsi');
-            $table->text('penyelesaian');
+            $table->text('penyelesaian')->nullable();
             $table->string('disampaikan_oleh');
             $table->string('sumber');
             $table->timestamp('tanggal_input');

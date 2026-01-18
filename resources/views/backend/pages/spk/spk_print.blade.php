@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Surat Perintah Kerja (SPK) - {{ $spk->nomor_spk }}</title>
-    <link rel="icon" href="{{ asset('images/logo/kecil.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('images/logo/logo.png') }}" type="image/png">
     <style>
         /* --- STYLE DEFAULT (UNTUK WEB BROWSER) --- */
         body {

@@ -91,6 +91,17 @@
             </div>
         @endif
 
+        <div class="card bg-white shadow rounded-lg dark:bg-white/[0.03] dark:border dark:border-gray-700 p-4 mb-6">
+            <div class="flex items-center gap-2">
+                <input type="text" id="pop-search" class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Cari POP...">
+                <button type="button" class="btn btn-primary inline-flex items-center gap-2">
+                    <i class="fas fa-search"></i>
+                    <span>Cari</span>
+                </button>
+                <button type="button" id="pop-reset" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500 transition-colors duration-200">Reset</button>
+            </div>
+        </div>
+
         <div class="card bg-white shadow rounded-lg dark:bg-white/[0.03] dark:border dark:border-gray-700">
             <div class="card-body p-6">
                 <div class="overflow-x-auto">
@@ -105,9 +116,9 @@
                                 <th class="px-4 py-3">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <tbody id="pop-tbody" class="divide-y divide-gray-200 dark:divide-gray-700">
                             @forelse($pops as $index => $pop)
-                                <tr>
+                                <tr class="pop-row">
                                     <td class="px-4 py-3">{{ $index + 1 }}</td>
                                     <td class="px-4 py-3">{{ $pop->nama_pop }}</td>
                                     <td class="px-4 py-3">{{ $pop->kabupaten_kota }}</td>
@@ -141,6 +152,11 @@
                                     </td>
                                 </tr>
                             @endforelse
+                            <tr id="pop-no-results" style="display: none;">
+                                <td colspan="6" class="text-center py-4 text-gray-500 dark:text-gray-400">
+                                    Data POP tidak ditemukan.
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -152,4 +168,47 @@
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const input = document.getElementById('pop-search');
+        const resetBtn = document.getElementById('pop-reset');
+        const tbody = document.getElementById('pop-tbody');
+        const noResultsRow = document.getElementById('pop-no-results');
+        if (!input || !tbody) return;
+
+        const rows = Array.from(tbody.querySelectorAll('tr.pop-row'));
+
+        function applyFilter() {
+            const q = (input.value || '').toLowerCase().trim();
+            let visibleIndex = 0;
+            let hasAnyVisible = false;
+
+            rows.forEach((row) => {
+                const text = (row.textContent || '').toLowerCase();
+                const match = q === '' || text.includes(q);
+                row.style.display = match ? '' : 'none';
+
+                if (match) {
+                    hasAnyVisible = true;
+                    visibleIndex += 1;
+                    const noCell = row.querySelector('td');
+                    if (noCell) noCell.textContent = String(visibleIndex);
+                }
+            });
+
+            if (noResultsRow) {
+                noResultsRow.style.display = hasAnyVisible ? 'none' : '';
+            }
+        }
+
+        input.addEventListener('input', applyFilter);
+        if (resetBtn) {
+            resetBtn.addEventListener('click', function () {
+                input.value = '';
+                input.dispatchEvent(new Event('input'));
+            });
+        }
+        applyFilter();
+    });
+</script>
 @endpush

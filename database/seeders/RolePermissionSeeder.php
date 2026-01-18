@@ -196,33 +196,32 @@ class RolePermissionSeeder extends Seeder
         }
 
         // Assign super admin role permission to superadmin user.
+        // Assign super admin role permission to superadmin user.
         if ($user) {
             $user->assignRole($roleSuperAdmin);
         }
 
-        // Assign subscriber role permission to subscriber user.
-        $subscriberPermissions = [
+        // Assign teknisi role permission to teknisi user.
+        $teknisiPermissions = [
             'dashboard.view',
-            'profile.view',
-            'profile.edit',
-            'profile.delete',
-            'profile.update',
+            'keluhan.view',
+            'spk.view',
         ];
 
-        // Create Subscriber Role.
-        $roleSubscriber = $this->maybeCreateSubscriberRole();
+        // Create Teknisi Role.
+        $roleTeknisi = $this->maybeCreateTeknisiRole();
 
-        // Add the permissions to the subscriber role.
-        foreach ($subscriberPermissions as $permission) {
-            $roleSubscriber->givePermissionTo($permission);
+        // Add the permissions to the teknisi role.
+        foreach ($teknisiPermissions as $permission) {
+            $roleTeknisi->givePermissionTo($permission);
         }
 
-        $this->command->info('Subscriber role permissions added successfully!');
+        $this->command->info('Teknisi role permissions added successfully!');
 
-        // Added default subscriber role to the users.
-        $users = User::all();
-        foreach ($users as $user) {
-            $user->assignRole('Subscriber');
+        // Assign Teknisi role to teknisi user
+        $teknisiUser = User::where('username', 'teknisi')->first();
+        if ($teknisiUser) {
+            $teknisiUser->assignRole($roleTeknisi);
         }
 
         $this->command->info('Roles and Permissions created successfully!');
@@ -232,14 +231,14 @@ class RolePermissionSeeder extends Seeder
     {
         return Role::firstOrCreate(
             ['name' => 'Superadmin', 'guard_name' => 'web'],
-            ['name' => 'superadmin', 'guard_name' => 'web']
+            ['name' => 'Superadmin', 'guard_name' => 'web']
         );
     }
 
-    private function maybeCreateSubscriberRole(): Role
+    private function maybeCreateTeknisiRole(): Role
     {
         return Role::firstOrCreate(
-            ['name' => 'Subscriber', 'guard_name' => 'web']
+            ['name' => 'Teknisi', 'guard_name' => 'web']
         );
     }
 }

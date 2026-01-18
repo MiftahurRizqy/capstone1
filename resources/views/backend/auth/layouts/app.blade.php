@@ -65,8 +65,6 @@
                                 <div class="flex items-center mb-4">
                                     {{-- Updated Logo Path --}}
                                     <img src="/images/logo/kecil.png" alt="Logo" class="block h-10 w-auto mr-3">
-                                    {{-- Added Mega Cleon Text --}}
-                                    <span class="text-3xl font-bold text-white">Mega Cleon</span>
                                 </div>
                                 <p class="text-center text-gray-400 dark:text-white/60">
                                     Your modern and secure administration dashboard.

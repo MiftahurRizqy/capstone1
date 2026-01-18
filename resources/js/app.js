@@ -115,7 +115,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Add keyboard event listener for "/" key
     document.addEventListener("keydown", function (event) {
-        if (event.key === "/" && document.activeElement !== searchInput) {
+        if (!searchInput) return;
+
+        const activeElement = document.activeElement;
+        const tagName = activeElement?.tagName?.toLowerCase();
+        const isTypingField =
+            tagName === "input" ||
+            tagName === "textarea" ||
+            tagName === "select" ||
+            activeElement?.isContentEditable;
+
+        if (event.key === "/" && activeElement !== searchInput && !isTypingField) {
             event.preventDefault(); // Prevent the "/" character from being typed
             focusSearchInput();
         }
