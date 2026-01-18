@@ -16,7 +16,8 @@ class UserSeeder extends Seeder
     public function run(): void
     {
 
-        User::insert([
+        // Use upsert to avoid duplicate key errors (e.g., when the same emails already exist).
+        User::upsert([
             [
                 'name' => 'Super Admin',
                 'email' => 'superadmin@example.com',
@@ -29,7 +30,7 @@ class UserSeeder extends Seeder
                 'username' => 'subscriber',
                 'password' => Hash::make('12345678'),
             ],
-        ]);
+        ], ['email'], ['name', 'username', 'password']);
 
         // Run factory to create additional users with unique details.
         User::factory()->count(50)->create();
