@@ -2,9 +2,9 @@
 
 
 
-use App\Http\Controllers\ActionLogController;
+
 use App\Http\Controllers\Backend\DashboardController;
-use App\Http\Controllers\Backend\ModulesController;
+
 use App\Http\Controllers\Backend\RolesController;
 use App\Http\Controllers\Backend\UsersController;
 use App\Http\Controllers\PelangganController;
@@ -39,7 +39,7 @@ use Illuminate\Http\Request;
 
 Route::get('/', 'HomeController@redirectAdmin')->name('index');
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/action-log', [ActionLogController::class, 'index'])->name('actionlog.index');
+
 
 /**
  * Admin routes.
@@ -48,11 +48,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('roles', RolesController::class);
 
-    // Modules Routes.
-    Route::get('/modules', [ModulesController::class, 'index'])->name('modules.index');
-    Route::post('/modules/toggle-status/{module}', [ModulesController::class, 'toggleStatus'])->name('modules.toggle-status');
-    Route::post('/modules/upload', [ModulesController::class, 'upload'])->name('modules.upload');
-    Route::delete('/modules/{module}', [ModulesController::class, 'destroy'])->name('modules.delete');
+
 
     // Settings Routes.
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');

@@ -202,49 +202,9 @@
             @endcanany
             @php echo ld_apply_filters('sidebar_menu_after_roles', '') @endphp
 
-            @can('module.view')
-            <li>
-                <a href="{{ route('admin.modules.index') }}"
-                    class="menu-item group {{ Route::is('admin.modules.index') ? 'menu-item-active' : 'menu-item-inactive' }}">
-                    <i class="bi bi-box text-xl text-center"></i>
-                    <span :style="`color: ${textColor}`">{{ __('Modules') }}</span>
-                </a>
-            </li>
-            @endcan
-            @php echo ld_apply_filters('sidebar_menu_after_modules', '') @endphp
 
-            @canany(['pulse.view', 'actionlog.view'])
-            <li>
-                <button
-                    class="menu-item group w-full text-left menu-item-inactive text-white {{ Route::is('actionlog.*') ? 'menu-item-active' : 'menu-item-inactive text-white' }}"
-                    type="button" onclick="toggleSubmenu('monitoring-submenu')">
-                    <i class="bi bi-activity text-xl text-center"></i>
-                    <span :style="`color: ${textColor}`">{{ __('Monitoring') }}</span>
-                    <i class="bi bi-chevron-down ml-auto"></i>
-                </button>
-                <ul id="monitoring-submenu"
-                    class="submenu {{ Route::is('actionlog.*') ? '' : 'hidden' }} pl-12 mt-2 space-y-2">
-                    @can('actionlog.view')
-                    <li>
-                        <a href="{{ route('actionlog.index') }}"
-                            class="block px-4 py-2 rounded-lg {{ Route::is('actionlog.index') ? 'menu-item-active' : 'menu-item-inactive text-white' }}">
-                            {{ __('Action Logs') }}
-                        </a>
-                    </li>
-                    @endcan
 
-                    @can('pulse.view')
-                    <li>
-                        <a href="{{ route('pulse') }}" class="block px-4 py-2 rounded-lg menu-item-inactive"
-                            target="_blank">
-                            {{ __('Laravel Pulse') }}
-                        </a>
-                    </li>
-                    @endcan
-                </ul>
-            </li>
-            @endcanany
-            @php echo ld_apply_filters('sidebar_menu_after_monitoring', '') @endphp
+
         </ul>
     </div>
 
