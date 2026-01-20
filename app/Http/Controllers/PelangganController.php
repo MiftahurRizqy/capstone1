@@ -22,6 +22,30 @@ class PelangganController extends Controller
         $this->middleware('can:pelanggan.edit')->only(['edit', 'update']);
         $this->middleware('can:pelanggan.delete')->only('destroy');
     }
+
+    public function personal(Request $request)
+    {
+        $kategoriId = KategoriPelanggan::whereRaw('LOWER(nama) = ?', ['personal'])->value('id');
+        if ($kategoriId) {
+            return redirect()->route('admin.pelanggan.index', array_merge($request->query(), [
+                'kategori_pelanggan_id' => $kategoriId,
+            ]));
+        }
+
+        return redirect()->route('admin.pelanggan.index', $request->query());
+    }
+
+    public function perusahaan(Request $request)
+    {
+        $kategoriId = KategoriPelanggan::whereRaw('LOWER(nama) = ?', ['perusahaan'])->value('id');
+        if ($kategoriId) {
+            return redirect()->route('admin.pelanggan.index', array_merge($request->query(), [
+                'kategori_pelanggan_id' => $kategoriId,
+            ]));
+        }
+
+        return redirect()->route('admin.pelanggan.index', $request->query());
+    }
     /**
      * Menampilkan daftar semua pelanggan dan menyediakan data untuk form.
      * Menggantikan metode personal() dan perusahaan().
