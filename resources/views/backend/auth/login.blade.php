@@ -64,9 +64,7 @@
                             {{ __('Remember me') }}
                         </label>
                     </div>
-                    <a href="{{ route('admin.password.request') }}" class="text-sm font-medium text-brand-500 hover:text-brand-600 dark:text-brand-400 dark:hover:text-brand-300 transition">
-                        {{ __('Forgot password?') }}
-                    </a>
+
                 </div>
                 
                 <div>
