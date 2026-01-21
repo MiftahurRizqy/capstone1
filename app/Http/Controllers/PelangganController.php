@@ -257,7 +257,8 @@ class PelangganController extends Controller
 
             // Simpan data penagihan jika ada
             // Simpan data penagihan jika ada data utama
-            if ($request->filled('kontak_penagihan') || $request->filled('biaya_reguler') || $request->filled('invoice_reguler')) {
+            // Simpan data penagihan jika ada data utama (Kontak Penagihan wajib ada untuk membuat record)
+            if ($request->filled('kontak_penagihan')) {
                 $penagihanData = $request->only([
                     'kontak_penagihan', 'alamat_penagihan', 'kode_pos_penagihan',
                     'kabupaten_penagihan', 'kota_penagihan', 'no_hp_penagihan',
@@ -434,7 +435,7 @@ class PelangganController extends Controller
 
             // Update atau buat data penagihan
             // Update atau buat data penagihan
-            if ($request->filled('kontak_penagihan') || $request->filled('biaya_reguler') || $request->filled('invoice_reguler')) {
+            if ($request->filled('kontak_penagihan')) {
                 $penagihanData = $request->only([
                     'kontak_penagihan', 'alamat_penagihan', 'kode_pos_penagihan',
                     'kabupaten_penagihan', 'kota_penagihan', 'no_hp_penagihan',
